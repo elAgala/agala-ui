@@ -1,0 +1,156 @@
+/* === Agala Design Tokens === */
+/* Purpose: Semantic, overridable CSS custom properties for @agala/ui.
+ *
+ * HOW TO THEME:
+ * 1. Copy any token to your project :root and change the value.
+ * 2. All tokens use raw HSL numbers (e.g. "240 10% 3.9%").
+ *    Use `hsl(var(--token))` in CSS, or `hsl(var(--token) / 0.5)` for opacity.
+ * 3. Change `--agala-primary` hue to rebrand the entire library instantly.
+ *
+ * EXAMPLE (Gym brand — orange):
+ *   :root { --agala-primary: 25 95% 53%; }
+ */
+
+:root {
+  /* ─── Surfaces ─── */
+  --agala-background: 0 0% 100%;
+  --agala-foreground: 240 10% 3.9%;
+  --agala-card: 0 0% 100%;
+  --agala-card-foreground: 240 10% 3.9%;
+  --agala-popover: 0 0% 100%;
+  --agala-popover-foreground: 240 10% 3.9%;
+
+  /* ─── Brand ─── */
+  --agala-primary: 239 84% 57%;        /* indigo-600 */
+  --agala-primary-foreground: 0 0% 100%;
+
+  /* ─── Secondary ─── */
+  --agala-secondary: 240 4.8% 95.9%;
+  --agala-secondary-foreground: 240 5.9% 10%;
+
+  /* ─── Muted ─── */
+  --agala-muted: 240 4.8% 95.9%;
+  --agala-muted-foreground: 240 3.8% 46.1%;
+
+  /* ─── Accent ─── */
+  --agala-accent: 240 4.8% 95.9%;
+  --agala-accent-foreground: 240 5.9% 10%;
+
+  /* ─── Danger ─── */
+  --agala-danger: 0 84.2% 60.2%;       /* red-500 */
+  --agala-danger-foreground: 0 0% 98%;
+
+  /* ─── Success ─── */
+  --agala-success: 142 71% 45%;
+  --agala-success-foreground: 0 0% 100%;
+
+  /* ─── Warning ─── */
+  --agala-warning: 43 96% 50%;
+  --agala-warning-foreground: 0 0% 10%;
+
+  /* ─── Structural ─── */
+  --agala-border: 240 5.9% 90%;
+  --agala-input: 240 5.9% 90%;
+  --agala-ring: 239 84% 57%;
+
+  /* ─── Overlay ─── */
+  --agala-overlay: 0 0% 0%;
+
+  /* ─── Radius ─── */
+  --agala-radius: 0.5rem;
+  --agala-radius-sm: calc(var(--agala-radius) - 4px);
+  --agala-radius-md: calc(var(--agala-radius) - 2px);
+  --agala-radius-lg: calc(var(--agala-radius) + 4px);
+
+  /* ─── Shadows ─── */
+  --agala-shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --agala-shadow-sm:
+    0 1px 3px 0 rgb(0 0 0 / 0.1),
+    0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --agala-shadow-md:
+    0 4px 6px -1px rgb(0 0 0 / 0.1),
+    0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --agala-shadow-lg:
+    0 10px 15px -3px rgb(0 0 0 / 0.1),
+    0 4px 6px -4px rgb(0 0 0 / 0.1);
+
+  /* ─── Motion ─── */
+  --agala-transition-fast: 120ms ease-out;
+  --agala-transition-base: 180ms ease-out;
+  --agala-transition-slow: 240ms ease-out;
+
+  /* ─── Typography ─── */
+  --agala-font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --agala-font-mono: ui-monospace, Menlo, Monaco, monospace;
+  --agala-font-weight-normal: 400;
+  --agala-font-weight-medium: 500;
+  --agala-font-weight-semibold: 600;
+  --agala-font-weight-bold: 700;
+  --agala-letter-spacing-tight: -0.01em;
+  --agala-letter-spacing-wide: 0.05em;
+
+  /* ─── Font sizes ─── */
+  --agala-font-size-sm: 0.75rem;
+  --agala-font-size-base: 0.875rem;
+  --agala-font-size-lg: 1rem;
+
+  /* ─── Line heights ─── */
+  --agala-line-height-normal: 1.25rem;
+  --agala-line-height-relaxed: 1.5;
+
+  /* ─── Border ─── */
+  --agala-border-width: 1px;
+  --agala-border-width-thick: 1.5px;
+
+  /* ─── Control heights ─── */
+  --agala-height-sm: 1.75rem;
+  --agala-height-md: 2.25rem;
+  --agala-height-lg: 2.5rem;
+
+  /* ─── Z-index ─── */
+  --agala-z-dropdown: 50;
+  --agala-z-modal: 1000;
+
+  /* ─── Layout ─── */
+  --agala-navbar-height: 3.5rem;
+  --agala-sidebar-width: 240px;
+  --agala-sidebar-collapsed-width: 64px;
+}
+
+/* ── Dark mode ── */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --agala-background: 240 10% 3.9%;
+    --agala-foreground: 0 0% 98%;
+    --agala-card: 240 10% 3.9%;
+    --agala-card-foreground: 0 0% 98%;
+    --agala-popover: 240 10% 3.9%;
+    --agala-popover-foreground: 0 0% 98%;
+
+    --agala-primary: 239 84% 67%;        /* indigo-500 */
+    --agala-primary-foreground: 0 0% 100%;
+
+    --agala-secondary: 240 3.7% 15.9%;
+    --agala-secondary-foreground: 0 0% 98%;
+
+    --agala-muted: 240 3.7% 15.9%;
+    --agala-muted-foreground: 240 5% 64.9%;
+
+    --agala-accent: 240 3.7% 15.9%;
+    --agala-accent-foreground: 0 0% 98%;
+
+    --agala-danger: 0 62.8% 30.6%;
+    --agala-danger-foreground: 0 0% 98%;
+
+    --agala-success: 142 71% 38%;
+    --agala-success-foreground: 0 0% 100%;
+
+    --agala-warning: 43 96% 44%;
+    --agala-warning-foreground: 0 0% 10%;
+
+    --agala-border: 240 3.7% 15.9%;
+    --agala-input: 240 3.7% 15.9%;
+    --agala-ring: 239 84% 67%;
+    --agala-overlay: 0 0% 0%;
+  }
+}

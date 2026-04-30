@@ -1,0 +1,26 @@
+export interface SelectOption {
+  value: string
+  label: string
+  disabled?: boolean
+  subtitle?: string
+  group?: string
+}
+
+export type SelectSize = 'sm' | 'md' | 'lg'
+
+export interface SelectProps {
+  options: SelectOption[]
+  modelValue?: string | string[]
+  multiple?: boolean
+  placeholder?: string
+  size?: SelectSize
+  disabled?: boolean
+  loading?: boolean
+  searchable?: boolean
+  clearable?: boolean
+  error?: boolean
+  errorMessage?: string
+  maxDisplayed?: number
+  maxSelections?: number
+  class?: string
+}
