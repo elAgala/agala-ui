@@ -380,7 +380,7 @@ watch(highlightedIdx, () => {
   <div
     ref="wrapperRef"
     class="wrapper"
-    :class="wrapperClass"
+    :class="[wrapperClass, $props.class]"
   >
     <div :class="triggerRowCls">
       <div
