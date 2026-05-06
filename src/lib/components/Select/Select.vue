@@ -513,7 +513,7 @@ watch(highlightedIdx, () => {
 <style scoped>
 .wrapper {
   position: relative;
-  display: inline-flex;
+  display: flex;
   flex-direction: column;
 }
 
