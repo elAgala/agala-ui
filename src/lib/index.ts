@@ -1,5 +1,8 @@
 import './tokens.css'
 
+export { AgalaIcon } from './components/AgalaIcon'
+export type { IconName } from './components/AgalaIcon/types'
+
 export { default as Button } from './components/Button/Button.vue'
 export type { ButtonProps, ButtonVariant, ButtonSize } from './components/Button'
 

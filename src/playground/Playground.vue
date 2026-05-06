@@ -5,11 +5,44 @@ import AgalaIcon from '../lib/components/AgalaIcon/AgalaIcon.vue'
 import type { TableColumn, TabItem } from '../lib'
 
 /* ─── Theme ─── */
-type Theme = 'default' | 'forja'
+type Theme = 'default' | 'forja' | 'custom'
 const activeTheme = ref<Theme>('default')
+const themeTesterOpen = ref(false)
+const customThemeCss = ref(`/* Paste your custom theme CSS here */
+:root {
+  --agala-primary: 200 90% 50%;
+}`)
+const customStyleEl = ref<HTMLStyleElement | null>(null)
+
+function applyCustomTheme() {
+  activeTheme.value = 'custom'
+  document.documentElement.removeAttribute('data-theme')
+  if (customStyleEl.value) {
+    customStyleEl.value.textContent = customThemeCss.value
+  } else {
+    const el = document.createElement('style')
+    el.textContent = customThemeCss.value
+    document.head.appendChild(el)
+    customStyleEl.value = el
+  }
+}
+
+function resetCustomTheme() {
+  activeTheme.value = 'default'
+  document.documentElement.removeAttribute('data-theme')
+  if (customStyleEl.value) {
+    customStyleEl.value.textContent = ''
+  }
+}
+
 watch(activeTheme, (t) => {
-  if (t === 'forja') document.documentElement.setAttribute('data-theme', 'forja')
-  else document.documentElement.removeAttribute('data-theme')
+  if (t === 'forja') {
+    document.documentElement.setAttribute('data-theme', 'forja')
+    if (customStyleEl.value) customStyleEl.value.textContent = ''
+  } else if (t !== 'custom') {
+    document.documentElement.removeAttribute('data-theme')
+    if (customStyleEl.value) customStyleEl.value.textContent = ''
+  }
 }, { immediate: true })
 
 /* ─── Button state ─── */
@@ -222,6 +255,46 @@ const AckDialog = {
       </button>
     </div>
   </div>
+
+  <!-- ─── Theme Tester ─── -->
+  <section class="themeTester">
+    <div class="themeTester__header">
+      <h2 style="margin: 0">🎨 Theme Tester</h2>
+      <Button
+        variant="ghost"
+        size="sm"
+        style="margin-left: auto"
+        @click="themeTesterOpen = !themeTesterOpen"
+      >
+        {{ themeTesterOpen ? 'Hide' : 'Show' }}
+      </Button>
+    </div>
+    <Transition name="themeTester-slide">
+      <div v-show="themeTesterOpen" class="themeTester__body">
+        <p class="muted" style="margin: 0 0 0.75rem; font-size: 0.875rem">
+          Paste custom CSS variables below and click <strong>Apply</strong> to see all components update instantly.
+        </p>
+        <div class="stack" style="max-width: 640px">
+          <Textarea
+            v-model="customThemeCss"
+            :rows="8"
+            resize="vertical"
+            placeholder="/* Paste your custom theme CSS here */\n:root {\n  --agala-primary: 200 90% 50%;\n  --agala-background: 0 0% 98%;\n  --agala-card: 0 0% 100%;\n  /* … */\n}"
+          />
+          <div class="row" style="margin-bottom: 0">
+            <Button variant="primary" icon @click="applyCustomTheme">
+              <template #icon><AgalaIcon name="refresh" :size="14" /></template>
+              Apply Custom Theme
+            </Button>
+            <Button variant="outline" @click="resetCustomTheme">Reset to Default</Button>
+            <span v-if="activeTheme === 'custom'" class="muted" style="font-size: 0.75rem; margin-left: auto">
+              ✅ Custom theme active
+            </span>
+          </div>
+        </div>
+      </div>
+    </Transition>
+  </section>
 
   <div class="playground">
     <header>
@@ -1171,5 +1244,22 @@ section {
   background: hsl(var(--agala-primary));
   color: hsl(var(--agala-primary-foreground));
   border-color: transparent;
+}
+
+/* ─── Theme Tester ─── */
+.themeTester {
+  position: sticky;
+  top: 0;
+  z-index: 998;
+  background: hsl(var(--agala-card));
+  border-bottom: var(--agala-border-width) solid hsl(var(--agala-border));
+  padding: 1.5rem 1.5rem;
+  box-shadow: var(--agala-shadow-sm);
+}
+
+.themeTester h2 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem;
 }
 </style>
