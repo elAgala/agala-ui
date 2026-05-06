@@ -1,7 +1,7 @@
 {
-  "name": "@agala/ui",
-  "version": "0.1.0",
-  "description": "Agala UI — A clean, versatile Vue 3 component library with atomic design tokens.",
+  "name": "@el-agala/ui",
+  "version": "0.1.1",
+  "description": "Agala UI — A zero-dependency Vue 3 component library with atomic design tokens, theming, and accessibility.",
   "type": "module",
   "module": "./dist/agala-ui.es.js",
   "types": "./dist/index.d.ts",
@@ -14,13 +14,16 @@
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "AI_CONTEXT.md",
+    "skills"
   ],
   "scripts": {
     "dev": "vite",
     "build:lib": "vue-tsc --noEmit && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prepublishOnly": "npm run build:lib"
   },
   "peerDependencies": {
     "vue": "^3.3.0"
@@ -43,16 +46,22 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/agala/ui.git"
+    "url": "https://github.com/el-agala/ui.git"
   },
   "author": "Agala",
   "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
   "keywords": [
     "vue",
     "vue3",
     "ui",
     "components",
     "design-system",
-    "agala"
+    "agala",
+    "zero-dependency",
+    "theming",
+    "accessibility"
   ]
 }
