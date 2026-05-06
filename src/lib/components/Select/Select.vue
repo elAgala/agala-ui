@@ -513,9 +513,8 @@ watch(highlightedIdx, () => {
 <style scoped>
 .wrapper {
   position: relative;
-  display: flex;
+  display: inline-flex;
   flex-direction: column;
-  width: 100%;
 }
 
 /* ── Trigger Row ── */
