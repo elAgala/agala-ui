@@ -515,6 +515,7 @@ watch(highlightedIdx, () => {
   position: relative;
   display: flex;
   flex-direction: column;
+  min-width: 140px;
 }
 
 /* ── Trigger Row ── */
