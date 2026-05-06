@@ -522,7 +522,6 @@ watch(highlightedIdx, () => {
   display: flex;
   align-items: center;
   gap: 0.25rem;
-  width: 100%;
   border: var(--agala-border-width) solid hsl(var(--agala-input));
   border-radius: calc(var(--agala-radius) - 2px);
   background-color: hsl(var(--agala-background));
