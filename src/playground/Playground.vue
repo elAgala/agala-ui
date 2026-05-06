@@ -431,6 +431,17 @@ const AckDialog = {
       </div>
     </section>
 
+    <section>
+      <h2>Select — Width Test (Flex Row)</h2>
+      <p class="muted" style="margin: 0 0 0.75rem; font-size: 0.875rem">
+        Two selects in a flex row with fixed widths — neither should stretch beyond its assigned width.
+      </p>
+      <div class="row" style="gap: 0.5rem; max-width: 400px; border: 1px dashed hsl(var(--agala-border)); padding: 0.5rem; border-radius: var(--agala-radius)">
+        <Select :options="USERS" placeholder="180px" style="width: 180px" clearable />
+        <Select :options="TAGS" placeholder="Flex:1" multiple clearable style="flex: 1" />
+      </div>
+    </section>
+
     <!-- ─── DatePicker ─── -->
     <section>
       <h2>DatePicker — Sizes</h2>
