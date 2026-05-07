@@ -11,7 +11,8 @@
         "types": "./dist/index.d.ts",
         "default": "./dist/agala-ui.es.js"
       }
-    }
+    },
+    "./reset.css": "./dist/reset.css"
   },
   "files": [
     "dist",
@@ -20,7 +21,7 @@
   ],
   "scripts": {
     "dev": "vite",
-    "build:lib": "vue-tsc --noEmit && vite build",
+    "build:lib": "vue-tsc --noEmit && vite build && cp src/lib/reset.css dist/reset.css",
     "lint": "eslint .",
     "preview": "vite preview",
     "prepublishOnly": "npm run build:lib"
