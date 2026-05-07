@@ -93,6 +93,7 @@ const cls = computed(() => [
 .input {
   display: flex;
   width: 100%;
+  box-sizing: border-box;
   height: var(--agala-height-md);
   border: var(--agala-border-width) solid hsl(var(--agala-input));
   border-radius: calc(var(--agala-radius) - 2px);

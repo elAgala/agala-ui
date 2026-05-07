@@ -54,6 +54,7 @@ const wrapperCls = computed(() => [
 .textarea {
   display: block;
   width: 100%;
+  box-sizing: border-box;
   min-height: 4rem;
   border: var(--agala-border-width) solid hsl(var(--agala-input));
   border-radius: calc(var(--agala-radius) - 2px);

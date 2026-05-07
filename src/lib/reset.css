@@ -1,0 +1,56 @@
+/**
+ * Agala UI — Optional CSS Reset
+ *
+ * Import this in your app entry to ensure all @agala/ui components
+ * render with correct sizing and consistent base styles.
+ *
+ * Usage:
+ *   import '@el-agala/ui/reset.css'
+ *
+ * Or in your global CSS:
+ *   @import '@el-agala/ui/reset.css';
+ */
+
+/* ── Box model ── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* ── Body base ── */
+body {
+  margin: 0;
+  background-color: hsl(var(--agala-background));
+  color: hsl(var(--agala-foreground));
+  font-family: var(--agala-font-sans);
+  line-height: var(--agala-line-height-relaxed);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Form elements ── */
+input,
+textarea,
+select,
+button {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+/* ── Focus visible (accessibility) ── */
+:focus-visible {
+  outline: 2px solid hsl(var(--agala-ring));
+  outline-offset: 2px;
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
