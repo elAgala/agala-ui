@@ -23,12 +23,16 @@ const cls = computed(() => [
   'textarea',
   resizeMap[props.resize],
   props.error ? 'textareaError' : undefined,
+].filter(Boolean).join(' '))
+
+const wrapperCls = computed(() => [
+  'wrapper',
   props.class,
 ].filter(Boolean).join(' '))
 </script>
 
 <template>
-  <div class="wrapper">
+  <div :class="wrapperCls">
     <textarea
       :class="cls"
       :value="modelValue"
@@ -47,7 +51,6 @@ const cls = computed(() => [
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
-  width: 100%;
 }
 
 .textarea {
