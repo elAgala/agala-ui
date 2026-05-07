@@ -48,9 +48,7 @@ const wrapperCls = computed(() => [
 
 <style scoped>
 .wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
+  display: block;
 }
 
 .textarea {
@@ -108,6 +106,6 @@ const wrapperCls = computed(() => [
   font-size: var(--agala-font-size-sm);
   color: hsl(var(--agala-danger));
   line-height: var(--agala-line-height-normal);
-  margin: 0;
+  margin: 0.25rem 0 0;
 }
 </style>
