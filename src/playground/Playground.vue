@@ -1077,6 +1077,30 @@ const AckDialog = {
           <Button variant="danger" size="sm">Delete</Button>
         </template>
       </Card>
+
+      <h2 style="margin-top: 1.5rem">Card — Accent Borders</h2>
+      <div class="row" style="align-items: flex-start">
+        <Card accent="top" accent-color="primary" style="width: 180px">
+          <template #header>Top Primary</template>
+          <p style="margin: 0; font-size: 0.875rem">accent: top</p>
+        </Card>
+        <Card accent="left" accent-color="danger" style="width: 180px">
+          <template #header>Left Danger</template>
+          <p style="margin: 0; font-size: 0.875rem">accent: left</p>
+        </Card>
+        <Card accent="bottom" accent-color="success" style="width: 180px">
+          <template #header>Bottom Success</template>
+          <p style="margin: 0; font-size: 0.875rem">accent: bottom</p>
+        </Card>
+        <Card accent="right" accent-color="warning" style="width: 180px">
+          <template #header>Right Warning</template>
+          <p style="margin: 0; font-size: 0.875rem">accent: right</p>
+        </Card>
+        <Card accent="top" accent-color="#8b5cf6" style="width: 180px">
+          <template #header>Custom Hex</template>
+          <p style="margin: 0; font-size: 0.875rem">accentColor: #8b5cf6</p>
+        </Card>
+      </div>
     </section>
 
     <!-- ═══════════════════ TOOLTIP ═══════════════════ -->

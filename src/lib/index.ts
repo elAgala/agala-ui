@@ -52,7 +52,7 @@ export { default as Tabs } from './components/Tabs/Tabs.vue'
 export type { TabsProps, TabItem } from './components/Tabs'
 
 export { default as Card } from './components/Card/Card.vue'
-export type { CardProps, CardPadding } from './components/Card'
+export type { CardProps, CardPadding, CardAccent } from './components/Card'
 
 export { default as Tooltip } from './components/Tooltip/Tooltip.vue'
 export type { TooltipProps, TooltipPlacement } from './components/Tooltip'

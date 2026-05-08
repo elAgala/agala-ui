@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { CardProps, CardPadding } from './types'
+import type { CardProps, CardPadding, CardAccent } from './types'
 
 const props = withDefaults(defineProps<CardProps>(), {
   padding: 'md',
@@ -13,6 +13,17 @@ const paddingMap: Record<CardPadding, string> = {
   lg:   'padLg',
 }
 
+const semanticTokens = ['primary', 'secondary', 'muted', 'danger', 'warning', 'success'] as const
+
+const resolvedAccentColor = computed(() => {
+  if (!props.accent) return undefined
+  const color = props.accentColor ?? 'primary'
+  if ((semanticTokens as readonly string[]).includes(color)) {
+    return `hsl(var(--agala-${color}))`
+  }
+  return color
+})
+
 const cls = computed(() => [
   'card',
   props.class,
@@ -22,10 +33,32 @@ const bodyCls = computed(() => [
   'cardBody',
   paddingMap[props.padding],
 ].join(' '))
+
+const cardStyle = computed(() => {
+  if (!props.accent || !resolvedAccentColor.value) {
+    return {}
+  }
+
+  const defaultColor = 'hsl(var(--agala-border))'
+  const accentWidth = '4px'
+  const defaultWidth = 'var(--agala-border-width, 1px)'
+
+  const sides: CardAccent[] = ['top', 'right', 'bottom', 'left']
+  const style: Record<string, string> = {}
+
+  sides.forEach((side) => {
+    const isAccent = props.accent === side
+    const capitalized = side.charAt(0).toUpperCase() + side.slice(1)
+    style[`border${capitalized}Width`] = isAccent ? accentWidth : defaultWidth
+    style[`border${capitalized}Color`] = isAccent ? resolvedAccentColor.value : defaultColor
+  })
+
+  return style
+})
 </script>
 
 <template>
-  <div :class="cls">
+  <div :class="cls" :style="cardStyle">
     <div v-if="$slots.header" class="cardHeader">
       <slot name="header" />
     </div>
