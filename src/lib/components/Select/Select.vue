@@ -53,7 +53,9 @@ const highlightedIdx = ref(0)
 /** Internal value for uncontrolled mode */
 const internalValue = ref<string | string[]>(props.multiple ? [] : '')
 
+const rowRef = ref<HTMLDivElement>()
 const triggerRef = ref<HTMLDivElement>()
+const floatingRef = ref<HTMLDivElement>()
 const searchRef = ref<HTMLInputElement>()
 const listRef = ref<HTMLUListElement>()
 const wrapperRef = ref<HTMLDivElement>()
@@ -128,6 +130,18 @@ const activeDescendant = computed(() => {
   const item = flatFiltered.value[highlightedIdx.value]
   if (item?.type === 'option') return `agala-opt-${highlightedIdx.value}`
   return undefined
+})
+
+/* ─── Fixed dropdown positioning (escapes overflow) ─── */
+const dropdownStyle = computed(() => {
+  if (!isOpen.value || !rowRef.value) return {}
+  const rect = rowRef.value.getBoundingClientRect()
+  return {
+    position: 'fixed' as const,
+    top: `${rect.bottom + 4}px`,
+    left: `${rect.left}px`,
+    width: `${rect.width}px`,
+  }
 })
 
 /* ─── Class helpers ─── */
@@ -353,19 +367,30 @@ function handleSearchKeyDown(e: KeyboardEvent) {
 watch(isOpen, (open) => {
   if (!open) return
   // Click outside
-  const handler = (e: MouseEvent) => {
-    if (!wrapperRef.value?.contains(e.target as Node)) {
+  const handleClick = (e: MouseEvent) => {
+    const target = e.target as Node
+    if (!wrapperRef.value?.contains(target) && !floatingRef.value?.contains(target)) {
       closeDropdown()
     }
   }
-  document.addEventListener('mousedown', handler)
+  // Close on any scroll outside the dropdown (modal scroll, page scroll, etc.)
+  const handleScroll = (e: Event) => {
+    if (!floatingRef.value?.contains(e.target as Node)) {
+      closeDropdown()
+    }
+  }
+  document.addEventListener('mousedown', handleClick)
+  window.addEventListener('scroll', handleScroll, true)
   // Focus search
   if (props.searchable) {
     nextTick(() => searchRef.value?.focus())
   }
   // Cleanup
   watch(isOpen, (newOpen) => {
-    if (!newOpen) document.removeEventListener('mousedown', handler)
+    if (!newOpen) {
+      document.removeEventListener('mousedown', handleClick)
+      window.removeEventListener('scroll', handleScroll, true)
+    }
   }, { once: true })
 })
 
@@ -382,7 +407,7 @@ watch(highlightedIdx, () => {
     class="wrapper"
     :class="[wrapperClass, $props.class]"
   >
-    <div :class="triggerRowCls">
+    <div ref="rowRef" :class="triggerRowCls">
       <div
         ref="triggerRef"
         role="combobox"
@@ -443,7 +468,7 @@ watch(highlightedIdx, () => {
       </span>
     </div>
 
-    <div v-if="isOpen" class="dropdown">
+    <div v-if="isOpen" ref="floatingRef" class="dropdown" :style="dropdownStyle">
       <div v-if="searchable" class="searchWrapper">
         <input
           ref="searchRef"
@@ -709,20 +734,16 @@ watch(highlightedIdx, () => {
 
 /* ── Dropdown ── */
 .dropdown {
-  position: absolute;
-  top: calc(100% + 4px);
-  left: 0;
-  right: 0;
   z-index: var(--agala-z-dropdown);
   display: flex;
   flex-direction: column;
+  max-height: min(24rem, 60vh);
   background-color: hsl(var(--agala-popover));
   color: hsl(var(--agala-popover-foreground));
   border: var(--agala-border-width) solid hsl(var(--agala-border));
   border-radius: calc(var(--agala-radius) - 2px);
   box-shadow: var(--agala-shadow-md);
   overflow: hidden;
-  max-height: min(24rem, 60vh);
 }
 
 /* Search */

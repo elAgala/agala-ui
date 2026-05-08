@@ -110,7 +110,7 @@ function handleKeyDown(e: KeyboardEvent) {
   border: var(--agala-border-width) solid hsl(var(--agala-border));
   border-radius: var(--agala-radius-lg);
   box-shadow: var(--agala-shadow-lg);
-  overflow: hidden;
+  overflow-y: auto;
   animation: dialogIn 200ms ease-out;
 }
 

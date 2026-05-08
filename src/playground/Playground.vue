@@ -61,6 +61,20 @@ const maxDate = ref('')
 
 /* ─── Modal state ─── */
 const basicOpen = ref(false)
+const selectInModalOpen = ref(false)
+
+/* ─── Select in modal test ─── */
+const gymMembers = [
+  { value: '1', label: 'Juan Pérez', subtitle: 'Plan: Premium' },
+  { value: '2', label: 'María García', subtitle: 'Plan: Basic' },
+  { value: '3', label: 'Carlos López', subtitle: 'Plan: Elite' },
+  { value: '4', label: 'Ana Rodríguez', subtitle: 'Plan: Premium' },
+  { value: '5', label: 'Pedro Sánchez', subtitle: 'Plan: Basic' },
+  { value: '6', label: 'Laura Torres', subtitle: 'Plan: Elite' },
+  { value: '7', label: 'Jorge Díaz', subtitle: 'Plan: Premium' },
+  { value: '8', label: 'Sofia Moreno', subtitle: 'Plan: Basic' },
+]
+const selectedMember = ref('')
 
 /* ─── Checkbox state ─── */
 const cbBasic = ref(false)
@@ -502,6 +516,44 @@ const AckDialog = {
         <template #footer="{ close }">
           <Button variant="outline" size="sm" @click="close">Close</Button>
           <Button size="sm" @click="basicOpen = false">Save Changes</Button>
+        </template>
+      </Modal>
+    </section>
+
+    <section>
+      <h2>Select in Modal (dropdown bug test)</h2>
+      <p class="muted" style="margin: 0 0 0.75rem; font-size: 0.875rem">
+        Open modal → scroll down → select dropdown. Dropdown should appear <strong>above the footer</strong>, not clipped.
+      </p>
+      <div class="row">
+        <Button @click="selectInModalOpen = true">Open Modal with Select</Button>
+      </div>
+      <Modal :open="selectInModalOpen" @close="selectInModalOpen = false" title="Asignar Instructor a Clase">
+        <!-- Lots of content to force scrolling -->
+        <p>Configuración de la clase de spinning del día lunes.</p>
+        <p class="muted">Este contenido está aquí para forzar que el modal tenga scroll y el Select quede cerca del footer.</p>
+        <div style="height: 150px; background: hsl(var(--agala-muted) / 0.3); border-radius: 8px; margin: 1rem 0; display: flex; align-items: center; justify-content: center; color: hsl(var(--agala-muted-foreground))">
+          Placeholder de contenido adicional
+        </div>
+        <p>Más contenido para asegurar que hay scroll...</p>
+        <p class="muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        <p>Aquí viene el Select cerca del footer:</p>
+        
+        <!-- Select near footer - this is the test case -->
+        <Select
+          v-model="selectedMember"
+          :options="gymMembers"
+          placeholder="Selecciona un instructor..."
+          searchable
+          style="margin-bottom: 1rem"
+        />
+        
+        <p class="muted">Más contenido después del select...</p>
+        <p>Otra línea de contenido para llenar el modal.</p>
+        
+        <template #footer="{ close }">
+          <Button variant="outline" size="sm" @click="close">Cancelar</Button>
+          <Button size="sm" @click="selectInModalOpen = false">Confirmar</Button>
         </template>
       </Modal>
     </section>
