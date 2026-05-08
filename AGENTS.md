@@ -7,7 +7,7 @@ Agata UI - Agent Instructions
 - **Tech stack:** Vue 3 + TypeScript + Vite + scoped CSS (NO CSS Modules)
 - **Style system:** Semantic CSS custom properties (design tokens) in HSL format, with built-in dark mode support
 - **Purpose:** Provide clean, reusable, fully accessible UI primitives
-- **Current phase:** Active development — 25+ components exist
+- **Current phase:** Active development — 26+ components exist
 
 ## Repository Structure
 

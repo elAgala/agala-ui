@@ -95,3 +95,6 @@ export type { DrawerProps, DrawerPlacement } from './components/Drawer'
 
 export { default as FileUpload } from './components/FileUpload/FileUpload.vue'
 export type { FileUploadProps, FileItem, FileStatus } from './components/FileUpload'
+
+export { default as DevEnvBanner } from './components/DevEnvBanner/DevEnvBanner.vue'
+export type { DevEnvBannerProps } from './components/DevEnvBanner'

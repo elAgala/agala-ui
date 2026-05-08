@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, h, watch, type VNode } from 'vue'
-import { Button, Input, FormField, Select, DatePicker, Modal, ModalProvider, modalManager, Badge, Checkbox, Toggle, Avatar, ToastProvider, toastManager, Textarea, DropdownMenu, Table, Tabs, Card, Tooltip, RadioGroup, Navbar, Sidebar, SidebarItem, SidebarGroup, Accordion, AccordionItem, Skeleton, Stat, EmptyState, Progress, Tag, Pagination, Drawer, FileUpload } from '../lib'
+import { Button, Input, FormField, Select, DatePicker, Modal, ModalProvider, modalManager, Badge, Checkbox, Toggle, Avatar, ToastProvider, toastManager, Textarea, DropdownMenu, Table, Tabs, Card, Tooltip, RadioGroup, Navbar, Sidebar, SidebarItem, SidebarGroup, Accordion, AccordionItem, Skeleton, Stat, EmptyState, Progress, Tag, Pagination, Drawer, FileUpload, DevEnvBanner } from '../lib'
 import AgalaIcon from '../lib/components/AgalaIcon/AgalaIcon.vue'
 import type { TableColumn, TabItem } from '../lib'
 
@@ -301,6 +301,16 @@ const AckDialog = {
       <h1>Agala UI</h1>
       <p>Elegant, modern, themable components. Toggle dark mode on your OS to switch palettes.</p>
     </header>
+
+    <!-- ─── DevEnvBanner ─── -->
+    <section>
+      <h2>DevEnvBanner</h2>
+      <p class="muted" style="margin: 0 0 0.75rem; font-size: 0.875rem">Close button removes the banner from the DOM. Refresh to reset.</p>
+      <div class="stack" style="gap: 0">
+        <DevEnvBanner />
+        <DevEnvBanner text="Custom: Preview environment — data resets daily." class="custom-banner" />
+      </div>
+    </section>
 
     <!-- ─── Button ─── -->
     <section>
