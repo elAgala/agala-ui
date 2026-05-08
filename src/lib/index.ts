@@ -15,6 +15,9 @@ export type { FormFieldProps } from './components/FormField'
 export { default as Select } from './components/Select/Select.vue'
 export type { SelectOption, SelectSize, SelectProps } from './components/Select'
 
+export { default as CreatableSelect } from './components/CreatableSelect/CreatableSelect.vue'
+export type { CreatableSelectOption, CreatableSelectProps } from './components/CreatableSelect'
+
 export { default as DatePicker } from './components/DatePicker/DatePicker.vue'
 export type { DatePickerProps, DatePickerSize } from './components/DatePicker'
 

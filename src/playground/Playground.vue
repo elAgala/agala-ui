@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, h, watch, type VNode } from 'vue'
-import { Button, Input, FormField, Select, DatePicker, Modal, ModalProvider, modalManager, Badge, Checkbox, Toggle, Avatar, ToastProvider, toastManager, Textarea, DropdownMenu, Table, Tabs, Card, Tooltip, RadioGroup, Navbar, Sidebar, SidebarItem, SidebarGroup, Accordion, AccordionItem, Skeleton, Stat, EmptyState, Progress, Tag, Pagination, Drawer, FileUpload, DevEnvBanner } from '../lib'
+import { Button, Input, FormField, Select, CreatableSelect, DatePicker, Modal, ModalProvider, modalManager, Badge, Checkbox, Toggle, Avatar, ToastProvider, toastManager, Textarea, DropdownMenu, Table, Tabs, Card, Tooltip, RadioGroup, Navbar, Sidebar, SidebarItem, SidebarGroup, Accordion, AccordionItem, Skeleton, Stat, EmptyState, Progress, Tag, Pagination, Drawer, FileUpload, DevEnvBanner } from '../lib'
 import AgalaIcon from '../lib/components/AgalaIcon/AgalaIcon.vue'
 import type { TableColumn, TabItem } from '../lib'
 
@@ -53,6 +53,37 @@ const singleUser = ref('')
 const multiTags = ref<string[]>([])
 const searchCountry = ref('')
 const maxTags = ref<string[]>([])
+
+/* ─── CreatableSelect state ─── */
+const creatableTags = ref<string[]>([])
+const creatableSearch = ref('')
+const emptyTags = ref<string[]>([])
+const emptyOptions = ref<Array<{value: string, label: string}>>([])
+
+const SKILLS = ref([
+  { value: 'skill-js', label: 'JavaScript' },
+  { value: 'skill-ts', label: 'TypeScript' },
+  { value: 'skill-vue', label: 'Vue.js' },
+  { value: 'skill-react', label: 'React' },
+  { value: 'skill-node', label: 'Node.js' },
+  { value: 'skill-python', label: 'Python' },
+])
+
+function handleCreateSkill(text: string) {
+  const newId = `skill-${Date.now()}`
+  SKILLS.value.push({ value: newId, label: text })
+  creatableTags.value = [...creatableTags.value, newId]
+}
+
+function handleSearchSkill(q: string) {
+  creatableSearch.value = q
+}
+
+function handleCreateEmpty(text: string) {
+  const newId = `empty-${Date.now()}`
+  emptyOptions.value.push({ value: newId, label: text })
+  emptyTags.value = [...emptyTags.value, newId]
+}
 
 /* ─── DatePicker state ─── */
 const pickedDate = ref('')
@@ -463,6 +494,40 @@ const AckDialog = {
       <div class="row" style="gap: 0.5rem; max-width: 400px; border: 1px dashed hsl(var(--agala-border)); padding: 0.5rem; border-radius: var(--agala-radius)">
         <Select :options="USERS" placeholder="180px" style="width: 180px" clearable />
         <Select :options="TAGS" placeholder="Flex:1" multiple clearable style="flex: 1" />
+      </div>
+    </section>
+
+    <!-- ─── CreatableSelect ─── -->
+    <section>
+      <h2>CreatableSelect — Basic</h2>
+      <p class="muted" style="margin: 0 0 0.75rem; font-size: 0.875rem">
+        Type to filter. When no match exists and creatable is true, a "Crear" option appears at the top.
+        Press Enter on it to emit the <code>create</code> event with the typed text.
+      </p>
+      <div class="stack" style="max-width: 400px">
+        <CreatableSelect
+          v-model="creatableTags"
+          :options="SKILLS"
+          placeholder="Pick or create skills…"
+          @create="handleCreateSkill"
+          @search="handleSearchSkill"
+        />
+        <p class="muted" style="font-size: 0.75rem; margin: 0">
+          Selected: {{ creatableTags.join(', ') || '—' }} · Last search query: {{ creatableSearch || '—' }}
+        </p>
+      </div>
+    </section>
+
+    <section>
+      <h2>CreatableSelect — Disabled + Empty</h2>
+      <div class="stack" style="max-width: 400px">
+        <CreatableSelect :options="SKILLS" placeholder="Disabled select" disabled />
+        <CreatableSelect
+          v-model="emptyTags"
+          :options="emptyOptions"
+          placeholder="No options available"
+          @create="handleCreateEmpty"
+        />
       </div>
     </section>
 
