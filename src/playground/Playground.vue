@@ -560,6 +560,7 @@ const AckDialog = {
         <DatePicker v-model="pickedDate" size="lg" placeholder="Large" />
       </div>
       <p class="muted" style="margin-top: 0.5rem; font-size: 0.875rem">Selected: {{ pickedDate || '—' }}</p>
+      <p class="muted" style="margin-top: 0.25rem; font-size: 0.875rem">Click the header to switch between day, month, and year views for fast navigation.</p>
     </section>
 
     <section>
