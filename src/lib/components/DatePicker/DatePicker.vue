@@ -169,11 +169,9 @@ function selectYear(year: number) {
 function yearCellCls(year: number): string {
   const selected = viewYear.value === year
   const disabled = isYearDisabled(year)
-  const today = new Date().getFullYear() === year
   return [
     'yearCell',
     selected ? 'yearCellSelected' : undefined,
-    today ? 'yearCellToday' : undefined,
     disabled ? 'yearCellDisabled' : undefined,
   ].filter(Boolean).join(' ')
 }
@@ -784,10 +782,6 @@ watch(isOpen, (open) => {
   cursor: default;
   opacity: 0.35;
   pointer-events: none;
-}
-.yearCellToday {
-  font-weight: var(--agala-font-weight-semibold);
-  color: hsl(var(--agala-primary));
 }
 
 .navBtn {
