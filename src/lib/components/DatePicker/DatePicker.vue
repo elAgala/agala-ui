@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, nextTick } from 'vue'
 import { AgalaIcon } from '../AgalaIcon'
+import { useDropdownPosition } from '../../composables/useDropdownPosition'
 import type { DatePickerSize } from './types'
 
 const props = withDefaults(defineProps<{
@@ -40,6 +41,10 @@ const viewMonth = ref(new Date().getMonth())
 const focusedDate = ref(props.modelValue || todayISO())
 const hoverDay = ref('')
 const wrapperRef = ref<HTMLDivElement>()
+const triggerRef = ref<HTMLDivElement>()
+const floatingRef = ref<HTMLDivElement>()
+
+const { dropdownStyle, recompute } = useDropdownPosition(triggerRef)
 
 /* Computed */
 const displayValue = computed(() => {
@@ -203,6 +208,7 @@ function open() {
     focusedDate.value = todayISO()
   }
   nextTick(() => {
+    recompute()
     const el = wrapperRef.value?.querySelector('[tabindex="0"]') as HTMLElement | null
     el?.focus()
   })
@@ -321,15 +327,29 @@ function cellCls(day: DayCell): string {
   ].filter(Boolean).join(' ')
 }
 
-/* click outside */
+/* click outside + scroll close + resize reposition */
 watch(isOpen, (open) => {
   if (!open) return
-  const handler = (e: MouseEvent) => {
-    if (!wrapperRef.value?.contains(e.target as Node)) close()
+  const handleClick = (e: MouseEvent) => {
+    if (!wrapperRef.value?.contains(e.target as Node) && !floatingRef.value?.contains(e.target as Node)) {
+      close()
+    }
   }
-  document.addEventListener('mousedown', handler)
+  const handleScroll = (e: Event) => {
+    if (!floatingRef.value?.contains(e.target as Node)) {
+      close()
+    }
+  }
+  const handleResize = () => recompute()
+  document.addEventListener('mousedown', handleClick)
+  window.addEventListener('scroll', handleScroll, true)
+  window.addEventListener('resize', handleResize)
   watch(isOpen, (newOpen) => {
-    if (!newOpen) document.removeEventListener('mousedown', handler)
+    if (!newOpen) {
+      document.removeEventListener('mousedown', handleClick)
+      window.removeEventListener('scroll', handleScroll, true)
+      window.removeEventListener('resize', handleResize)
+    }
   }, { once: true })
 })
 </script>
@@ -340,7 +360,7 @@ watch(isOpen, (open) => {
     class="wrapper"
     :class="$props.class"
   >
-    <div :class="triggerRowCls" @click="handleTriggerClick" @keydown="handleTriggerKeyDown" tabindex="0" role="combobox" :aria-expanded="isOpen" aria-haspopup="grid" aria-controls="agala-date-grid" :aria-disabled="disabled">
+    <div ref="triggerRef" :class="triggerRowCls" @click="handleTriggerClick" @keydown="handleTriggerKeyDown" tabindex="0" role="combobox" :aria-expanded="isOpen" aria-haspopup="grid" aria-controls="agala-date-grid" :aria-disabled="disabled">
       <span class="triggerLabel">
         <AgalaIcon name="calendar" :size="14" />
         <span :class="displayValue ? 'triggerValue' : 'triggerPlaceholder'">
@@ -352,7 +372,7 @@ watch(isOpen, (open) => {
       </span>
     </div>
 
-    <div v-if="isOpen" class="dropdown" id="agala-date-grid" role="grid" aria-label="Calendar" @keydown="handleGridKeyDown">
+    <div v-if="isOpen" ref="floatingRef" class="dropdown" :style="dropdownStyle" id="agala-date-grid" role="grid" aria-label="Calendar" @keydown="handleGridKeyDown">
       <div class="header">
         <button type="button" class="navBtn" @click="prevMonth" aria-label="Previous month">
           <AgalaIcon name="chevron" :size="14" />
@@ -490,9 +510,6 @@ watch(isOpen, (open) => {
 
 /* ── Dropdown ── */
 .dropdown {
-  position: absolute;
-  top: calc(100% + 4px);
-  left: 0;
   z-index: var(--agala-z-dropdown);
   display: flex;
   flex-direction: column;

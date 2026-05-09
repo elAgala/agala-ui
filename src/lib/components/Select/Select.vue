@@ -6,6 +6,7 @@ import {
   nextTick,
 } from 'vue'
 import { AgalaIcon } from '../AgalaIcon'
+import { useDropdownPosition } from '../../composables/useDropdownPosition'
 import type { SelectOption, SelectSize } from './types'
 
 type FlatItem =
@@ -133,16 +134,7 @@ const activeDescendant = computed(() => {
 })
 
 /* ─── Fixed dropdown positioning (escapes overflow) ─── */
-const dropdownStyle = computed(() => {
-  if (!isOpen.value || !rowRef.value) return {}
-  const rect = rowRef.value.getBoundingClientRect()
-  return {
-    position: 'fixed' as const,
-    top: `${rect.bottom + 4}px`,
-    left: `${rect.left}px`,
-    width: `${rect.width}px`,
-  }
-})
+const { dropdownStyle, recompute } = useDropdownPosition(rowRef)
 
 /* ─── Class helpers ─── */
 const triggerRowCls = computed(() => [
@@ -213,6 +205,7 @@ function openDropdown() {
   isOpen.value = true
   query.value = ''
   highlightedIdx.value = 0
+  nextTick(() => recompute())
 }
 
 function findNextIndex(start: number, dir: 1 | -1): number {
@@ -379,8 +372,10 @@ watch(isOpen, (open) => {
       closeDropdown()
     }
   }
+  const handleResize = () => recompute()
   document.addEventListener('mousedown', handleClick)
   window.addEventListener('scroll', handleScroll, true)
+  window.addEventListener('resize', handleResize)
   // Focus search
   if (props.searchable) {
     nextTick(() => searchRef.value?.focus())
@@ -390,6 +385,7 @@ watch(isOpen, (open) => {
     if (!newOpen) {
       document.removeEventListener('mousedown', handleClick)
       window.removeEventListener('scroll', handleScroll, true)
+      window.removeEventListener('resize', handleResize)
     }
   }, { once: true })
 })
