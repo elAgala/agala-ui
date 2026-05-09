@@ -2,11 +2,16 @@
 name: agala-ui
 description: >
   Expert knowledge of @el-agala/ui — a zero-dependency Vue 3 component library
-  with 25+ components, HSL design tokens, theming, and accessibility.
-  Use when building UI with Agala components, theming, or referencing the design system.
+  with 28+ components, HSL design tokens, theming, and accessibility.
+  Auto-triggered when the user mentions "agala", "el-agala/ui", "agala ui",
+  or asks to build UI with these components.
 ---
 
 # Agala UI — Complete Component Reference
+
+> Copy-paste this entire block into any AI assistant to teach it how to use `@el-agala/ui`.
+
+---
 
 ## Overview
 
@@ -15,10 +20,11 @@ description: >
 **Key principles:**
 - Scoped CSS in `.vue` SFCs only
 - HSL design tokens (`--agala-primary`, etc.) via `tokens.css`
-- Dark mode via `prefers-color-scheme: dark`
+- Dark mode via `@media (prefers-color-scheme: dark)`
 - Custom themes via `data-theme="forja"` attribute on `<html>`
 - Icon system: internal `AgalaIcon` with `name` string prop (40+ icons, zero icon deps)
 - Accessibility: focus rings, ARIA, keyboard nav
+- Composables: `useSelectFilter`, `useChipDisplay`, `useKeyboardNav`, `useDropdownPosition`
 
 ---
 
@@ -34,16 +40,17 @@ npm install @el-agala/ui vue
 import { createApp } from 'vue'
 import App from './App.vue'
 
-// CSS is auto-injected by the build, but for SSR or Vite optimization you may import explicitly:
-// import '@el-agala/ui/dist/index.css'
-
 createApp(App).mount('#app')
+```
+
+**Optional CSS reset:**
+```ts
+import '@el-agala/ui/reset.css'
 ```
 
 **For imperative modals & toasts — add providers once at root:**
 
 ```vue
-<!-- App.vue -->
 <template>
   <ModalProvider />
   <ToastProvider />
@@ -75,6 +82,8 @@ import { ModalProvider, ToastProvider } from '@el-agala/ui'
   --agala-success: 142 71% 45%;
   --agala-warning: 43 96% 50%;
   --agala-radius: 0.5rem;
+  --agala-z-modal: 1000;
+  --agala-z-dropdown: 1050;
 }
 ```
 
@@ -131,11 +140,41 @@ html[data-theme="forja"] {
 - `options`: `{ value, label, subtitle?, group?, disabled? }[]`
 - `multiple`, `searchable`, `clearable`, `maxSelections`
 - `size`: `sm` | `md` | `lg`
+- Dropdown teleports to body to escape modal stacking context
+- Uses `useDropdownPosition` with default `width: 'trigger'`
+
+### CreatableSelect
+```vue
+<CreatableSelect
+  v-model="selectedTags"
+  :options="[{ value: 'js', label: 'JavaScript' }]"
+  id-key="value"
+  label-key="label"
+  placeholder="Search or create..."
+  :creatable="true"
+  :debounce="300"
+  @create="handleCreate"
+  @search="handleSearch"
+/>
+```
+- Multi-select with chips
+- Type to filter existing options
+- Shows "Crear 'texto'" option when no match and `creatable` is true
+- Press Enter to create → emits `@create` with the text (parent assigns ID)
+- **Auto-selects on create**: newly created text is automatically added to selected values
+- Backspace removes last chip
+- `idKey`: property for value (default: `'value'`)
+- `labelKey`: property for display (default: `'label'`)
+- `debounce`: ms delay for `@search` emit (default: 300)
+- `maxDisplayed`: max chips shown before "+N more" (default: 3)
+- Uses `useDropdownPosition` with default `width: 'trigger'`
 
 ### DatePicker
 ```vue
 <DatePicker v-model="date" placeholder="Pick a date" size="md" clearable min="2024-01-01" max="2024-12-31" />
 ```
+- Dropdown teleports to body
+- Uses `useDropdownPosition` with `width: 'auto'` so calendar expands to `280px` instead of being clipped to trigger width
 
 ### Badge
 ```vue
@@ -204,12 +243,17 @@ html[data-theme="forja"] {
 
 ### Card
 ```vue
-<Card padding="md">
+<Card padding="md" accent="top" accent-color="primary">
   <template #header>Title</template>
   <p>Content</p>
   <template #footer><Button>Action</Button></template>
 </Card>
 ```
+- `padding`: `none` | `sm` | `md` | `lg`
+- `accent`: `top` | `left` | `right` | `bottom` — position of colored border segment
+- `accentColor`: semantic token (`primary`, `secondary`, `muted`, `danger`, `warning`, `success`) or raw CSS color
+- Accented side gets 4px solid color, other sides keep 1px default border
+- `class` prop for consumer overrides
 
 ### Tooltip
 ```vue
@@ -368,6 +412,88 @@ toastManager.show({
 - `SidebarItem`: `icon`, `label`, `active`, `badge`, `badgeVariant`, `dot`, `dotVariant`, `disabled`
 - `SidebarGroup`: `label`
 
+### DevEnvBanner
+```vue
+<DevEnvBanner text="ATENCIÓN: Esto es un ambiente inestable de desarrollo" />
+```
+- Simple dismissible warning banner
+- Uses warning theme colors
+- Close button removes banner from DOM (no parent state needed)
+- `text` prop to override default message
+- `class` prop for consumer overrides
+- Use as sibling of `<Navbar>` in app layout
+
+---
+
+## Composables (Reusable)
+
+Available at `src/lib/composables/`:
+
+### useSelectFilter
+Filters options by query text, case-insensitive.
+```ts
+import { useSelectFilter } from '@el-agala/ui'
+// Used internally by Select and CreatableSelect
+```
+
+### useChipDisplay
+Renders chips from selected values + options.
+```ts
+import { useChipDisplay } from '@el-agala/ui'
+// Used internally by Select and CreatableSelect
+```
+
+### useKeyboardNav
+Arrow/Enter/Escape/Backspace/Tab/Home/End handlers.
+```ts
+import { useKeyboardNav } from '@el-agala/ui'
+// Used internally by Select and CreatableSelect
+```
+
+### useDropdownPosition
+Fixed positioning with scroll handling (teleports to body).
+
+```ts
+import { useDropdownPosition } from '@el-agala/ui'
+
+const { dropdownStyle, recompute } = useDropdownPosition(triggerRef, {
+  width: 'trigger' // 'trigger' | 'auto'
+})
+```
+
+**Options:**
+- `width`: `'trigger'` (default) — sets `width: ${rect.width}px` on dropdown to match trigger
+- `width`: `'auto'` — skips width, lets CSS handle it (useful for DatePicker where calendar needs 280px)
+
+**Usage pattern inside component:**
+```ts
+const { dropdownStyle, recompute } = useDropdownPosition(triggerRef, { width: 'auto' })
+
+// On open — must wrap recompute() in requestAnimationFrame inside nextTick
+// so getBoundingClientRect() reads after browser layout/composite phase
+watch(isOpen, async (open) => {
+  if (open) {
+    await nextTick()
+    requestAnimationFrame(() => recompute())
+    // focus with preventScroll to avoid browser auto-scroll to fixed-position element
+    searchInputRef.value?.focus({ preventScroll: true })
+    window.addEventListener('scroll', closeOnScroll, true)
+    window.addEventListener('resize', recompute)
+  } else {
+    window.removeEventListener('scroll', closeOnScroll, true)
+    window.removeEventListener('resize', recompute)
+  }
+})
+```
+
+**Returns:** `{ dropdownStyle: Ref<CSSProperties>, recompute: () => void }`
+
+**Critical rules:**
+- Never use `computed()` for `getBoundingClientRect()` — element reference identity is stable, so Vue caches stale coordinates
+- Always call `recompute()` imperatively after `nextTick()` + `requestAnimationFrame()`
+- Call `recompute()` on `resize` events while dropdown is open
+- `position: fixed` teleported to `<body>` is relative to viewport UNLESS an ancestor has `transform`, `perspective`, or `filter`
+
 ---
 
 ## Imperative Patterns
@@ -428,7 +554,7 @@ toastManager.show({
 
 2. **ModalProvider / ToastProvider** — Must be mounted once at app root. Imperative modals/toasts won't work without them.
 
-3. **Teleports** — Modal, Drawer, Toast, and DropdownMenu use `<Teleport to="body">`. No z-index issues.
+3. **Teleports** — Modal, Drawer, Toast, DropdownMenu, and Select/DatePicker/CreatableSelect dropdowns use `<Teleport to="body">`. `--agala-z-dropdown: 1050` > `--agala-z-modal: 1000` ensures dropdowns stack above modal backdrop.
 
 4. **Type imports** — Use `import type { ... }` due to `verbatimModuleSyntax`.
 
@@ -440,6 +566,18 @@ toastManager.show({
 
 8. **v-model** — Most inputs support `v-model`. For uncontrolled usage, use `:model-value` + `@update:model-value`.
 
+9. **Select in Modals** — Select dropdowns are teleported to body to escape modal overflow clipping. Works out of the box via `useDropdownPosition`.
+
+10. **CreatableSelect ID handling** — Component emits `@create` with text only. Parent is responsible for assigning IDs and pushing to options array. Component auto-selects newly created text.
+
+11. **Dropdown positioning** — Never use `computed()` for `getBoundingClientRect()`. Element ref identity is stable → Vue caches stale coordinates. Use `ref` + imperative `recompute()` after `nextTick()` + `requestAnimationFrame()`.
+
+12. **Dropdown width** — `useDropdownPosition` with `width: 'trigger'` sets inline `width: ${rect.width}px`. For content wider than trigger (DatePicker calendar), use `width: 'auto'` so CSS `width: 280px` applies.
+
+13. **Focus scroll** — When focusing teleported `position: fixed` elements, always use `focus({ preventScroll: true })` to prevent browser auto-scroll.
+
+14. **Containing blocks** — `position: fixed` is relative to viewport UNLESS an ancestor has `transform`, `perspective`, or `filter`. If forja-app or consumer applies these to `<body>`/modal ancestors, dropdown coordinates will be wrong.
+
 ---
 
 ## File Structure (consumer view)
@@ -449,6 +587,7 @@ node_modules/@el-agala/ui/
   dist/
     agala-ui.es.js     ← ESM bundle (CSS injected)
     index.d.ts         ← TypeScript declarations
+    reset.css          ← Optional global CSS reset
 ```
 
 ```ts
