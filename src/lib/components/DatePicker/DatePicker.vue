@@ -415,6 +415,11 @@ function cellCls(day: DayCell): string {
 watch(isYearPanelOpen, (open) => {
   if (open) {
     document.addEventListener('mousedown', closeYearPanelOnClickOutside)
+    nextTick(() => {
+      const panel = wrapperRef.value?.querySelector('.yearPanel') as HTMLElement | null
+      const selectedBtn = panel?.querySelector('.yearCellSelected') as HTMLElement | null
+      selectedBtn?.scrollIntoView({ block: 'center', behavior: 'auto' })
+    })
   } else {
     document.removeEventListener('mousedown', closeYearPanelOnClickOutside)
   }
@@ -767,6 +772,13 @@ watch(isOpen, (open) => {
   background-color: hsl(var(--agala-primary));
   color: hsl(var(--agala-primary-foreground));
   font-weight: var(--agala-font-weight-medium);
+}
+.yearCellSelected:hover {
+  background-color: hsl(var(--agala-primary) / 0.9);
+}
+.yearCell:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px hsl(var(--agala-ring) / 0.3);
 }
 .yearCellDisabled {
   cursor: default;
