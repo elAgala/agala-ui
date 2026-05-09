@@ -1,5 +1,7 @@
 import './tokens.css'
 
+export { useMediaQuery } from './composables/useMediaQuery'
+
 export { AgalaIcon } from './components/AgalaIcon'
 export type { IconName } from './components/AgalaIcon/types'
 
@@ -66,7 +68,9 @@ export type { RadioGroupProps, RadioOption, RadioOrientation } from './component
 export { default as Sidebar } from './components/Sidebar/Sidebar.vue'
 export { default as SidebarItem } from './components/Sidebar/SidebarItem.vue'
 export { default as SidebarGroup } from './components/Sidebar/SidebarGroup.vue'
+export { default as SidebarToggle } from './components/SidebarToggle/SidebarToggle.vue'
 export type { SidebarProps, SidebarItemProps, SidebarGroupProps, SidebarItemBadgeVariant, SidebarItemDotVariant } from './components/Sidebar'
+export type { SidebarToggleProps } from './components/SidebarToggle'
 
 export { default as Navbar } from './components/Navbar/Navbar.vue'
 export type { NavbarProps } from './components/Navbar'

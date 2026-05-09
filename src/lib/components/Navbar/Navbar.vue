@@ -44,6 +44,15 @@ const props = defineProps<NavbarProps>()
   font-size: var(--agala-font-size-lg);
   color: hsl(var(--agala-foreground));
   white-space: nowrap;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 639px) {
+  .navbarBrand {
+    flex-shrink: 1;
+  }
 }
 
 .navbarNav {

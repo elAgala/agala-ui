@@ -1,18 +1,21 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, inject, unref } from 'vue'
 import type { SidebarGroupProps } from './types'
 
 const props = defineProps<SidebarGroupProps>()
 
+const isCollapsed = computed(() => unref(inject('sidebar-collapsed', false)))
+
 const cls = computed(() => [
   'sidebarGroup',
+  isCollapsed.value ? 'sidebarGroup--collapsed' : undefined,
   props.class,
 ].filter(Boolean).join(' '))
 </script>
 
 <template>
   <div :class="cls">
-    <span v-if="label" class="sidebarGroup__label">{{ label }}</span>
+    <span v-if="label && !isCollapsed" class="sidebarGroup__label">{{ label }}</span>
     <div class="sidebarGroup__content">
       <slot />
     </div>
@@ -25,6 +28,10 @@ const cls = computed(() => [
   flex-direction: column;
   gap: 0.125rem;
   padding: 0.5rem 0;
+}
+
+.sidebarGroup--collapsed {
+  align-items: center;
 }
 
 .sidebarGroup__label {
@@ -43,5 +50,9 @@ const cls = computed(() => [
   display: flex;
   flex-direction: column;
   gap: 0.125rem;
+}
+
+.sidebarGroup--collapsed .sidebarGroup__content {
+  align-items: center;
 }
 </style>

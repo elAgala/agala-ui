@@ -86,9 +86,10 @@ onUnmounted(() => {
             tabindex="-1"
             @keydown="onKeydown"
           >
-            <div v-if="$slots.header || title" class="drawer__header">
+            <div v-if="$slots.header || title || dismissible" class="drawer__header">
               <slot name="header">
-                <h2 class="drawer__title">{{ title }}</h2>
+                <h2 v-if="title" class="drawer__title">{{ title }}</h2>
+                <span v-else />
               </slot>
               <button
                 v-if="dismissible"

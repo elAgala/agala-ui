@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, inject, unref } from 'vue'
 import AgalaIcon from '../AgalaIcon/AgalaIcon.vue'
+import Tooltip from '../Tooltip/Tooltip.vue'
 import type { SidebarItemProps } from './types'
 
 const props = withDefaults(defineProps<SidebarItemProps>(), {
@@ -12,22 +13,27 @@ const emit = defineEmits<{
   click: [event: MouseEvent]
 }>()
 
+const isCollapsed = computed(() => unref(inject('sidebar-collapsed', false)))
+
 const cls = computed(() => [
   'sidebarItem',
   props.active && 'sidebarItem--active',
   props.disabled && 'sidebarItem--disabled',
+  isCollapsed.value ? 'sidebarItem--collapsed' : undefined,
   props.class,
 ].filter(Boolean).join(' '))
 
 const badgeCls = computed(() => [
   'sidebarItem__badge',
   `sidebarItem__badge--${props.badgeVariant}`,
-].join(' '))
+  isCollapsed.value ? 'sidebarItem__badge--collapsed' : undefined,
+].filter(Boolean).join(' '))
 
 const dotCls = computed(() => [
   'sidebarItem__dot',
   `sidebarItem__dot--${props.dotVariant}`,
-].join(' '))
+  isCollapsed.value ? 'sidebarItem__dot--collapsed' : undefined,
+].filter(Boolean).join(' '))
 
 function onClick(e: MouseEvent) {
   if (!props.disabled) emit('click', e)
@@ -35,7 +41,41 @@ function onClick(e: MouseEvent) {
 </script>
 
 <template>
+  <Tooltip
+    v-if="isCollapsed && label"
+    placement="right"
+    :delay="0"
+    :content="label"
+    block
+  >
+    <button
+      type="button"
+      :class="cls"
+      :disabled="disabled"
+      :aria-current="active ? 'page' : undefined"
+      @click="onClick"
+    >
+      <span v-if="$slots.icon" class="sidebarItem__icon">
+        <slot name="icon" />
+      </span>
+      <span v-else-if="icon" class="sidebarItem__icon">
+        <AgalaIcon :name="icon" :size="18" />
+      </span>
+
+      <span class="sidebarItem__label">
+        <slot>{{ label }}</slot>
+      </span>
+
+      <span v-if="badge !== undefined" :class="badgeCls">
+        <span v-if="!isCollapsed">{{ badge }}</span>
+      </span>
+
+      <span v-if="dot" :class="dotCls" aria-hidden="true" />
+    </button>
+  </Tooltip>
+
   <button
+    v-else
     type="button"
     :class="cls"
     :disabled="disabled"
@@ -111,6 +151,11 @@ function onClick(e: MouseEvent) {
   pointer-events: none;
 }
 
+.sidebarItem--collapsed {
+  justify-content: center;
+  padding: 0.5rem;
+}
+
 .sidebarItem__icon {
   display: inline-flex;
   align-items: center;
@@ -135,6 +180,10 @@ function onClick(e: MouseEvent) {
   text-overflow: ellipsis;
 }
 
+.sidebarItem--collapsed .sidebarItem__label {
+  display: none;
+}
+
 .sidebarItem__badge {
   flex-shrink: 0;
   display: inline-flex;
@@ -148,6 +197,17 @@ function onClick(e: MouseEvent) {
   font-weight: var(--agala-font-weight-semibold);
   line-height: 1;
   letter-spacing: 0.02em;
+}
+
+.sidebarItem__badge--collapsed {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.25rem;
+  min-width: 0.5rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  padding: 0;
+  border-radius: 50%;
 }
 
 .sidebarItem__badge--default {
@@ -175,6 +235,12 @@ function onClick(e: MouseEvent) {
   width: 6px;
   height: 6px;
   border-radius: 50%;
+}
+
+.sidebarItem__dot--collapsed {
+  position: absolute;
+  bottom: 0.25rem;
+  right: 0.25rem;
 }
 
 .sidebarItem__dot--primary {

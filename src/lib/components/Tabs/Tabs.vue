@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
+import { useMediaQuery } from '../../composables/useMediaQuery'
 import type { TabsProps, TabItem } from './types'
 
 let _id = 0
@@ -11,6 +12,40 @@ const emit = defineEmits<{
 }>()
 
 const uid = `tabs-${++_id}`
+
+const { matches: isMobile } = useMediaQuery('(max-width: 639px)')
+const activeTabRef = ref<HTMLElement | null>(null)
+const tabListRef = ref<HTMLElement | null>(null)
+
+function setActiveTabRef(el: Element | null) {
+  activeTabRef.value = el as HTMLElement | null
+}
+const hasOverflow = ref(false)
+
+function checkOverflow() {
+  if (tabListRef.value) {
+    hasOverflow.value = tabListRef.value.scrollWidth > tabListRef.value.clientWidth
+  }
+}
+
+onMounted(() => {
+  checkOverflow()
+  window.addEventListener('resize', checkOverflow)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', checkOverflow)
+})
+
+watch(() => props.tabs, checkOverflow, { deep: true })
+
+watch(() => props.modelValue, () => {
+  if (isMobile.value) {
+    nextTick(() => {
+      activeTabRef.value?.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' })
+    })
+  }
+})
 
 const enabledTabs = computed(() => props.tabs.filter(t => !t.disabled))
 
@@ -52,7 +87,12 @@ function tabCls(tab: TabItem) {
 
 <template>
   <div :class="['tabs', props.class].filter(Boolean).join(' ')">
-    <div class="tabList" role="tablist" aria-orientation="horizontal">
+    <div
+      ref="tabListRef"
+      :class="['tabList', { 'tabList--scrollable': hasOverflow }]"
+      role="tablist"
+      aria-orientation="horizontal"
+    >
       <button
         v-for="tab in tabs"
         :key="tab.value"
@@ -62,6 +102,7 @@ function tabCls(tab: TabItem) {
         :disabled="tab.disabled"
         :tabindex="modelValue === tab.value ? 0 : -1"
         :class="tabCls(tab)"
+        :ref="modelValue === tab.value ? setActiveTabRef : undefined"
         role="tab"
         type="button"
         @click="select(tab)"
@@ -147,5 +188,26 @@ function tabCls(tab: TabItem) {
   outline: 2px solid hsl(var(--agala-ring));
   outline-offset: 2px;
   border-radius: var(--agala-radius-sm);
+}
+
+@media (max-width: 639px) {
+  .tabList {
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+  }
+
+  .tabList::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tabList.tabList--scrollable {
+    mask-image: linear-gradient(to right, transparent, black 0.75rem, black calc(100% - 0.75rem), transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 0.75rem, black calc(100% - 0.75rem), transparent);
+  }
+
+  .tabBtn {
+    flex-shrink: 0;
+  }
 }
 </style>

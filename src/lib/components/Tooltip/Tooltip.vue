@@ -7,6 +7,7 @@ let _id = 0
 const props = withDefaults(defineProps<TooltipProps>(), {
   placement: 'top',
   delay: 300,
+  block: false,
 })
 
 const tooltipId = `agala-tooltip-${++_id}`
@@ -26,7 +27,7 @@ function hide() {
 <template>
   <div
     class="tooltipWrapper"
-    :class="props.class"
+    :class="[props.class, block ? 'tooltipWrapper--block' : undefined]"
     @mouseenter="show"
     @mouseleave="hide"
     @focusin="show"
@@ -54,6 +55,11 @@ function hide() {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+}
+
+.tooltipWrapper--block {
+  display: flex;
+  width: 100%;
 }
 
 .tooltip {

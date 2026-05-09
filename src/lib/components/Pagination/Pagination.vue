@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import AgalaIcon from '../AgalaIcon/AgalaIcon.vue'
+import { useMediaQuery } from '../../composables/useMediaQuery'
 import type { PaginationProps } from './types'
 
 const props = withDefaults(defineProps<PaginationProps>(), {
@@ -12,6 +13,8 @@ const props = withDefaults(defineProps<PaginationProps>(), {
 const emit = defineEmits<{
   'update:modelValue': [page: number]
 }>()
+
+const { matches: isMobile } = useMediaQuery('(max-width: 639px)')
 
 const totalPages = computed(() => Math.max(1, Math.ceil(props.total / props.pageSize)))
 const currentPage = computed(() => Math.min(props.modelValue, totalPages.value))
@@ -75,20 +78,27 @@ const pages = computed(() => {
       <AgalaIcon name="chevron-left" :size="14" />
     </button>
 
-    <button
-      v-for="(page, idx) in pages"
-      :key="`${page}-${idx}`"
-      type="button"
-      class="pagination__page"
-      :class="{ 'pagination__page--active': page === currentPage, 'pagination__page--ellipsis': page === 'ellipsis' }"
-      :disabled="page === 'ellipsis'"
-      :aria-current="page === currentPage ? 'page' : undefined"
-      :aria-label="page === 'ellipsis' ? undefined : `Page ${page}`"
-      @click="page !== 'ellipsis' && goTo(page as number)"
-    >
-      <span v-if="page === 'ellipsis'">…</span>
-      <span v-else>{{ page }}</span>
-    </button>
+    <template v-if="isMobile">
+      <span class="pagination__status" aria-live="polite">
+        Page {{ currentPage }} of {{ totalPages }}
+      </span>
+    </template>
+    <template v-else>
+      <button
+        v-for="(page, idx) in pages"
+        :key="`${page}-${idx}`"
+        type="button"
+        class="pagination__page"
+        :class="{ 'pagination__page--active': page === currentPage, 'pagination__page--ellipsis': page === 'ellipsis' }"
+        :disabled="page === 'ellipsis'"
+        :aria-current="page === currentPage ? 'page' : undefined"
+        :aria-label="page === 'ellipsis' ? undefined : `Page ${page}`"
+        @click="page !== 'ellipsis' && goTo(page as number)"
+      >
+        <span v-if="page === 'ellipsis'">…</span>
+        <span v-else>{{ page }}</span>
+      </button>
+    </template>
 
     <button
       type="button"
@@ -158,5 +168,21 @@ const pages = computed(() => {
 .pagination__page:disabled {
   opacity: 0.4;
   cursor: not-allowed;
+}
+
+@media (max-width: 639px) {
+  .pagination__page {
+    display: none;
+  }
+
+  .pagination__status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 6rem;
+    font-size: var(--agala-font-size-sm);
+    font-weight: var(--agala-font-weight-medium);
+    color: hsl(var(--agala-muted-foreground));
+  }
 }
 </style>

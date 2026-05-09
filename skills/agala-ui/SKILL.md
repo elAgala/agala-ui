@@ -24,7 +24,8 @@ description: >
 - Custom themes via `data-theme="forja"` attribute on `<html>`
 - Icon system: internal `AgalaIcon` with `name` string prop (40+ icons, zero icon deps)
 - Accessibility: focus rings, ARIA, keyboard nav
-- Composables: `useSelectFilter`, `useChipDisplay`, `useKeyboardNav`, `useDropdownPosition`
+- Composables: `useSelectFilter`, `useChipDisplay`, `useKeyboardNav`, `useDropdownPosition`, `useMediaQuery`
+- **Responsive by default** — Sidebar, Modal, Tabs, Pagination, and Navbar adapt to mobile/tablet viewports via CSS media queries (no custom CSS needed)
 
 ---
 
@@ -233,6 +234,7 @@ html[data-theme="forja"] {
 ```vue
 <Pagination v-model="page" :total="120" :page-size="10" :sibling-count="1" show-edges />
 ```
+- **Responsive:** Below 640px, switches to compact mode showing only Prev / "Page X of Y" / Next instead of numbered buttons.
 
 ### Tabs
 ```vue
@@ -240,6 +242,7 @@ html[data-theme="forja"] {
   <template #panel-a>Content</template>
 </Tabs>
 ```
+- **Responsive:** Below 640px, tab list becomes horizontally scrollable with hidden scrollbar and edge fade indicators. Active tab auto-scrolls into view.
 
 ### Card
 ```vue
@@ -279,6 +282,7 @@ html[data-theme="forja"] {
 </Modal>
 ```
 - `size`: `sm` | `md` | `lg` | `xl` | `full`
+- **Responsive:** Below 640px, `sm/md/lg/xl` automatically shrink to `calc(100vw - 2rem)` with reduced padding. `full` unchanged.
 
 ### Modal (Imperative)
 ```vue
@@ -391,7 +395,7 @@ toastManager.show({
 
 ### Sidebar
 ```vue
-<Sidebar v-model:collapsed="collapsed">
+<Sidebar v-model:collapsed="collapsed" v-model:open="sidebarOpen" :responsive="true">
   <template #header>
     <span>Brand</span>
     <Button @click="collapsed = !collapsed">☰</Button>
@@ -411,6 +415,20 @@ toastManager.show({
 ```
 - `SidebarItem`: `icon`, `label`, `active`, `badge`, `badgeVariant`, `dot`, `dotVariant`, `disabled`
 - `SidebarGroup`: `label`
+- **Responsive behavior (always on, `responsive` prop defaults to `true`):**
+  - Desktop (>768px): full width (default 240px), `collapsed` prop controls collapse
+  - Tablet (640–768px): auto-collapses to 64px icon-only via CSS. `collapsed` prop ignored. Smooth transition.
+  - Mobile (<640px): hidden. Use `v-model:open` to show as a left `Drawer` (280px)
+- On mobile, place a `SidebarToggle` in your `Navbar` to control `open`
+
+### SidebarToggle
+```vue
+<SidebarToggle :aria-expanded="sidebarOpen" aria-controls="sidebar-id" @click="sidebarOpen = !sidebarOpen" />
+```
+- Ghost icon button with `panel-left` icon
+- `ariaExpanded`, `ariaControls`, `ariaLabel` props
+- Emits `click`
+- Place inside `Navbar` to toggle mobile sidebar Drawer
 
 ### DevEnvBanner
 ```vue
@@ -449,6 +467,17 @@ Arrow/Enter/Escape/Backspace/Tab/Home/End handlers.
 import { useKeyboardNav } from '@el-agala/ui'
 // Used internally by Select and CreatableSelect
 ```
+
+### useMediaQuery
+SSR-safe wrapper around `window.matchMedia` for JS enhancements only.
+
+```ts
+import { useMediaQuery } from '@el-agala/ui'
+
+const { matches: isMobile } = useMediaQuery('(max-width: 639px)')
+```
+
+**Critical:** Use only for JS enhancements (e.g. scrolling active tab into view). Never use for layout decisions — all layout responsive behavior is CSS-only via `@media` queries.
 
 ### useDropdownPosition
 Fixed positioning with scroll handling (teleports to body).
@@ -577,6 +606,14 @@ toastManager.show({
 13. **Focus scroll** — When focusing teleported `position: fixed` elements, always use `focus({ preventScroll: true })` to prevent browser auto-scroll.
 
 14. **Containing blocks** — `position: fixed` is relative to viewport UNLESS an ancestor has `transform`, `perspective`, or `filter`. If forja-app or consumer applies these to `<body>`/modal ancestors, dropdown coordinates will be wrong.
+
+15. **Responsive Sidebar** — `Sidebar` is responsive by default (`responsive` prop defaults to `true`). On tablet (640–768px) it auto-collapses to 64px regardless of the `collapsed` prop. On mobile (<640px) it hides completely — use `v-model:open` + `SidebarToggle` to show it as a Drawer.
+
+16. **Responsive layout is CSS-only** — All responsive behavior (Sidebar width, Modal sizing, Tabs scroll, Pagination compact) uses CSS `@media` queries. The `useMediaQuery` composable exists only for JS enhancements like scrolling active tabs into view. Never use it for layout.
+
+17. **Breakpoint tokens** — `--agala-breakpoint-sm: 640px` and `--agala-breakpoint-md: 768px` are exposed as CSS custom properties for documentation/JS reference only. Component media queries hardcode these values; they cannot be consumed via `var()` inside `@media` rules.
+
+18. **Table responsive** — `Table` does not have built-in responsive column hiding. Wrap it in a container with `overflow-x: auto` for horizontal scrolling on mobile, or use custom CSS to hide less important columns.
 
 ---
 

@@ -111,6 +111,10 @@
   --agala-z-dropdown: 1050;
   --agala-z-modal: 1000;
 
+  /* ─── Breakpoints ─── */
+  --agala-breakpoint-sm: 640px;
+  --agala-breakpoint-md: 768px;
+
   /* ─── Layout ─── */
   --agala-navbar-height: 3.5rem;
   --agala-sidebar-width: 240px;

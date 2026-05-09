@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, h, watch, type VNode } from 'vue'
-import { Button, Input, FormField, Select, CreatableSelect, DatePicker, Modal, ModalProvider, modalManager, Badge, Checkbox, Toggle, Avatar, ToastProvider, toastManager, Textarea, DropdownMenu, Table, Tabs, Card, Tooltip, RadioGroup, Navbar, Sidebar, SidebarItem, SidebarGroup, Accordion, AccordionItem, Skeleton, Stat, EmptyState, Progress, Tag, Pagination, Drawer, FileUpload, DevEnvBanner } from '../lib'
+import { Button, Input, FormField, Select, CreatableSelect, DatePicker, Modal, ModalProvider, modalManager, Badge, Checkbox, Toggle, Avatar, ToastProvider, toastManager, Textarea, DropdownMenu, Table, Tabs, Card, Tooltip, RadioGroup, Navbar, Sidebar, SidebarItem, SidebarGroup, SidebarToggle, Accordion, AccordionItem, Skeleton, Stat, EmptyState, Progress, Tag, Pagination, Drawer, FileUpload, DevEnvBanner } from '../lib'
 import AgalaIcon from '../lib/components/AgalaIcon/AgalaIcon.vue'
 import type { TableColumn, TabItem } from '../lib'
 
@@ -139,6 +139,7 @@ const progressValue = ref(65)
 
 /* ─── Sidebar state ─── */
 const sidebarCollapsed = ref(false)
+const sidebarOpen = ref(false)
 
 /* ─── Tag state ─── */
 const tagList = ref([
@@ -166,10 +167,15 @@ const uploadedFiles = ref<InstanceType<typeof FileUpload>['$props']['modelValue'
 /* ─── Tabs state ─── */
 const activeTab = ref('overview')
 const TABS: TabItem[] = [
-  { value: 'overview',  label: 'Overview' },
-  { value: 'members',   label: 'Members' },
-  { value: 'billing',   label: 'Billing' },
-  { value: 'settings',  label: 'Settings', disabled: true },
+  { value: 'overview',     label: 'Overview' },
+  { value: 'members',      label: 'Members' },
+  { value: 'billing',      label: 'Billing' },
+  { value: 'analytics',    label: 'Analytics' },
+  { value: 'activity',     label: 'Activity' },
+  { value: 'security',     label: 'Security' },
+  { value: 'integrations', label: 'Integrations' },
+  { value: 'help',         label: 'Help' },
+  { value: 'settings',     label: 'Settings', disabled: true },
 ]
 
 /* ─── RadioGroup state ─── */
@@ -579,9 +585,12 @@ const AckDialog = {
       <p class="muted">Toggle your OS dark mode preference to watch the tokens switch automatically.</p>
     </section>
 
-    <!-- ═══════════════════ MODAL ═══════════════════ -->
+    <!-- ═══════════════════ MODAL (Responsive) ═══════════════════ -->
     <section>
       <h2>Modal — Declarative</h2>
+      <p class="muted" style="margin: 0 0 0.75rem; font-size: 0.875rem">
+        Shrinks to near-full-width on viewports below 640 px automatically.
+      </p>
       <div class="row">
         <Button @click="basicOpen = true">Open Basic Modal</Button>
       </div>
@@ -1004,15 +1013,18 @@ const AckDialog = {
       <p class="muted" style="margin-top: 0.5rem; font-size: 0.875rem">Click the × to remove. Removable tags emit a <code>remove</code> event.</p>
     </section>
 
-    <!-- ═══════════════════ PAGINATION ═══════════════════ -->
+    <!-- ═══════════════════ PAGINATION (Responsive) ═══════════════════ -->
     <section>
-      <h2>Pagination</h2>
+      <h2>Pagination — Responsive</h2>
+      <p class="muted" style="margin: 0 0 0.75rem; font-size: 0.875rem">
+        Switches to compact mode (Prev / "Page X of Y" / Next) on viewports below 640 px.
+      </p>
       <div class="row">
         <Pagination v-model="currentPage" :total="120" :page-size="10" />
       </div>
       <p class="muted" style="margin-top: 0.5rem; font-size: 0.875rem">Current page: <strong>{{ currentPage }}</strong> of 12</p>
 
-      <h2 style="margin-top: 1.5rem">Pagination — Compact</h2>
+      <h2 style="margin-top: 1.5rem">Pagination — Compact (forced)</h2>
       <div class="row">
         <Pagination v-model="currentPage" :total="500" :page-size="10" :sibling-count="0" :show-edges="false" />
       </div>
@@ -1061,13 +1073,16 @@ const AckDialog = {
       </div>
     </section>
 
-    <!-- ═══════════════════ NAVBAR ═══════════════════ -->
+    <!-- ═══════════════════ NAVBAR (Responsive) ═══════════════════ -->
     <section>
-      <h2>Navbar</h2>
+      <h2>Navbar — Responsive</h2>
+      <p class="muted" style="margin: 0 0 0.75rem; font-size: 0.875rem">
+        Brand text truncates with ellipsis on narrow viewports.
+      </p>
       <div style="border: 1px solid hsl(var(--agala-border)); border-radius: var(--agala-radius-lg); overflow: hidden">
         <Navbar>
           <template #brand>
-            <Badge variant="default">Agala UI</Badge>
+            My Very Long Application Name
           </template>
           <Button variant="ghost" size="sm">Dashboard</Button>
           <Button variant="ghost" size="sm">Members</Button>
@@ -1078,64 +1093,86 @@ const AckDialog = {
           </template>
         </Navbar>
         <div style="padding: 1.25rem; font-size: 0.875rem; color: hsl(var(--agala-muted-foreground))">
-          Page content goes here. Navbar is sticky inside its scroll container.
+          Page content goes here. Resize to &lt;640 px to see the brand name truncate with ellipsis.
         </div>
       </div>
     </section>
 
-    <!-- ═══════════════════ SIDEBAR ═══════════════════ -->
+    <!-- ═══════════════════ SIDEBAR (Responsive) ═══════════════════ -->
     <section>
-      <h2>Sidebar</h2>
-      <div style="display: flex; height: 420px; border: 1px solid hsl(var(--agala-border)); border-radius: var(--agala-radius-lg); overflow: hidden">
-        <Sidebar v-model:collapsed="sidebarCollapsed">
-          <template #header="{ collapsed, toggle }">
-            <span v-if="!collapsed" style="font-weight: 700; font-size: 0.875rem; white-space: nowrap; letter-spacing: var(--agala-letter-spacing-tight)">FORJA</span>
-            <span v-if="!collapsed" class="muted" style="font-size: 0.625rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; margin-left: 0.5rem">ADMIN</span>
-            <Button variant="ghost" size="icon" style="margin-left: auto; flex-shrink: 0" @click="toggle" aria-label="Toggle sidebar">
-              <AgalaIcon :name="collapsed ? 'panel-left' : 'panel-left'" :size="16" />
-            </Button>
+      <h2>Sidebar — Responsive</h2>
+      <p class="muted" style="margin: 0 0 0.75rem; font-size: 0.875rem">
+        Auto-collapses to icon-only on tablet (640–768 px). Hidden on mobile (&lt;640 px) — use the toggle to open the Drawer.
+      </p>
+      <div style="border: 1px solid hsl(var(--agala-border)); border-radius: var(--agala-radius-lg); overflow: hidden">
+        <Navbar>
+          <template #brand>
+            <SidebarToggle aria-controls="responsive-sidebar" :aria-expanded="sidebarOpen" @click="sidebarOpen = !sidebarOpen" />
+            <span style="font-weight: 600; font-size: 0.875rem; margin-left: 0.5rem">My App</span>
           </template>
+          <Button variant="ghost" size="sm">Dashboard</Button>
+          <Button variant="ghost" size="sm">Members</Button>
+          <template #actions>
+            <Avatar fallback="JD" size="sm" />
+          </template>
+        </Navbar>
+        <div style="display: flex; height: 420px">
+          <Sidebar
+            id="responsive-sidebar"
+            :responsive="true"
+            v-model:collapsed="sidebarCollapsed"
+            v-model:open="sidebarOpen"
+          >
+            <template #header="{ collapsed, toggle }">
+              <span v-if="!collapsed" style="font-weight: 700; font-size: 0.875rem; white-space: nowrap; letter-spacing: var(--agala-letter-spacing-tight)">FORJA</span>
+              <span v-if="!collapsed" class="muted" style="font-size: 0.625rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; margin-left: 0.5rem">ADMIN</span>
+              <Button variant="ghost" size="icon" style="margin-left: auto; flex-shrink: 0" @click="toggle" aria-label="Toggle sidebar">
+                <AgalaIcon name="panel-left" :size="16" />
+              </Button>
+            </template>
 
-          <template #default="{ collapsed }">
-            <SidebarGroup v-if="!collapsed" label="Operación">
+            <SidebarGroup label="Operación">
               <SidebarItem icon="home" label="Panel" active />
               <SidebarItem icon="users" label="Socios" badge="248" />
               <SidebarItem icon="key" label="Accesos" dot dot-variant="danger" />
               <SidebarItem icon="calendar" label="Agenda" />
+              <SidebarItem icon="clock" label="Horarios" />
             </SidebarGroup>
 
-            <SidebarGroup v-if="!collapsed" label="Comercial">
+            <SidebarGroup label="Comercial">
               <SidebarItem icon="document" label="Planes" />
               <SidebarItem icon="refresh" label="Renovaciones" badge="59" badge-variant="danger" />
               <SidebarItem icon="bell" label="Notificaciones" />
+              <SidebarItem icon="credit-card" label="Pagos" />
+              <SidebarItem icon="chart-bar" label="Reportes" />
             </SidebarGroup>
 
-            <div v-if="collapsed" style="display: flex; flex-direction: column; gap: 0.25rem; padding: 0.5rem 0">
-              <SidebarItem icon="home" active />
-              <SidebarItem icon="users" />
-              <SidebarItem icon="key" dot dot-variant="danger" />
-              <SidebarItem icon="calendar" />
-              <SidebarItem icon="document" />
-              <SidebarItem icon="refresh" />
-              <SidebarItem icon="bell" />
-            </div>
-          </template>
+            <SidebarGroup label="Sistema">
+              <SidebarItem icon="settings" label="Configuración" />
+              <SidebarItem icon="user" label="Perfil" />
+            </SidebarGroup>
 
-          <template #footer="{ collapsed }">
-            <div style="display: flex; align-items: center; gap: 0.5rem; overflow: hidden; padding: 0 0.25rem">
-              <Avatar fallback="MA" size="sm" style="flex-shrink: 0" />
-              <div v-if="!collapsed" style="display: flex; flex-direction: column; min-width: 0">
-                <span style="font-size: 0.75rem; font-weight: 600; white-space: nowrap">Mariana Acosta</span>
-                <span class="muted" style="font-size: 0.625rem; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap">Owner</span>
+            <template #footer="{ collapsed }">
+              <div style="display: flex; align-items: center; gap: 0.5rem; overflow: hidden; padding: 0 0.25rem">
+                <Avatar fallback="MA" size="sm" style="flex-shrink: 0" />
+                <div v-if="!collapsed" style="display: flex; flex-direction: column; min-width: 0">
+                  <span style="font-size: 0.75rem; font-weight: 600; white-space: nowrap">Mariana Acosta</span>
+                  <span class="muted" style="font-size: 0.625rem; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap">Owner</span>
+                </div>
               </div>
-            </div>
-          </template>
-        </Sidebar>
-        <div style="flex: 1; padding: 1.25rem; font-size: 0.875rem; color: hsl(var(--agala-muted-foreground))">
-          Main content area. Sidebar collapses with a smooth width transition.
+            </template>
+          </Sidebar>
+          <div style="flex: 1; padding: 1.25rem; font-size: 0.875rem; color: hsl(var(--agala-muted-foreground))">
+            Main content area. Resize the viewport to see responsive behavior:
+            <ul style="margin: 0.5rem 0; padding-left: 1.25rem">
+              <li><strong>Desktop (&gt;768 px):</strong> full sidebar with optional manual collapse.</li>
+              <li><strong>Tablet (640–768 px):</strong> auto-collapses to icon-only (64 px).</li>
+              <li><strong>Mobile (&lt;640 px):</strong> sidebar hidden; use the toggle to open the Drawer.</li>
+            </ul>
+          </div>
         </div>
       </div>
-      <p class="muted" style="margin-top: 0.5rem; font-size: 0.875rem">Collapsed: {{ sidebarCollapsed }}. Click the panel button to toggle.</p>
+      <p class="muted" style="margin-top: 0.5rem; font-size: 0.875rem">Collapsed: {{ sidebarCollapsed }} · Drawer open: {{ sidebarOpen }}</p>
     </section>
 
     <!-- ═══════════════════ ACCORDION ═══════════════════ -->
@@ -1186,9 +1223,12 @@ const AckDialog = {
       <p class="muted" style="margin-top: 0.75rem; font-size: 0.875rem">Shimmer animation. Use inside Table's loading state, Card loading states, or anywhere content is pending.</p>
     </section>
 
-    <!-- ═══════════════════ TABS ═══════════════════ -->
+    <!-- ═══════════════════ TABS (Responsive) ═══════════════════ -->
     <section>
-      <h2>Tabs</h2>
+      <h2>Tabs — Responsive</h2>
+      <p class="muted" style="margin: 0 0 0.75rem; font-size: 0.875rem">
+        Horizontal scroll on viewports below 640 px. Many tabs are shown below to exercise scrolling.
+      </p>
       <Tabs :tabs="TABS" v-model="activeTab">
         <template #panel-overview>
           <Card>
@@ -1201,6 +1241,21 @@ const AckDialog = {
         </template>
         <template #panel-billing>
           <p style="margin: 0">Billing panel — invoices, payment methods, etc.</p>
+        </template>
+        <template #panel-analytics>
+          <p style="margin: 0">Analytics panel — charts, metrics, and trends.</p>
+        </template>
+        <template #panel-activity>
+          <p style="margin: 0">Activity panel — recent events and logs.</p>
+        </template>
+        <template #panel-security>
+          <p style="margin: 0">Security panel — 2FA, sessions, and audit logs.</p>
+        </template>
+        <template #panel-integrations>
+          <p style="margin: 0">Integrations panel — connected apps and webhooks.</p>
+        </template>
+        <template #panel-help>
+          <p style="margin: 0">Help panel — documentation and support links.</p>
         </template>
       </Tabs>
       <p class="muted" style="margin-top: 0.75rem; font-size: 0.875rem">Active tab: <strong>{{ activeTab }}</strong> · "Settings" is disabled.</p>

@@ -2,6 +2,8 @@ export interface SidebarProps {
   collapsed?: boolean
   width?: string
   collapsedWidth?: string
+  responsive?: boolean
+  open?: boolean
   class?: string
 }
 
