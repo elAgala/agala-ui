@@ -348,7 +348,7 @@ function handleSearchInput(e: Event) {
 function handleSearchKeyDown(e: KeyboardEvent) {
   if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
     e.preventDefault()
-    listRef.value?.focus()
+    listRef.value?.focus({ preventScroll: true })
   }
   if (e.key === 'Escape') {
     query.value = ''
@@ -378,7 +378,7 @@ watch(isOpen, (open) => {
   window.addEventListener('resize', handleResize)
   // Focus search
   if (props.searchable) {
-    nextTick(() => searchRef.value?.focus())
+    nextTick(() => searchRef.value?.focus({ preventScroll: true }))
   }
   // Cleanup
   watch(isOpen, (newOpen) => {

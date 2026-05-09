@@ -72,7 +72,7 @@ const SKILLS = ref([
 function handleCreateSkill(text: string) {
   const newId = `skill-${Date.now()}`
   SKILLS.value.push({ value: newId, label: text })
-  creatableTags.value = [...creatableTags.value, newId]
+  // Component auto-selects; parent only adds to options
 }
 
 function handleSearchSkill(q: string) {
@@ -82,7 +82,7 @@ function handleSearchSkill(q: string) {
 function handleCreateEmpty(text: string) {
   const newId = `empty-${Date.now()}`
   emptyOptions.value.push({ value: newId, label: text })
-  emptyTags.value = [...emptyTags.value, newId]
+  // Component auto-selects; parent only adds to options
 }
 
 /* ─── DatePicker state ─── */
@@ -106,6 +106,20 @@ const gymMembers = [
   { value: '8', label: 'Sofia Moreno', subtitle: 'Plan: Basic' },
 ]
 const selectedMember = ref('')
+
+/* ─── CreatableSelect + DatePicker in modal test ─── */
+const modalSkills = ref([
+  { value: 'ms-js', label: 'JavaScript' },
+  { value: 'ms-ts', label: 'TypeScript' },
+  { value: 'ms-vue', label: 'Vue.js' },
+])
+const modalSelectedSkills = ref<string[]>([])
+const modalClassDate = ref('')
+
+function handleModalCreateSkill(text: string) {
+  const newId = `ms-${Date.now()}`
+  modalSkills.value.push({ value: newId, label: text })
+}
 
 /* ─── Checkbox state ─── */
 const cbBasic = ref(false)
@@ -586,14 +600,14 @@ const AckDialog = {
     </section>
 
     <section>
-      <h2>Select in Modal (dropdown bug test)</h2>
+      <h2>Dropdowns in Modal (positioning test)</h2>
       <p class="muted" style="margin: 0 0 0.75rem; font-size: 0.875rem">
-        Open modal → scroll down → select dropdown. Dropdown should appear <strong>above the footer</strong>, not clipped.
+        Open modal → scroll down → test Select, CreatableSelect, and DatePicker dropdowns. All should appear <strong>above the footer</strong>, not clipped.
       </p>
       <div class="row">
         <Button @click="selectInModalOpen = true">Open Modal with Select</Button>
       </div>
-      <Modal :open="selectInModalOpen" @close="selectInModalOpen = false" title="Asignar Instructor a Clase">
+      <Modal :open="selectInModalOpen" @close="selectInModalOpen = false" title="Dropdown Positioning Test">
         <!-- Lots of content to force scrolling -->
         <p>Configuración de la clase de spinning del día lunes.</p>
         <p class="muted">Este contenido está aquí para forzar que el modal tenga scroll y el Select quede cerca del footer.</p>
@@ -612,7 +626,23 @@ const AckDialog = {
           searchable
           style="margin-bottom: 1rem"
         />
-        
+
+        <p class="muted">Aquí viene el CreatableSelect cerca del footer:</p>
+        <CreatableSelect
+          v-model="modalSelectedSkills"
+          :options="modalSkills"
+          placeholder="Pick or create skills…"
+          @create="handleModalCreateSkill"
+          style="margin-bottom: 1rem"
+        />
+
+        <p class="muted">Aquí viene el DatePicker cerca del footer:</p>
+        <DatePicker
+          v-model="modalClassDate"
+          placeholder="Pick a class date…"
+          style="margin-bottom: 1rem; max-width: 320px"
+        />
+
         <p class="muted">Más contenido después del select...</p>
         <p>Otra línea de contenido para llenar el modal.</p>
         

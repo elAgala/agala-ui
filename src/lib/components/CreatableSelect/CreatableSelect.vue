@@ -3,6 +3,7 @@ import { ref, computed, watch, nextTick } from 'vue'
 import { AgalaIcon } from '../AgalaIcon'
 import { useChipDisplay } from '../../composables/useChipDisplay'
 import { useKeyboardNav } from '../../composables/useKeyboardNav'
+import { useDropdownPosition } from '../../composables/useDropdownPosition'
 import type { CreatableSelectProps } from './types'
 
 const props = withDefaults(defineProps<CreatableSelectProps>(), {
@@ -127,16 +128,7 @@ const flatItems = computed<FlatItemEntry[]>(() => {
 })
 
 /* ─── Dropdown position ─── */
-const dropdownStyle = computed(() => {
-  if (!isOpen.value || !triggerRef.value) return {}
-  const rect = triggerRef.value.getBoundingClientRect()
-  return {
-    position: 'fixed' as const,
-    top: `${rect.bottom + 4}px`,
-    left: `${rect.left}px`,
-    width: `${rect.width}px`,
-  }
-})
+const { dropdownStyle, recompute } = useDropdownPosition(triggerRef)
 
 /* ─── Helpers ─── */
 function updateValue(newValue: string[]) {
@@ -170,6 +162,7 @@ function openDropdown() {
   isOpen.value = true
   query.value = ''
   highlightedIdx.value = 0
+  nextTick(() => recompute())
 }
 
 function removeLastChip() {
@@ -190,6 +183,11 @@ function selectItem(idx: number, disabled: boolean | undefined) {
 function handleCreate(text: string) {
   createdLabels.value.set(text, text)
   emit('create', text)
+  // Auto-select the newly created option
+  const current = [...selectedValues.value]
+  if (!current.includes(text)) {
+    updateValue([...current, text])
+  }
   closeDropdown()
 }
 
@@ -291,15 +289,18 @@ watch(isOpen, (open) => {
     }
   }
 
+  const handleResize = () => recompute()
   document.addEventListener('mousedown', handleClick)
   window.addEventListener('scroll', handleScroll, true)
+  window.addEventListener('resize', handleResize)
 
-  nextTick(() => searchRef.value?.focus())
+  nextTick(() => searchRef.value?.focus({ preventScroll: true }))
 
   watch(isOpen, (newOpen) => {
     if (!newOpen) {
       document.removeEventListener('mousedown', handleClick)
       window.removeEventListener('scroll', handleScroll, true)
+      window.removeEventListener('resize', handleResize)
     }
   }, { once: true })
 })

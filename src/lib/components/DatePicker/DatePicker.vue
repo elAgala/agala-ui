@@ -210,7 +210,7 @@ function open() {
   nextTick(() => {
     recompute()
     const el = wrapperRef.value?.querySelector('[tabindex="0"]') as HTMLElement | null
-    el?.focus()
+    el?.focus({ preventScroll: true })
   })
 }
 
@@ -310,7 +310,7 @@ function handleGridKeyDown(e: KeyboardEvent) {
     viewMonth.value = d.getMonth()
     nextTick(() => {
       const el = wrapperRef.value?.querySelector('[tabindex="0"]') as HTMLElement | null
-      el?.focus()
+      el?.focus({ preventScroll: true })
     })
   }
 }
