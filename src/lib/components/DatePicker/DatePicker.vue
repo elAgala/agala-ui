@@ -34,23 +34,15 @@ const MONTH_LABELS = [
   'July', 'August', 'September', 'October', 'November', 'December',
 ]
 
-type ViewMode = 'days' | 'months' | 'years'
-
 /* State */
 const isOpen = ref(false)
-const viewMode = ref<ViewMode>('days')
 const viewYear = ref(new Date().getFullYear())
 const viewMonth = ref(new Date().getMonth())
 const focusedDate = ref(props.modelValue || todayISO())
-const focusedMonth = ref(new Date().getMonth())
-const focusedYear = ref(new Date().getFullYear())
 const hoverDay = ref('')
-const hoverMonth = ref(-1)
-const hoverYear = ref(-Infinity)
 const wrapperRef = ref<HTMLDivElement>()
 const triggerRef = ref<HTMLDivElement>()
 const floatingRef = ref<HTMLDivElement>()
-const yearListRef = ref<HTMLDivElement>()
 
 const { dropdownStyle, recompute } = useDropdownPosition(triggerRef, { width: 'auto' })
 
@@ -62,19 +54,12 @@ const displayValue = computed(() => {
   return formatDisplay(d)
 })
 
-const viewMonthLabel = computed(() => {
-  if (viewMode.value === 'days') {
-    return `${MONTH_LABELS[viewMonth.value]} ${viewYear.value}`
-  }
-  if (viewMode.value === 'months') {
-    return `${viewYear.value}`
-  }
-  const list = yearList.value
-  return `${list[0]} – ${list[list.length - 1]}`
-})
-
-const yearList = computed(() => {
-  return Array.from({ length: 201 }, (_, i) => viewYear.value - 100 + i)
+const yearOptions = computed(() => {
+  const min = props.min ? parseISO(props.min)?.getFullYear() : undefined
+  const max = props.max ? parseISO(props.max)?.getFullYear() : undefined
+  const start = min ?? new Date().getFullYear() - 100
+  const end = max ?? new Date().getFullYear() + 100
+  return Array.from({ length: end - start + 1 }, (_, i) => start + i)
 })
 
 interface DayCell {
@@ -166,14 +151,6 @@ function isMonthDisabled(monthIndex: number): boolean {
   return false
 }
 
-function isYearDisabled(year: number): boolean {
-  const firstISO = toISO(new Date(year, 0, 1))
-  const lastISO = toISO(new Date(year, 11, 31))
-  if (props.min && lastISO < props.min) return true
-  if (props.max && firstISO > props.max) return true
-  return false
-}
-
 function todayISO(): string {
   return toISO(new Date())
 }
@@ -197,52 +174,10 @@ function formatDisplay(d: Date): string {
   return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })
 }
 
-function resetFocusedDateToMonth(year: number, month: number) {
-  const t = new Date()
-  if (t.getFullYear() === year && t.getMonth() === month) {
-    const iso = toISO(t)
-    if (!isDisabled(iso)) {
-      focusedDate.value = iso
-      return
-    }
-  }
-  const lastDay = new Date(year, month + 1, 0).getDate()
-  for (let i = 1; i <= lastDay; i++) {
-    const iso = toISO(new Date(year, month, i))
-    if (!isDisabled(iso)) {
-      focusedDate.value = iso
-      return
-    }
-  }
-  focusedDate.value = toISO(new Date(year, month, 1))
-}
-
 function selectDay(day: DayCell) {
   if (day.disabled) return
   emit('update:modelValue', day.dateISO)
   close()
-}
-
-function selectMonth(monthIndex: number) {
-  if (isMonthDisabled(monthIndex)) return
-  viewMonth.value = monthIndex
-  viewMode.value = 'days'
-  resetFocusedDateToMonth(viewYear.value, monthIndex)
-  nextTick(() => {
-    const el = wrapperRef.value?.querySelector('[tabindex="0"]') as HTMLElement | null
-    el?.focus({ preventScroll: true })
-  })
-}
-
-function selectYear(year: number) {
-  if (isYearDisabled(year)) return
-  viewYear.value = year
-  viewMode.value = 'months'
-  focusedMonth.value = viewMonth.value
-  nextTick(() => {
-    const el = wrapperRef.value?.querySelector('[tabindex="0"]') as HTMLElement | null
-    el?.focus({ preventScroll: true })
-  })
 }
 
 function clear() {
@@ -268,50 +203,21 @@ function nextMonth() {
   }
 }
 
-function prevView() {
-  if (viewMode.value === 'days') {
-    prevMonth()
-  } else if (viewMode.value === 'months') {
-    viewYear.value--
-  } else if (viewMode.value === 'years') {
-    viewYear.value -= 20
-    const list = yearList.value
-    focusedYear.value = Math.max(list[0], Math.min(list[list.length - 1], focusedYear.value - 20))
-  }
-}
-
-function nextView() {
-  if (viewMode.value === 'days') {
-    nextMonth()
-  } else if (viewMode.value === 'months') {
-    viewYear.value++
-  } else if (viewMode.value === 'years') {
-    viewYear.value += 20
-    const list = yearList.value
-    focusedYear.value = Math.max(list[0], Math.min(list[list.length - 1], focusedYear.value + 20))
-  }
-}
-
 function open() {
   if (props.disabled) return
   isOpen.value = true
-  viewMode.value = 'days'
   if (props.modelValue) {
     const d = parseISO(props.modelValue)
     if (d) {
       viewYear.value = d.getFullYear()
       viewMonth.value = d.getMonth()
       focusedDate.value = props.modelValue
-      focusedMonth.value = d.getMonth()
-      focusedYear.value = d.getFullYear()
     }
   } else {
     const t = new Date()
     viewYear.value = t.getFullYear()
     viewMonth.value = t.getMonth()
     focusedDate.value = todayISO()
-    focusedMonth.value = t.getMonth()
-    focusedYear.value = t.getFullYear()
   }
   nextTick(() => {
     requestAnimationFrame(() => recompute())
@@ -322,7 +228,6 @@ function open() {
 
 function close() {
   isOpen.value = false
-  viewMode.value = 'days'
 }
 
 function handleTriggerClick() {
@@ -348,226 +253,77 @@ function handleTriggerKeyDown(e: KeyboardEvent) {
   }
 }
 
-function handleHeaderClick() {
-  if (viewMode.value === 'days') {
-    viewMode.value = 'months'
-    focusedMonth.value = viewMonth.value
-  } else if (viewMode.value === 'months') {
-    viewMode.value = 'years'
-    focusedYear.value = viewYear.value
-  } else {
-    viewMode.value = 'days'
-    resetFocusedDateToMonth(viewYear.value, viewMonth.value)
-  }
-  nextTick(() => {
-    const el = wrapperRef.value?.querySelector('[tabindex="0"]') as HTMLElement | null
-    el?.focus({ preventScroll: true })
-  })
-}
-
-function handlePickerKeyDown(e: KeyboardEvent) {
+function handleGridKeyDown(e: KeyboardEvent) {
   e.stopPropagation()
   if (!isOpen.value) return
 
-  if (viewMode.value === 'days') {
-    let d = parseISO(focusedDate.value) || new Date()
-    let changed = false
+  let d = parseISO(focusedDate.value) || new Date()
+  let changed = false
 
-    switch (e.key) {
-      case 'ArrowLeft':
-        e.preventDefault()
-        d.setDate(d.getDate() - 1)
-        changed = true
-        break
-      case 'ArrowRight':
-        e.preventDefault()
-        d.setDate(d.getDate() + 1)
-        changed = true
-        break
-      case 'ArrowUp':
-        e.preventDefault()
-        d.setDate(d.getDate() - 7)
-        changed = true
-        break
-      case 'ArrowDown':
-        e.preventDefault()
-        d.setDate(d.getDate() + 7)
-        changed = true
-        break
-      case 'Home':
-        e.preventDefault()
-        d.setDate(1)
-        changed = true
-        break
-      case 'End':
-        e.preventDefault()
-        d.setDate(new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate())
-        changed = true
-        break
-      case 'PageUp':
-        e.preventDefault()
-        d.setMonth(d.getMonth() - 1)
-        changed = true
-        break
-      case 'PageDown':
-        e.preventDefault()
-        d.setMonth(d.getMonth() + 1)
-        changed = true
-        break
-      case 'Enter':
-      case ' ': {
-        e.preventDefault()
-        const iso = toISO(d)
-        if (!isDisabled(iso)) {
-          emit('update:modelValue', iso)
-          close()
-        }
-        return
-      }
-      case 'Escape':
+  switch (e.key) {
+    case 'ArrowLeft':
+      e.preventDefault()
+      d.setDate(d.getDate() - 1)
+      changed = true
+      break
+    case 'ArrowRight':
+      e.preventDefault()
+      d.setDate(d.getDate() + 1)
+      changed = true
+      break
+    case 'ArrowUp':
+      e.preventDefault()
+      d.setDate(d.getDate() - 7)
+      changed = true
+      break
+    case 'ArrowDown':
+      e.preventDefault()
+      d.setDate(d.getDate() + 7)
+      changed = true
+      break
+    case 'Home':
+      e.preventDefault()
+      d.setDate(1)
+      changed = true
+      break
+    case 'End':
+      e.preventDefault()
+      d.setDate(new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate())
+      changed = true
+      break
+    case 'PageUp':
+      e.preventDefault()
+      d.setMonth(d.getMonth() - 1)
+      changed = true
+      break
+    case 'PageDown':
+      e.preventDefault()
+      d.setMonth(d.getMonth() + 1)
+      changed = true
+      break
+    case 'Enter':
+    case ' ': {
+      e.preventDefault()
+      const iso = toISO(d)
+      if (!isDisabled(iso)) {
+        emit('update:modelValue', iso)
         close()
-        return
+      }
+      return
     }
-
-    if (changed) {
-      focusedDate.value = toISO(d)
-      viewYear.value = d.getFullYear()
-      viewMonth.value = d.getMonth()
-      nextTick(() => {
-        const el = wrapperRef.value?.querySelector('[tabindex="0"]') as HTMLElement | null
-        el?.focus({ preventScroll: true })
-      })
-    }
-    return
+    case 'Escape':
+      close()
+      return
   }
 
-  if (viewMode.value === 'months') {
-    let m = focusedMonth.value
-    let changed = false
-
-    switch (e.key) {
-      case 'ArrowLeft':
-        e.preventDefault()
-        m--
-        if (m < 0) m = 11
-        changed = true
-        break
-      case 'ArrowRight':
-        e.preventDefault()
-        m++
-        if (m > 11) m = 0
-        changed = true
-        break
-      case 'ArrowUp':
-        e.preventDefault()
-        m -= 3
-        if (m < 0) m = 0
-        changed = true
-        break
-      case 'ArrowDown':
-        e.preventDefault()
-        m += 3
-        if (m > 11) m = 11
-        changed = true
-        break
-      case 'Home':
-        e.preventDefault()
-        m = 0
-        changed = true
-        break
-      case 'End':
-        e.preventDefault()
-        m = 11
-        changed = true
-        break
-      case 'Enter':
-      case ' ':
-        e.preventDefault()
-        selectMonth(m)
-        return
-      case 'Escape':
-        e.preventDefault()
-        viewMode.value = 'days'
-        resetFocusedDateToMonth(viewYear.value, viewMonth.value)
-        nextTick(() => {
-          const el = wrapperRef.value?.querySelector('[tabindex="0"]') as HTMLElement | null
-          el?.focus({ preventScroll: true })
-        })
-        return
-    }
-
-    if (changed) {
-      focusedMonth.value = m
-      nextTick(() => {
-        const el = wrapperRef.value?.querySelector('[tabindex="0"]') as HTMLElement | null
-        el?.focus({ preventScroll: true })
-      })
-    }
-    return
-  }
-
-  if (viewMode.value === 'years') {
-    const list = yearList.value
-    let y = focusedYear.value
-    let changed = false
-
-    switch (e.key) {
-      case 'ArrowUp':
-        e.preventDefault()
-        y--
-        changed = true
-        break
-      case 'ArrowDown':
-        e.preventDefault()
-        y++
-        changed = true
-        break
-      case 'PageUp':
-        e.preventDefault()
-        y -= 10
-        changed = true
-        break
-      case 'PageDown':
-        e.preventDefault()
-        y += 10
-        changed = true
-        break
-      case 'Home':
-        e.preventDefault()
-        y = list[0]
-        changed = true
-        break
-      case 'End':
-        e.preventDefault()
-        y = list[list.length - 1]
-        changed = true
-        break
-      case 'Enter':
-      case ' ':
-        e.preventDefault()
-        selectYear(y)
-        return
-      case 'Escape':
-        e.preventDefault()
-        viewMode.value = 'months'
-        nextTick(() => {
-          const el = wrapperRef.value?.querySelector('[tabindex="0"]') as HTMLElement | null
-          el?.focus({ preventScroll: true })
-        })
-        return
-    }
-
-    if (changed) {
-      if (y < list[0]) y = list[0]
-      if (y > list[list.length - 1]) y = list[list.length - 1]
-      focusedYear.value = y
-      nextTick(() => {
-        const el = wrapperRef.value?.querySelector('[tabindex="0"]') as HTMLElement | null
-        el?.focus({ preventScroll: true })
-        el?.scrollIntoView({ block: 'center', behavior: 'auto' })
-      })
-    }
-    return
+  if (changed) {
+    focusedDate.value = toISO(d)
+    viewYear.value = d.getFullYear()
+    viewMonth.value = d.getMonth()
+    nextTick(() => {
+      const el = wrapperRef.value?.querySelector('[tabindex="0"]') as HTMLElement | null
+      el?.focus({ preventScroll: true })
+    })
   }
 }
 
@@ -580,36 +336,6 @@ function cellCls(day: DayCell): string {
     day.disabled ? 'dayCellDisabled' : undefined,
     day.focused && !day.selected ? 'dayCellFocused' : undefined,
     hoverDay.value === day.dateISO && !day.disabled && !day.selected ? 'dayCellHover' : undefined,
-  ].filter(Boolean).join(' ')
-}
-
-function monthCellCls(m: number): string {
-  const selected = viewMonth.value === m
-  const disabled = isMonthDisabled(m)
-  const today = new Date().getMonth() === m && new Date().getFullYear() === viewYear.value
-  const focused = focusedMonth.value === m
-  return [
-    'monthCell',
-    selected ? 'monthCellSelected' : undefined,
-    today ? 'monthCellToday' : undefined,
-    disabled ? 'monthCellDisabled' : undefined,
-    focused && !selected ? 'monthCellFocused' : undefined,
-    hoverMonth.value === m && !disabled && !selected ? 'monthCellHover' : undefined,
-  ].filter(Boolean).join(' ')
-}
-
-function yearCellCls(year: number): string {
-  const selected = viewYear.value === year
-  const disabled = isYearDisabled(year)
-  const today = new Date().getFullYear() === year
-  const focused = focusedYear.value === year
-  return [
-    'yearCell',
-    selected ? 'yearCellSelected' : undefined,
-    today ? 'yearCellToday' : undefined,
-    disabled ? 'yearCellDisabled' : undefined,
-    focused && !selected ? 'yearCellFocused' : undefined,
-    hoverYear.value === year && !disabled && !selected ? 'yearCellHover' : undefined,
   ].filter(Boolean).join(' ')
 }
 
@@ -639,14 +365,6 @@ watch(isOpen, (open) => {
   }, { once: true })
 })
 
-watch(viewMode, (mode) => {
-  if (mode === 'years') {
-    nextTick(() => {
-      const el = yearListRef.value?.querySelector('[tabindex="0"]') as HTMLElement | null
-      el?.scrollIntoView({ block: 'center', behavior: 'auto' })
-    })
-  }
-})
 </script>
 
 <template>
@@ -667,90 +385,59 @@ watch(viewMode, (mode) => {
       </span>
     </div>
 
-    <div v-if="isOpen" ref="floatingRef" class="dropdown" :style="dropdownStyle" id="agala-date-grid" role="grid" aria-label="Calendar" @keydown="handlePickerKeyDown">
+    <div v-if="isOpen" ref="floatingRef" class="dropdown" :style="dropdownStyle" id="agala-date-grid" role="grid" aria-label="Calendar" @keydown="handleGridKeyDown">
       <div class="header">
-        <button type="button" class="navBtn" @click="prevView" :aria-label="viewMode === 'days' ? 'Previous month' : viewMode === 'months' ? 'Previous year' : 'Previous 20 years'">
+        <button type="button" class="navBtn" @click="prevMonth" aria-label="Previous month">
           <AgalaIcon name="chevron" :size="14" />
         </button>
-        <button type="button" class="monthLabel headerLabelBtn" @click="handleHeaderClick" aria-live="polite">
-          {{ viewMonthLabel }}
-        </button>
-        <button type="button" class="navBtn navBtnNext" @click="nextView" :aria-label="viewMode === 'days' ? 'Next month' : viewMode === 'months' ? 'Next year' : 'Next 20 years'">
+        <div class="headerSelects">
+          <div class="selectWrapper">
+            <select v-model="viewMonth" class="nativeSelect">
+              <option v-for="(label, i) in MONTH_LABELS" :key="i" :value="i" :disabled="isMonthDisabled(i)">
+                {{ label }}
+              </option>
+            </select>
+            <AgalaIcon name="chevron" :size="12" class="selectChevron" />
+          </div>
+          <div class="selectWrapper">
+            <select v-model="viewYear" class="nativeSelect">
+              <option v-for="year in yearOptions" :key="year" :value="year">
+                {{ year }}
+              </option>
+            </select>
+            <AgalaIcon name="chevron" :size="12" class="selectChevron" />
+          </div>
+        </div>
+        <button type="button" class="navBtn navBtnNext" @click="nextMonth" aria-label="Next month">
           <AgalaIcon name="chevron" :size="14" />
         </button>
       </div>
 
-      <template v-if="viewMode === 'days'">
-        <div class="weekdays" role="row">
-          <div v-for="d in WEEKDAYS" :key="d" class="weekday" role="columnheader" :aria-label="d">
-            {{ d }}
-          </div>
+      <div class="weekdays" role="row">
+        <div v-for="d in WEEKDAYS" :key="d" class="weekday" role="columnheader" :aria-label="d">
+          {{ d }}
         </div>
+      </div>
 
-        <div class="days" role="rowgroup">
-          <div v-for="(week, wi) in grid" :key="wi" class="week" role="row">
-            <button
-              v-for="day in week"
-              :key="day.dateISO"
-              type="button"
-              :role="'gridcell'"
-              :aria-selected="day.selected"
-              :aria-disabled="day.disabled"
-              :aria-label="day.ariaLabel"
-              :class="cellCls(day)"
-              :tabindex="day.focused ? 0 : -1"
-              @click="selectDay(day)"
-              @mouseenter="hoverDay = day.dateISO"
-              @mouseleave="hoverDay = ''"
-            >
-              {{ day.dayNum }}
-            </button>
-          </div>
-        </div>
-      </template>
-
-      <div v-if="viewMode === 'months'" class="monthGrid" role="grid" aria-label="Months">
-        <div v-for="row in [ [0,1,2], [3,4,5], [6,7,8], [9,10,11] ]" :key="row[0]" class="monthRow" role="row">
+      <div class="days" role="rowgroup">
+        <div v-for="(week, wi) in grid" :key="wi" class="week" role="row">
           <button
-            v-for="m in row"
-            :key="m"
+            v-for="day in week"
+            :key="day.dateISO"
             type="button"
-            role="gridcell"
-            :class="monthCellCls(m)"
-            :tabindex="focusedMonth === m ? 0 : -1"
-            :aria-selected="viewMonth === m"
-            :aria-disabled="isMonthDisabled(m)"
-            @click="selectMonth(m)"
-            @mouseenter="hoverMonth = m"
-            @mouseleave="hoverMonth = -1"
+            :role="'gridcell'"
+            :aria-selected="day.selected"
+            :aria-disabled="day.disabled"
+            :aria-label="day.ariaLabel"
+            :class="cellCls(day)"
+            :tabindex="day.focused ? 0 : -1"
+            @click="selectDay(day)"
+            @mouseenter="hoverDay = day.dateISO"
+            @mouseleave="hoverDay = ''"
           >
-            {{ MONTH_LABELS[m].slice(0, 3) }}
+            {{ day.dayNum }}
           </button>
         </div>
-      </div>
-
-      <div
-        v-if="viewMode === 'years'"
-        ref="yearListRef"
-        class="yearList"
-        role="listbox"
-        aria-label="Years"
-      >
-        <button
-          v-for="year in yearList"
-          :key="year"
-          type="button"
-          role="option"
-          :class="yearCellCls(year)"
-          :tabindex="focusedYear === year ? 0 : -1"
-          :aria-selected="viewYear === year"
-          :aria-disabled="isYearDisabled(year)"
-          @click="selectYear(year)"
-          @mouseenter="hoverYear = year"
-          @mouseleave="hoverYear = -Infinity"
-        >
-          {{ year }}
-        </button>
       </div>
 
       <div v-if="clearable && modelValue" class="footer">
@@ -876,25 +563,49 @@ watch(viewMode, (mode) => {
   border-bottom: var(--agala-border-width) solid hsl(var(--agala-border));
 }
 
-.monthLabel {
-  font-size: var(--agala-font-size-base);
-  font-weight: var(--agala-font-weight-semibold);
-  color: hsl(var(--agala-foreground));
+.headerSelects {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+  justify-content: center;
 }
-
-.headerLabelBtn {
-  font-size: var(--agala-font-size-base);
-  font-weight: var(--agala-font-weight-semibold);
-  color: hsl(var(--agala-foreground));
+.selectWrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+.nativeSelect {
+  appearance: none;
+  -webkit-appearance: none;
   background: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 0.25rem 0.5rem;
+  border: 1px solid hsl(var(--agala-border));
   border-radius: var(--agala-radius-sm);
-  transition: background-color var(--agala-transition-fast);
+  padding: 0.25rem 1.5rem 0.25rem 0.5rem;
+  font-size: var(--agala-font-size-sm);
+  font-family: var(--agala-font-sans);
+  color: hsl(var(--agala-foreground));
+  cursor: pointer;
+  transition: border-color var(--agala-transition-fast), background-color var(--agala-transition-fast);
+  outline: none;
 }
-.headerLabelBtn:hover {
+.nativeSelect:hover {
+  border-color: hsl(var(--agala-border));
   background-color: hsl(var(--agala-muted));
+}
+.nativeSelect:focus-visible {
+  border-color: hsl(var(--agala-ring));
+  box-shadow: 0 0 0 2px hsl(var(--agala-ring) / 0.2);
+}
+.nativeSelect option:disabled {
+  opacity: 0.4;
+  color: hsl(var(--agala-muted-foreground));
+}
+.selectChevron {
+  position: absolute;
+  right: 0.375rem;
+  pointer-events: none;
+  color: hsl(var(--agala-muted-foreground));
 }
 
 .navBtn {
@@ -1014,137 +725,6 @@ watch(viewMode, (mode) => {
 }
 
 .dayCellHover:not(.dayCellDisabled):not(.dayCellSelected):not(.dayCellFocused) {
-  background-color: hsl(var(--agala-accent));
-}
-
-/* Month grid */
-.monthGrid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0.125rem;
-  padding: 0.25rem 0;
-}
-
-.monthRow {
-  display: contents;
-}
-
-.monthCell {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 2.5rem;
-  border: none;
-  border-radius: var(--agala-radius-sm);
-  background: transparent;
-  color: hsl(var(--agala-foreground));
-  font-size: var(--agala-font-size-sm);
-  font-family: var(--agala-font-sans);
-  cursor: pointer;
-  transition: background-color var(--agala-transition-fast), color var(--agala-transition-fast);
-}
-
-.monthCell:hover:not(.monthCellDisabled):not(.monthCellSelected) {
-  background-color: hsl(var(--agala-accent));
-  color: hsl(var(--agala-accent-foreground));
-}
-
-.monthCell:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 2px hsl(var(--agala-ring) / 0.3);
-}
-
-.monthCellSelected {
-  background-color: hsl(var(--agala-primary));
-  color: hsl(var(--agala-primary-foreground));
-  font-weight: var(--agala-font-weight-medium);
-}
-
-.monthCellSelected:hover {
-  background-color: hsl(var(--agala-primary) / 0.9);
-}
-
-.monthCellDisabled {
-  cursor: default;
-  opacity: 0.35;
-  pointer-events: none;
-}
-
-.monthCellToday {
-  font-weight: var(--agala-font-weight-semibold);
-  color: hsl(var(--agala-primary));
-}
-
-.monthCellFocused:not(.monthCellSelected) {
-  box-shadow: 0 0 0 2px hsl(var(--agala-ring) / 0.3);
-}
-
-.monthCellHover:not(.monthCellDisabled):not(.monthCellSelected):not(.monthCellFocused) {
-  background-color: hsl(var(--agala-accent));
-}
-
-/* Year list */
-.yearList {
-  display: flex;
-  flex-direction: column;
-  gap: 0.125rem;
-  overflow-y: auto;
-  max-height: 240px;
-  padding: 0.125rem;
-}
-
-.yearCell {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 2rem;
-  width: 100%;
-  border: none;
-  border-radius: var(--agala-radius-sm);
-  background: transparent;
-  color: hsl(var(--agala-foreground));
-  font-size: var(--agala-font-size-sm);
-  font-family: var(--agala-font-sans);
-  cursor: pointer;
-  transition: background-color var(--agala-transition-fast), color var(--agala-transition-fast);
-}
-
-.yearCell:hover:not(.yearCellDisabled):not(.yearCellSelected) {
-  background-color: hsl(var(--agala-accent));
-  color: hsl(var(--agala-accent-foreground));
-}
-
-.yearCell:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 2px hsl(var(--agala-ring) / 0.3);
-}
-
-.yearCellSelected {
-  background-color: hsl(var(--agala-primary));
-  color: hsl(var(--agala-primary-foreground));
-  font-weight: var(--agala-font-weight-medium);
-}
-
-.yearCellSelected:hover {
-  background-color: hsl(var(--agala-primary) / 0.9);
-}
-
-.yearCellDisabled {
-  cursor: default;
-  opacity: 0.35;
-  pointer-events: none;
-}
-
-.yearCellToday {
-  font-weight: var(--agala-font-weight-semibold);
-  color: hsl(var(--agala-primary));
-}
-
-.yearCellFocused:not(.yearCellSelected) {
-  box-shadow: 0 0 0 2px hsl(var(--agala-ring) / 0.3);
-}
-
-.yearCellHover:not(.yearCellDisabled):not(.yearCellSelected):not(.yearCellFocused) {
   background-color: hsl(var(--agala-accent));
 }
 
