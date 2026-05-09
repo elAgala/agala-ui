@@ -57,12 +57,12 @@ const displayValue = computed(() => {
 const yearGroups = computed(() => {
   const min = props.min ? parseISO(props.min)?.getFullYear() : undefined
   const max = props.max ? parseISO(props.max)?.getFullYear() : undefined
-  const start = min ?? new Date().getFullYear() - 50
-  const end = max ?? new Date().getFullYear() + 50
+  const start = min ?? new Date().getFullYear() - 10
+  const end = max ?? new Date().getFullYear() + 10
 
   const groups: { label: string; years: number[] }[] = []
   const decadeStart = Math.floor(start / 10) * 10
-  const decadeEnd = Math.ceil(end / 10) * 10
+  const decadeEnd = Math.ceil((end + 1) / 10) * 10
 
   for (let d = decadeStart; d < decadeEnd; d += 10) {
     const years = []
