@@ -54,12 +54,26 @@ const displayValue = computed(() => {
   return formatDisplay(d)
 })
 
-const yearOptions = computed(() => {
+const yearGroups = computed(() => {
   const min = props.min ? parseISO(props.min)?.getFullYear() : undefined
   const max = props.max ? parseISO(props.max)?.getFullYear() : undefined
-  const start = min ?? new Date().getFullYear() - 100
-  const end = max ?? new Date().getFullYear() + 100
-  return Array.from({ length: end - start + 1 }, (_, i) => start + i)
+  const start = min ?? new Date().getFullYear() - 50
+  const end = max ?? new Date().getFullYear() + 50
+
+  const groups: { label: string; years: number[] }[] = []
+  const decadeStart = Math.floor(start / 10) * 10
+  const decadeEnd = Math.ceil(end / 10) * 10
+
+  for (let d = decadeStart; d < decadeEnd; d += 10) {
+    const years = []
+    for (let y = d; y < d + 10; y++) {
+      if (y >= start && y <= end) years.push(y)
+    }
+    if (years.length) {
+      groups.push({ label: `${d}s`, years })
+    }
+  }
+  return groups
 })
 
 interface DayCell {
@@ -390,24 +404,26 @@ watch(isOpen, (open) => {
         <button type="button" class="navBtn" @click="prevMonth" aria-label="Previous month">
           <AgalaIcon name="chevron" :size="14" />
         </button>
-        <div class="headerSelects">
-          <div class="selectWrapper">
-            <select v-model="viewMonth" class="nativeSelect">
-              <option v-for="(label, i) in MONTH_LABELS" :key="i" :value="i" :disabled="isMonthDisabled(i)">
-                {{ label }}
-              </option>
-            </select>
-            <AgalaIcon name="chevron" :size="12" class="selectChevron" />
+    <div class="headerSelects">
+            <div class="selectWrapper">
+              <select v-model="viewMonth" class="nativeSelect monthSelect">
+                <option v-for="(label, i) in MONTH_LABELS" :key="i" :value="i" :disabled="isMonthDisabled(i)">
+                  {{ label }}
+                </option>
+              </select>
+              <AgalaIcon name="chevron" :size="12" class="selectChevron" />
+            </div>
+            <div class="selectWrapper">
+              <select v-model="viewYear" class="nativeSelect yearSelect">
+                <optgroup v-for="group in yearGroups" :key="group.label" :label="group.label">
+                  <option v-for="year in group.years" :key="year" :value="year">
+                    {{ year }}
+                  </option>
+                </optgroup>
+              </select>
+              <AgalaIcon name="chevron" :size="12" class="selectChevron" />
+            </div>
           </div>
-          <div class="selectWrapper">
-            <select v-model="viewYear" class="nativeSelect">
-              <option v-for="year in yearOptions" :key="year" :value="year">
-                {{ year }}
-              </option>
-            </select>
-            <AgalaIcon name="chevron" :size="12" class="selectChevron" />
-          </div>
-        </div>
         <button type="button" class="navBtn navBtnNext" @click="nextMonth" aria-label="Next month">
           <AgalaIcon name="chevron" :size="14" />
         </button>
@@ -600,6 +616,10 @@ watch(isOpen, (open) => {
 .nativeSelect option:disabled {
   opacity: 0.4;
   color: hsl(var(--agala-muted-foreground));
+}
+.yearSelect {
+  padding-right: 1.25rem;
+  min-width: 4.5rem;
 }
 .selectChevron {
   position: absolute;
