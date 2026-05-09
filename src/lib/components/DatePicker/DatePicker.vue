@@ -43,6 +43,7 @@ const hoverDay = ref('')
 const wrapperRef = ref<HTMLDivElement>()
 const triggerRef = ref<HTMLDivElement>()
 const floatingRef = ref<HTMLDivElement>()
+const isYearPanelOpen = ref(false)
 
 const { dropdownStyle, recompute } = useDropdownPosition(triggerRef, { width: 'auto' })
 
@@ -54,26 +55,12 @@ const displayValue = computed(() => {
   return formatDisplay(d)
 })
 
-const yearGroups = computed(() => {
+const yearOptions = computed(() => {
   const min = props.min ? parseISO(props.min)?.getFullYear() : undefined
   const max = props.max ? parseISO(props.max)?.getFullYear() : undefined
-  const start = min ?? new Date().getFullYear() - 10
-  const end = max ?? new Date().getFullYear() + 10
-
-  const groups: { label: string; years: number[] }[] = []
-  const decadeStart = Math.floor(start / 10) * 10
-  const decadeEnd = Math.ceil((end + 1) / 10) * 10
-
-  for (let d = decadeStart; d < decadeEnd; d += 10) {
-    const years = []
-    for (let y = d; y < d + 10; y++) {
-      if (y >= start && y <= end) years.push(y)
-    }
-    if (years.length) {
-      groups.push({ label: `${d}s`, years })
-    }
-  }
-  return groups
+  const start = min ?? new Date().getFullYear() - 100
+  const end = max ?? new Date().getFullYear() + 100
+  return Array.from({ length: end - start + 1 }, (_, i) => start + i)
 })
 
 interface DayCell {
@@ -165,6 +152,41 @@ function isMonthDisabled(monthIndex: number): boolean {
   return false
 }
 
+function isYearDisabled(year: number): boolean {
+  const firstISO = toISO(new Date(year, 0, 1))
+  const lastISO = toISO(new Date(year, 11, 31))
+  if (props.min && lastISO < props.min) return true
+  if (props.max && firstISO > props.max) return true
+  return false
+}
+
+function selectYear(year: number) {
+  if (isYearDisabled(year)) return
+  viewYear.value = year
+  isYearPanelOpen.value = false
+}
+
+function yearCellCls(year: number): string {
+  const selected = viewYear.value === year
+  const disabled = isYearDisabled(year)
+  const today = new Date().getFullYear() === year
+  return [
+    'yearCell',
+    selected ? 'yearCellSelected' : undefined,
+    today ? 'yearCellToday' : undefined,
+    disabled ? 'yearCellDisabled' : undefined,
+  ].filter(Boolean).join(' ')
+}
+
+function closeYearPanelOnClickOutside(e: MouseEvent) {
+  const target = e.target as Node
+  const panel = wrapperRef.value?.querySelector('.yearPanel')
+  const trigger = wrapperRef.value?.querySelector('.yearTrigger')
+  if (panel && !panel.contains(target) && trigger && !trigger.contains(target)) {
+    isYearPanelOpen.value = false
+  }
+}
+
 function todayISO(): string {
   return toISO(new Date())
 }
@@ -191,6 +213,7 @@ function formatDisplay(d: Date): string {
 function selectDay(day: DayCell) {
   if (day.disabled) return
   emit('update:modelValue', day.dateISO)
+  isYearPanelOpen.value = false
   close()
 }
 
@@ -242,6 +265,7 @@ function open() {
 
 function close() {
   isOpen.value = false
+  isYearPanelOpen.value = false
 }
 
 function handleTriggerClick() {
@@ -270,6 +294,41 @@ function handleTriggerKeyDown(e: KeyboardEvent) {
 function handleGridKeyDown(e: KeyboardEvent) {
   e.stopPropagation()
   if (!isOpen.value) return
+
+  if (isYearPanelOpen.value) {
+    const panel = wrapperRef.value?.querySelector('.yearPanel')
+    const buttons = panel ? Array.from(panel.querySelectorAll('.yearCell')) as HTMLElement[] : []
+    const activeIndex = buttons.findIndex(btn => btn === document.activeElement)
+
+    switch (e.key) {
+      case 'ArrowUp':
+        e.preventDefault()
+        if (activeIndex > 0) {
+          buttons[activeIndex - 1]?.focus()
+        } else if (buttons.length > 0) {
+          buttons[0]?.focus()
+        }
+        return
+      case 'ArrowDown':
+        e.preventDefault()
+        if (activeIndex >= 0 && activeIndex < buttons.length - 1) {
+          buttons[activeIndex + 1]?.focus()
+        } else if (buttons.length > 0) {
+          buttons[buttons.length - 1]?.focus()
+        }
+        return
+      case 'Enter':
+        if (activeIndex !== -1) {
+          e.preventDefault()
+          selectYear(Number(buttons[activeIndex].textContent?.trim()))
+        }
+        return
+      case 'Escape':
+        e.preventDefault()
+        isYearPanelOpen.value = false
+        return
+    }
+  }
 
   let d = parseISO(focusedDate.value) || new Date()
   let changed = false
@@ -353,6 +412,14 @@ function cellCls(day: DayCell): string {
   ].filter(Boolean).join(' ')
 }
 
+watch(isYearPanelOpen, (open) => {
+  if (open) {
+    document.addEventListener('mousedown', closeYearPanelOnClickOutside)
+  } else {
+    document.removeEventListener('mousedown', closeYearPanelOnClickOutside)
+  }
+})
+
 /* click outside + scroll close + resize reposition */
 watch(isOpen, (open) => {
   if (!open) return
@@ -413,15 +480,36 @@ watch(isOpen, (open) => {
               </select>
               <AgalaIcon name="chevron" :size="12" class="selectChevron" />
             </div>
-            <div class="selectWrapper">
-              <select v-model="viewYear" class="nativeSelect yearSelect">
-                <optgroup v-for="group in yearGroups" :key="group.label" :label="group.label">
-                  <option v-for="year in group.years" :key="year" :value="year">
-                    {{ year }}
-                  </option>
-                </optgroup>
-              </select>
-              <AgalaIcon name="chevron" :size="12" class="selectChevron" />
+            <div class="selectWrapper yearPanelWrapper">
+              <button
+                type="button"
+                class="nativeSelect yearTrigger yearSelect"
+                @click.stop="isYearPanelOpen = !isYearPanelOpen"
+                :aria-expanded="isYearPanelOpen"
+                aria-haspopup="listbox"
+              >
+                {{ viewYear }}
+                <AgalaIcon name="chevron" :size="12" class="selectChevron" :class="isYearPanelOpen ? 'selectChevronOpen' : ''" />
+              </button>
+              <div
+                v-if="isYearPanelOpen"
+                class="yearPanel"
+                role="listbox"
+                aria-label="Years"
+              >
+                <button
+                  v-for="year in yearOptions"
+                  :key="year"
+                  type="button"
+                  role="option"
+                  :class="yearCellCls(year)"
+                  :aria-selected="viewYear === year"
+                  :aria-disabled="isYearDisabled(year)"
+                  @click="selectYear(year)"
+                >
+                  {{ year }}
+                </button>
+              </div>
             </div>
           </div>
         <button type="button" class="navBtn navBtnNext" @click="nextMonth" aria-label="Next month">
@@ -626,6 +714,68 @@ watch(isOpen, (open) => {
   right: 0.375rem;
   pointer-events: none;
   color: hsl(var(--agala-muted-foreground));
+}
+.selectChevronOpen {
+  transform: rotate(180deg);
+}
+
+.yearPanelWrapper {
+  position: relative;
+}
+.yearTrigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+.yearPanel {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 10;
+  background-color: hsl(var(--agala-popover));
+  border: var(--agala-border-width) solid hsl(var(--agala-border));
+  border-radius: calc(var(--agala-radius) - 2px);
+  box-shadow: var(--agala-shadow-md);
+  padding: 0.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+.yearCell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 2rem;
+  width: 100%;
+  border: none;
+  border-radius: var(--agala-radius-sm);
+  background: transparent;
+  color: hsl(var(--agala-foreground));
+  font-size: var(--agala-font-size-sm);
+  font-family: var(--agala-font-sans);
+  cursor: pointer;
+  transition: background-color var(--agala-transition-fast), color var(--agala-transition-fast);
+}
+.yearCell:hover:not(.yearCellDisabled):not(.yearCellSelected) {
+  background-color: hsl(var(--agala-accent));
+  color: hsl(var(--agala-accent-foreground));
+}
+.yearCellSelected {
+  background-color: hsl(var(--agala-primary));
+  color: hsl(var(--agala-primary-foreground));
+  font-weight: var(--agala-font-weight-medium);
+}
+.yearCellDisabled {
+  cursor: default;
+  opacity: 0.35;
+  pointer-events: none;
+}
+.yearCellToday {
+  font-weight: var(--agala-font-weight-semibold);
+  color: hsl(var(--agala-primary));
 }
 
 .navBtn {
