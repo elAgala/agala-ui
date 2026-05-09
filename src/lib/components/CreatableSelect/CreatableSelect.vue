@@ -162,7 +162,7 @@ function openDropdown() {
   isOpen.value = true
   query.value = ''
   highlightedIdx.value = 0
-  nextTick(() => recompute())
+  nextTick(() => requestAnimationFrame(() => recompute()))
 }
 
 function removeLastChip() {

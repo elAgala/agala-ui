@@ -9,18 +9,26 @@ import { type Ref, ref } from 'vue'
  *     for layout reads — element references don't change when elements move,
  *     so Vue's computed caching returns stale coordinates.
  */
-export function useDropdownPosition(triggerRef: Ref<HTMLElement | undefined>) {
-  const dropdownStyle = ref<Record<string, string>>({})
+export function useDropdownPosition(
+  triggerRef: Ref<HTMLElement | undefined>,
+  opts: { width?: 'trigger' | 'auto' } = {}
+) {
+  const dropdownStyle = ref<Record<string, string>>({
+    position: 'fixed',
+  })
 
   function recompute() {
     if (!triggerRef.value) return
     const rect = triggerRef.value.getBoundingClientRect()
-    dropdownStyle.value = {
+    const style: Record<string, string> = {
       position: 'fixed',
       top: `${rect.bottom + 4}px`,
       left: `${rect.left}px`,
-      width: `${rect.width}px`,
     }
+    if (opts.width !== 'auto') {
+      style.width = `${rect.width}px`
+    }
+    dropdownStyle.value = style
   }
 
   return { dropdownStyle, recompute }

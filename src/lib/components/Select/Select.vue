@@ -205,7 +205,7 @@ function openDropdown() {
   isOpen.value = true
   query.value = ''
   highlightedIdx.value = 0
-  nextTick(() => recompute())
+  nextTick(() => requestAnimationFrame(() => recompute()))
 }
 
 function findNextIndex(start: number, dir: 1 | -1): number {

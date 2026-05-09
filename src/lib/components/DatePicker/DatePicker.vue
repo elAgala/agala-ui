@@ -44,7 +44,7 @@ const wrapperRef = ref<HTMLDivElement>()
 const triggerRef = ref<HTMLDivElement>()
 const floatingRef = ref<HTMLDivElement>()
 
-const { dropdownStyle, recompute } = useDropdownPosition(triggerRef)
+const { dropdownStyle, recompute } = useDropdownPosition(triggerRef, { width: 'auto' })
 
 /* Computed */
 const displayValue = computed(() => {
@@ -208,7 +208,7 @@ function open() {
     focusedDate.value = todayISO()
   }
   nextTick(() => {
-    recompute()
+    requestAnimationFrame(() => recompute())
     const el = wrapperRef.value?.querySelector('[tabindex="0"]') as HTMLElement | null
     el?.focus({ preventScroll: true })
   })
