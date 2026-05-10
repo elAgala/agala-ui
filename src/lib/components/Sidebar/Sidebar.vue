@@ -35,6 +35,7 @@ const currentWidth = computed(() => {
 
 const cls = computed(() => [
   'sidebar',
+  props.responsive ? 'sidebarResponsive' : undefined,
   isCollapsed.value ? 'sidebarCollapsed' : undefined,
   props.class,
 ].filter(Boolean).join(' '))
@@ -53,15 +54,15 @@ provide('sidebar-collapsed', isCollapsed)
 <template>
   <aside :class="cls" :style="{ '--sidebar-width': currentWidth }">
     <div v-if="$slots.header" class="sidebarHeader">
-      <slot name="header" :collapsed="collapsed" :toggle="toggle" />
+      <slot name="header" :collapsed="isCollapsed" :toggle="toggle" />
     </div>
 
     <nav class="sidebarNav">
-      <slot :collapsed="collapsed" :toggle="toggle" />
+      <slot :collapsed="isCollapsed" :toggle="toggle" />
     </nav>
 
     <div v-if="$slots.footer" class="sidebarFooter">
-      <slot name="footer" :collapsed="collapsed" :toggle="toggle" />
+      <slot name="footer" :collapsed="isCollapsed" :toggle="toggle" />
     </div>
   </aside>
 
@@ -121,14 +122,14 @@ provide('sidebar-collapsed', isCollapsed)
 
 /* Tablet: auto-collapse to 64px */
 @media (max-width: 767px) {
-  .sidebar {
+  .sidebar.sidebarResponsive {
     width: 64px !important;
   }
 }
 
 /* Mobile: hide sidebar, Drawer takes over */
 @media (max-width: 639px) {
-  .sidebar {
+  .sidebar.sidebarResponsive {
     display: none;
   }
 }

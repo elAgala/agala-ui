@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, h, watch, type VNode } from 'vue'
 import { Button, Input, FormField, Select, CreatableSelect, DatePicker, Modal, ModalProvider, modalManager, Badge, Checkbox, Toggle, Avatar, ToastProvider, toastManager, Textarea, DropdownMenu, Table, Tabs, Card, Tooltip, RadioGroup, Navbar, Sidebar, SidebarItem, SidebarGroup, SidebarToggle, Accordion, AccordionItem, Skeleton, Stat, EmptyState, Progress, Tag, Pagination, Drawer, FileUpload, DevEnvBanner } from '../lib'
+import { useMediaQuery } from '../lib/composables/useMediaQuery'
 import AgalaIcon from '../lib/components/AgalaIcon/AgalaIcon.vue'
 import type { TableColumn, TabItem } from '../lib'
 
@@ -140,6 +141,7 @@ const progressValue = ref(65)
 /* ─── Sidebar state ─── */
 const sidebarCollapsed = ref(false)
 const sidebarOpen = ref(false)
+const isMobileViewport = useMediaQuery('(max-width: 639px)')
 
 /* ─── Tag state ─── */
 const tagList = ref([
@@ -1108,7 +1110,7 @@ const AckDialog = {
       <div style="border: 1px solid hsl(var(--agala-border)); border-radius: var(--agala-radius-lg); overflow: hidden">
         <Navbar>
           <template #brand>
-            <SidebarToggle aria-controls="responsive-sidebar" :aria-expanded="sidebarOpen" @click="sidebarOpen = !sidebarOpen" />
+            <SidebarToggle v-if="isMobileViewport" aria-controls="responsive-sidebar" :aria-expanded="sidebarOpen" @click="sidebarOpen = !sidebarOpen" />
             <span style="font-weight: 600; font-size: 0.875rem; margin-left: 0.5rem">My App</span>
           </template>
           <Button variant="ghost" size="sm">Dashboard</Button>
