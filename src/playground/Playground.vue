@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref, h, watch } from 'vue'
 import { Button, Input, FormField, Select, CreatableSelect, DatePicker, ColorPicker, Modal, ModalProvider, modalManager, Badge, Checkbox, Toggle, Avatar, ToastProvider, toastManager, Textarea, DropdownMenu, Table, Tabs, Card, Tooltip, RadioGroup, Navbar, Sidebar, SidebarItem, SidebarGroup, SidebarToggle, Accordion, AccordionItem, Skeleton, Stat, EmptyState, Progress, Tag, Pagination, Drawer, FileUpload, DevEnvBanner, Calendar, Alert } from '../lib'
+
+import { BaseChart } from '../../packages/charts/src/index'
 import { useMediaQuery } from '../lib/composables/useMediaQuery'
 import AgalaIcon from '../lib/components/AgalaIcon/AgalaIcon.vue'
 import type { TableColumn, TabItem, CalendarEvent, CalendarView } from '../lib'
@@ -8,7 +10,6 @@ import type { TableColumn, TabItem, CalendarEvent, CalendarView } from '../lib'
 /* ─── Theme ─── */
 type Theme = 'default' | 'forja' | 'custom'
 const activeTheme = ref<Theme>('default')
-const themeTesterOpen = ref(false)
 const customThemeCss = ref(`/* Paste your custom theme CSS here */
 :root {
   --agala-primary: 200 90% 50%;
@@ -380,55 +381,35 @@ const AckDialog = {
   </div>
 
   <!-- ─── Theme Tester ─── -->
-  <section class="themeTester">
-    <div class="themeTester__header">
-      <h2 style="margin: 0">🎨 Theme Tester</h2>
-      <Button
-        variant="ghost"
-        size="sm"
-        style="margin-left: auto"
-        @click="themeTesterOpen = !themeTesterOpen"
-      >
-        {{ themeTesterOpen ? 'Hide' : 'Show' }}
-      </Button>
-    </div>
-    <Transition name="themeTester-slide">
-      <div v-show="themeTesterOpen" class="themeTester__body">
-        <p class="muted" style="margin: 0 0 0.75rem; font-size: 0.875rem">
-          Paste custom CSS variables below and click <strong>Apply</strong> to see all components update instantly.
-        </p>
-        <div class="stack" style="max-width: 640px">
-          <Textarea
-            v-model="customThemeCss"
-            :rows="8"
-            resize="vertical"
-            placeholder="/* Paste your custom theme CSS here */\n:root {\n  --agala-primary: 200 90% 50%;\n  --agala-background: 0 0% 98%;\n  --agala-card: 0 0% 100%;\n  /* … */\n}"
-          />
-          <div class="row" style="margin-bottom: 0">
-            <Button variant="primary" icon @click="applyCustomTheme">
-              <template #icon><AgalaIcon name="refresh" :size="14" /></template>
-              Apply Custom Theme
-            </Button>
-            <Button variant="outline" @click="resetCustomTheme">Reset to Default</Button>
-            <span v-if="activeTheme === 'custom'" class="muted" style="font-size: 0.75rem; margin-left: auto">
-              ✅ Custom theme active
-            </span>
-          </div>
-        </div>
+  <section id="theme">
+    <h2>Theme Tester</h2>
+    <p class="muted" style="margin: 0 0 0.75rem; font-size: 0.875rem">
+      Paste custom CSS variables below and click <strong>Apply</strong> to see all components update instantly.
+    </p>
+    <div class="stack" style="max-width: 640px">
+      <Textarea
+        v-model="customThemeCss"
+        :rows="6"
+        resize="vertical"
+        placeholder="/* Paste your custom theme CSS here */\n:root {\n  --agala-primary: 200 90% 50%;\n  --agala-background: 0 0% 98%;\n  --agala-card: 0 0% 100%;\n  /* … */\n}"
+      />
+      <div class="row" style="margin-bottom: 0">
+        <Button variant="primary" icon @click="applyCustomTheme">
+          <template #icon><AgalaIcon name="refresh" :size="14" /></template>
+          Apply Custom Theme
+        </Button>
+        <Button variant="outline" @click="resetCustomTheme">Reset to Default</Button>
+        <span v-if="activeTheme === 'custom'" class="muted" style="font-size: 0.75rem; margin-left: auto">
+          ✅ Custom theme active
+        </span>
       </div>
-    </Transition>
+    </div>
   </section>
 
-  <div class="playground">
-    <header>
-      <h1>Agala UI</h1>
-      <p>Elegant, modern, themable components. Toggle dark mode on your OS to switch palettes.</p>
-    </header>
-
-    <!-- ─── DevEnvBanner ─── -->
-    <section>
-      <h2>DevEnvBanner</h2>
-      <p class="muted" style="margin: 0 0 0.75rem; font-size: 0.875rem">Close button removes the banner from the DOM. Refresh to reset.</p>
+  <!-- ─── DevEnvBanner ─── -->
+  <section id="banner">
+    <h2>DevEnvBanner</h2>
+    <p class="muted" style="margin: 0 0 0.75rem; font-size: 0.875rem">Close button removes the banner from the DOM. Refresh to reset.</p>
       <div class="stack" style="gap: 0">
         <DevEnvBanner />
         <DevEnvBanner text="Custom: Preview environment — data resets daily." class="custom-banner" />
@@ -436,7 +417,7 @@ const AckDialog = {
     </section>
 
     <!-- ─── Button ─── -->
-    <section>
+    <section id="btn">
       <h2>Button — Variants</h2>
       <div class="row">
         <Button v-for="v in variants" :key="v" :variant="v">
@@ -478,7 +459,7 @@ const AckDialog = {
     </section>
 
     <!-- ─── Input ─── -->
-    <section>
+    <section id="input">
       <h2>Input — Default</h2>
       <div class="stack" style="max-width: 400px">
         <Input placeholder="Small" size="sm" />
@@ -506,7 +487,7 @@ const AckDialog = {
     </section>
 
     <!-- ─── FormField ─── -->
-    <section>
+    <section id="formfield">
       <h2>FormField</h2>
       <div class="stack" style="max-width: 400px">
         <FormField label="Username" helper="Choose a unique username." html-for="user" required>
@@ -525,7 +506,7 @@ const AckDialog = {
     </section>
 
     <!-- ─── Select ─── -->
-    <section>
+    <section id="select">
       <h2>Select — Single</h2>
       <div class="stack" style="max-width: 400px">
         <Select :options="USERS" placeholder="Pick a user" v-model="singleUser" clearable />
@@ -576,7 +557,7 @@ const AckDialog = {
     </section>
 
     <!-- ─── CreatableSelect ─── -->
-    <section>
+    <section id="creatable">
       <h2>CreatableSelect — Basic</h2>
       <p class="muted" style="margin: 0 0 0.75rem; font-size: 0.875rem">
         Type to filter. When no match exists and creatable is true, a "Crear" option appears at the top.
@@ -610,7 +591,7 @@ const AckDialog = {
     </section>
 
     <!-- ─── DatePicker ─── -->
-    <section>
+    <section id="datepicker">
       <h2>DatePicker — Sizes</h2>
       <div class="stack" style="max-width: 320px">
         <DatePicker v-model="pickedDate" size="sm" placeholder="Small" />
@@ -639,7 +620,7 @@ const AckDialog = {
     </section>
 
     <!-- ─── Calendar ─── -->
-    <section>
+    <section id="calendar">
       <h2>Calendar</h2>
       <p class="muted" style="margin: 0 0 0.75rem; font-size: 0.875rem">
         Interactive calendar with month, week, day, and list views. Click events or days to see debug info below.
@@ -682,7 +663,7 @@ const AckDialog = {
     </section>
 
     <!-- ─── Dark Mode ─── -->
-    <section>
+    <section id="dark">
       <h2>Dark Mode</h2>
       <p class="muted">Toggle your OS dark mode preference to watch the tokens switch automatically.</p>
     </section>
@@ -1494,7 +1475,7 @@ const AckDialog = {
     </section>
 
     <!-- ─── Alert ─── -->
-    <section>
+    <section id="alert">
       <h2>Alert — Variants</h2>
       <div class="stack" style="max-width: 600px">
         <Alert variant="info">This is an informational message.</Alert>
@@ -1538,6 +1519,86 @@ const AckDialog = {
       </div>
     </section>
 
+    <!-- ─── Charts (from @el-agala/charts) ─── -->
+    <section>
+      <h2>Charts — BaseChart</h2>
+      <div class="charts-grid" style="max-width: 900px">
+        <div class="chart-item" style="background: hsl(var(--agala-card)); border-radius: var(--agala-radius); padding: 1rem;">
+          <h3 style="margin: 0 0 0.5rem; font-size: 0.875rem; font-weight: 600;">Line</h3>
+          <BaseChart
+            type="line"
+            :labels="['Jan','Feb','Mar','Apr','May','Jun']"
+            :datasets="[{ name: 'Revenue', data: [1200, 1900, 1500, 2100, 1800, 2400], smooth: true, areaStyle: true }]"
+            :height="220"
+          />
+        </div>
+        <div class="chart-item" style="background: hsl(var(--agala-card)); border-radius: var(--agala-radius); padding: 1rem;">
+          <h3 style="margin: 0 0 0.5rem; font-size: 0.875rem; font-weight: 600;">Bar</h3>
+          <BaseChart
+            type="bar"
+            :labels="['Mon','Tue','Wed','Thu','Fri','Sat','Sun']"
+            :datasets="[{ name: 'Check-ins', data: [45, 52, 38, 61, 48, 72, 80] }]"
+            :height="220"
+          />
+        </div>
+        <div class="chart-item" style="background: hsl(var(--agala-card)); border-radius: var(--agala-radius); padding: 1rem;">
+          <h3 style="margin: 0 0 0.5rem; font-size: 0.875rem; font-weight: 600;">Pie</h3>
+          <BaseChart
+            type="pie"
+            :labels="['Active','Inactive','Pending']"
+            :datasets="[{ data: [65, 20, 15] }]"
+            :height="220"
+          />
+        </div>
+        <div class="chart-item" style="background: hsl(var(--agala-card)); border-radius: var(--agala-radius); padding: 1rem;">
+          <h3 style="margin: 0 0 0.5rem; font-size: 0.875rem; font-weight: 600;">Scatter — Age vs. Spend</h3>
+          <BaseChart
+            type="scatter"
+            :datasets="[{ name: 'Members', data: [[22,320],[25,480],[30,550],[35,420],[40,670],[45,580],[50,720],[28,390],[33,510],[38,640]] }]"
+            :height="220"
+          />
+        </div>
+        <div class="chart-item" style="background: hsl(var(--agala-card)); border-radius: var(--agala-radius); padding: 1rem;">
+          <h3 style="margin: 0 0 0.5rem; font-size: 0.875rem; font-weight: 600;">Radar — Member Profile</h3>
+          <BaseChart
+            type="radar"
+            :indicators="[{ name: 'Attendance', max: 100 }, { name: 'Renewals', max: 100 }, { name: 'Referrals', max: 100 }, { name: 'Engagement', max: 100 }, { name: 'Satisfaction', max: 100 }]"
+            :datasets="[{ name: 'Q1', data: [85, 70, 45, 60, 90] }, { name: 'Q2', data: [78, 82, 55, 72, 88] }]"
+            :height="220"
+          />
+        </div>
+        <div class="chart-item" style="background: hsl(var(--agala-card)); border-radius: var(--agala-radius); padding: 1rem;">
+          <h3 style="margin: 0 0 0.5rem; font-size: 0.875rem; font-weight: 600;">Gauge — Occupancy</h3>
+          <BaseChart
+            type="gauge"
+            :datasets="[{ name: 'Capacity', data: [72] }]"
+            :max="100"
+            :height="220"
+          />
+        </div>
+        <div class="chart-item" style="background: hsl(var(--agala-card)); border-radius: var(--agala-radius); padding: 1rem;">
+          <h3 style="margin: 0 0 0.5rem; font-size: 0.875rem; font-weight: 600;">Stacked Area — Total Members</h3>
+          <BaseChart
+            type="line"
+            stacked
+            :labels="['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']"
+            :datasets="[{ name: 'New', data: [20,28,35,42,50,55,60,58,62,70,75,80] }, { name: 'Renewed', data: [80,82,85,88,90,92,95,93,96,98,100,105] }]"
+            :height="220"
+          />
+        </div>
+        <div class="chart-item" style="background: hsl(var(--agala-card)); border-radius: var(--agala-radius); padding: 1rem;">
+          <h3 style="margin: 0 0 0.5rem; font-size: 0.875rem; font-weight: 600;">Stacked Bar — Members by Plan</h3>
+          <BaseChart
+            type="bar"
+            stacked
+            :labels="['Jan','Feb','Mar','Apr','May','Jun']"
+            :datasets="[{ name: 'Basic', data: [30,40,35,50,45,60] }, { name: 'Pro', data: [20,25,30,35,40,45] }, { name: 'Elite', data: [10,12,15,18,20,25] }]"
+            :height="220"
+          />
+        </div>
+      </div>
+    </section>
+
   </div>
 </template>
 
@@ -1575,6 +1636,7 @@ h2 {
 
 section {
   margin-bottom: 3rem;
+  scroll-margin-top: 1.5rem;
 }
 
 .row {
@@ -1593,6 +1655,75 @@ section {
 
 .muted {
   color: hsl(var(--agala-muted-foreground));
+}
+
+/* ─── Floating left nav ─── */
+.playground-nav {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 160px;
+  overflow-y: auto;
+  padding: 1rem 0.75rem;
+  background: hsl(var(--agala-card));
+  border-right: 1px solid hsl(var(--agala-border));
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+.playground-nav__title {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: hsl(var(--agala-muted-foreground));
+  margin-bottom: 0.375rem;
+  padding: 0 0.375rem;
+}
+.playground-nav a {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: hsl(var(--agala-muted-foreground));
+  text-decoration: none;
+  padding: 0.25rem 0.375rem;
+  border-radius: var(--agala-radius-sm);
+  transition: color var(--agala-transition-fast), background var(--agala-transition-fast);
+}
+.playground-nav a:hover {
+  color: hsl(var(--agala-foreground));
+  background: hsl(var(--agala-muted));
+}
+.playground-nav a:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px hsl(var(--agala-ring));
+}
+
+.playground {
+  margin-left: 160px;
+}
+
+@media (max-width: 768px) {
+  .playground-nav {
+    display: none;
+  }
+  .playground {
+    margin-left: 0;
+  }
+}
+
+/* ─── Charts grid ─── */
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+@media (max-width: 640px) {
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ─── Theme switcher bar ─── */
@@ -1651,19 +1782,4 @@ section {
 }
 
 /* ─── Theme Tester ─── */
-.themeTester {
-  position: sticky;
-  top: 0;
-  z-index: 998;
-  background: hsl(var(--agala-card));
-  border-bottom: var(--agala-border-width) solid hsl(var(--agala-border));
-  padding: 1.5rem 1.5rem;
-  box-shadow: var(--agala-shadow-sm);
-}
-
-.themeTester h2 {
-  font-size: 1rem;
-  font-weight: 600;
-  margin: 0 0 0.5rem;
-}
 </style>
