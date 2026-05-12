@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, provide } from 'vue'
+import { computed, provide, watch } from 'vue'
 import Drawer from '../Drawer/Drawer.vue'
 import { useMediaQuery } from '../../composables/useMediaQuery'
 import type { SidebarProps } from './types'
@@ -49,6 +49,13 @@ function onDrawerClose() {
 }
 
 provide('sidebar-collapsed', isCollapsed)
+
+/* ─── Auto-close Drawer when leaving mobile ─── */
+watch(isMobile, (mobile) => {
+  if (!mobile && props.open) {
+    emit('update:open', false)
+  }
+})
 </script>
 
 <template>
