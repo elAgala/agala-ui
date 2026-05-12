@@ -406,6 +406,45 @@ const AckDialog = {
     </div>
   </section>
 
+  <nav class="playground-nav">
+    <span class="playground-nav__title">Components</span>
+    <a href="#banner">Dev Banner</a>
+    <a href="#btn">Button</a>
+    <a href="#input">Input</a>
+    <a href="#formfield">FormField</a>
+    <a href="#select">Select</a>
+    <a href="#creatable">Creatable</a>
+    <a href="#datepicker">DatePicker</a>
+    <a href="#calendar">Calendar</a>
+    <a href="#colorpicker">ColorPicker</a>
+    <a href="#modal">Modal</a>
+    <a href="#badge">Badge</a>
+    <a href="#checkbox">Checkbox</a>
+    <a href="#toggle">Toggle</a>
+    <a href="#avatar">Avatar</a>
+    <a href="#toast">Toast</a>
+    <a href="#textarea">Textarea</a>
+    <a href="#dropdown">Dropdown</a>
+    <a href="#table">Table</a>
+    <a href="#tabs">Tabs</a>
+    <a href="#card">Card</a>
+    <a href="#tooltip">Tooltip</a>
+    <a href="#radio">Radio</a>
+    <a href="#navbar">Navbar</a>
+    <a href="#sidebar">Sidebar</a>
+    <a href="#accordion">Accordion</a>
+    <a href="#skeleton">Skeleton</a>
+    <a href="#stat">Stat</a>
+    <a href="#progress">Progress</a>
+    <a href="#tag">Tag</a>
+    <a href="#pagination">Pagination</a>
+    <a href="#drawer">Drawer</a>
+    <a href="#fileupload">File</a>
+    <a href="#alert">Alert</a>
+    <a href="#charts">Charts</a>
+    <a href="#theme">Theme</a>
+  </nav>
+
   <div class="playground">
     <header>
       <h1>Agala UI</h1>
