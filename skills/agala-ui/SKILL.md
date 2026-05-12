@@ -26,6 +26,7 @@ description: >
 - Accessibility: focus rings, ARIA, keyboard nav
 - Composables: `useSelectFilter`, `useChipDisplay`, `useKeyboardNav`, `useDropdownPosition`, `usePopoverBehavior`, `useMediaQuery`
 - **Responsive by default** — Sidebar, Modal, Tabs, Pagination, and Navbar adapt to mobile/tablet viewports via CSS media queries (no custom CSS needed)
+- **Alert** — inline contextual messages with 4 semantic variants, optional title, dismissible, flat mode
 - **ColorPicker** — popover-based with saturation/luminance square, hue slider, presets, manual HEX input
 
 ---
@@ -362,8 +363,10 @@ import { modalManager } from '@el-agala/ui'
 
 const result = await modalManager.open(MyDialogComponent, {
   props: { message: 'Delete?' },
+  title: 'Confirm deletion',
   size: 'sm',
   dismissible: true,
+  hideHeader: false,
 })
 if (result.confirmed) { /* … */ }
 ```
@@ -438,6 +441,23 @@ toastManager.show({
   <AccordionItem value="1" title="Question">Answer</AccordionItem>
 </Accordion>
 ```
+
+### Alert
+```vue
+<Alert variant="info" title="Heads up" dismissible>
+  Your session expires in 5 minutes.
+</Alert>
+
+<Alert variant="success" flat>Changes saved.</Alert>
+```
+- `variant`: `info` | `success` | `warning` | `danger`
+- `title`: optional bold header text
+- Default slot: description/body content
+- `dismissible`: shows × button, click removes from DOM (internal `v-if`, no emit)
+- `flat`: minimal icon+text mode — no background, no border, no title, compact padding
+- Auto-matched icons: info→`info`, success→`check-circle`, warning→`alert-triangle`, danger→`alert-circle`
+- `role="alert"`, `aria-atomic="true"`, dismiss button has `aria-label="Dismiss alert"`
+- `class` prop for consumer overrides
 
 ### Stat
 ```vue
