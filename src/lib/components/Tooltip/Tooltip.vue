@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import type { TooltipProps } from './types'
 
-let _id = 0
+let idCounter = 0
 
 const props = withDefaults(defineProps<TooltipProps>(), {
   placement: 'top',
@@ -10,7 +10,8 @@ const props = withDefaults(defineProps<TooltipProps>(), {
   block: false,
 })
 
-const tooltipId = `agala-tooltip-${++_id}`
+idCounter += 1
+const tooltipId = `agala-tooltip-${idCounter}`
 const visible = ref(false)
 let timer: ReturnType<typeof setTimeout> | null = null
 

@@ -3,7 +3,7 @@ import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useMediaQuery } from '../../composables/useMediaQuery'
 import type { TabsProps, TabItem } from './types'
 
-let _id = 0
+let idCounter = 0
 
 const props = withDefaults(defineProps<TabsProps>(), {})
 
@@ -11,7 +11,8 @@ const emit = defineEmits<{
   'update:modelValue': [value: string]
 }>()
 
-const uid = `tabs-${++_id}`
+idCounter += 1
+const uid = `tabs-${idCounter}`
 
 const { matches: isMobile } = useMediaQuery('(max-width: 639px)')
 const activeTabRef = ref<HTMLElement | null>(null)

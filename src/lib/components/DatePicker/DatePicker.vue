@@ -268,7 +268,8 @@ function close() {
 
 function handleTriggerClick() {
   if (props.disabled) return
-  isOpen.value ? close() : open()
+  if (isOpen.value) close()
+  else open()
 }
 
 function handleTriggerKeyDown(e: KeyboardEvent) {
@@ -277,7 +278,8 @@ function handleTriggerKeyDown(e: KeyboardEvent) {
     case 'Enter':
     case ' ':
       e.preventDefault()
-      isOpen.value ? close() : open()
+      if (isOpen.value) close()
+      else open()
       break
     case 'ArrowDown':
       e.preventDefault()

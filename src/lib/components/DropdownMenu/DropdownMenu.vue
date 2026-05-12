@@ -40,7 +40,8 @@ function close() {
 }
 
 function toggle() {
-  isOpen.value ? close() : open()
+  if (isOpen.value) close()
+  else open()
 }
 
 function executeItem(item: DropdownMenuItem) {

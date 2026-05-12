@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import type { RadioGroupProps, RadioOption, RadioOrientation } from './types'
 
-let _id = 0
+let idCounter = 0
 
 const props = withDefaults(defineProps<RadioGroupProps>(), {
   orientation: 'vertical',
@@ -14,7 +14,8 @@ const emit = defineEmits<{
   'update:modelValue': [value: string]
 }>()
 
-const groupName = `agala-radio-${++_id}`
+idCounter += 1
+const groupName = `agala-radio-${idCounter}`
 
 const orientationMap: Record<RadioOrientation, string> = {
   vertical:   'groupVertical',
