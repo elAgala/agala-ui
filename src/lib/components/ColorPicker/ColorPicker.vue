@@ -3,6 +3,7 @@ import { ref, computed, watch, nextTick, onMounted } from 'vue'
 import { AgalaIcon } from '../AgalaIcon'
 import Input from '../Input/Input.vue'
 import { useDropdownPosition } from '../../composables/useDropdownPosition'
+import { usePopoverBehavior } from '../../composables/usePopoverBehavior'
 import ColorSquare from './ColorSquare.vue'
 import HueSlider from './HueSlider.vue'
 import {
@@ -256,31 +257,8 @@ function handleClear() {
   close()
 }
 
-/* ─── Click outside + scroll close + resize reposition ─── */
-watch(isOpen, (open) => {
-  if (!open) return
-  const handleClick = (e: MouseEvent) => {
-    if (!wrapperRef.value?.contains(e.target as Node) && !floatingRef.value?.contains(e.target as Node)) {
-      close()
-    }
-  }
-  const handleScroll = (e: Event) => {
-    if (!floatingRef.value?.contains(e.target as Node)) {
-      close()
-    }
-  }
-  const handleResize = () => recompute()
-  document.addEventListener('mousedown', handleClick)
-  window.addEventListener('scroll', handleScroll, true)
-  window.addEventListener('resize', handleResize)
-  watch(isOpen, (newOpen) => {
-    if (!newOpen) {
-      document.removeEventListener('mousedown', handleClick)
-      window.removeEventListener('scroll', handleScroll, true)
-      window.removeEventListener('resize', handleResize)
-    }
-  }, { once: true })
-})
+/* ─── Popover behavior (click-outside, scroll-close, resize-reposition) ─── */
+usePopoverBehavior(isOpen, wrapperRef, floatingRef, () => close(), recompute)
 
 /* ─── Tab trapping ─── */
 function handlePopoverKeyDown(e: KeyboardEvent) {

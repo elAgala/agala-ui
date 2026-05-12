@@ -2,6 +2,7 @@
 import { ref, computed, watch, nextTick } from 'vue'
 import { AgalaIcon } from '../AgalaIcon'
 import { useDropdownPosition } from '../../composables/useDropdownPosition'
+import { usePopoverBehavior } from '../../composables/usePopoverBehavior'
 import type { DatePickerSize } from './types'
 
 const props = withDefaults(defineProps<{
@@ -426,30 +427,7 @@ watch(isYearPanelOpen, (open) => {
 })
 
 /* click outside + scroll close + resize reposition */
-watch(isOpen, (open) => {
-  if (!open) return
-  const handleClick = (e: MouseEvent) => {
-    if (!wrapperRef.value?.contains(e.target as Node) && !floatingRef.value?.contains(e.target as Node)) {
-      close()
-    }
-  }
-  const handleScroll = (e: Event) => {
-    if (!floatingRef.value?.contains(e.target as Node)) {
-      close()
-    }
-  }
-  const handleResize = () => recompute()
-  document.addEventListener('mousedown', handleClick)
-  window.addEventListener('scroll', handleScroll, true)
-  window.addEventListener('resize', handleResize)
-  watch(isOpen, (newOpen) => {
-    if (!newOpen) {
-      document.removeEventListener('mousedown', handleClick)
-      window.removeEventListener('scroll', handleScroll, true)
-      window.removeEventListener('resize', handleResize)
-    }
-  }, { once: true })
-})
+usePopoverBehavior(isOpen, wrapperRef, floatingRef, () => close(), recompute)
 
 </script>
 

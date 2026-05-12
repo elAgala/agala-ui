@@ -7,6 +7,7 @@ import {
 } from 'vue'
 import { AgalaIcon } from '../AgalaIcon'
 import { useDropdownPosition } from '../../composables/useDropdownPosition'
+import { usePopoverBehavior } from '../../composables/usePopoverBehavior'
 import type { SelectOption, SelectSize } from './types'
 
 type FlatItem =
@@ -357,37 +358,13 @@ function handleSearchKeyDown(e: KeyboardEvent) {
 }
 
 /* ─── Watches ─── */
+usePopoverBehavior(isOpen, wrapperRef, floatingRef, () => closeDropdown(), recompute)
+
+// Focus search input when opening
 watch(isOpen, (open) => {
-  if (!open) return
-  // Click outside
-  const handleClick = (e: MouseEvent) => {
-    const target = e.target as Node
-    if (!wrapperRef.value?.contains(target) && !floatingRef.value?.contains(target)) {
-      closeDropdown()
-    }
-  }
-  // Close on any scroll outside the dropdown (modal scroll, page scroll, etc.)
-  const handleScroll = (e: Event) => {
-    if (!floatingRef.value?.contains(e.target as Node)) {
-      closeDropdown()
-    }
-  }
-  const handleResize = () => recompute()
-  document.addEventListener('mousedown', handleClick)
-  window.addEventListener('scroll', handleScroll, true)
-  window.addEventListener('resize', handleResize)
-  // Focus search
-  if (props.searchable) {
+  if (open && props.searchable) {
     nextTick(() => searchRef.value?.focus({ preventScroll: true }))
   }
-  // Cleanup
-  watch(isOpen, (newOpen) => {
-    if (!newOpen) {
-      document.removeEventListener('mousedown', handleClick)
-      window.removeEventListener('scroll', handleScroll, true)
-      window.removeEventListener('resize', handleResize)
-    }
-  }, { once: true })
 })
 
 watch(highlightedIdx, () => {

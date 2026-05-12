@@ -4,6 +4,7 @@ import { AgalaIcon } from '../AgalaIcon'
 import { useChipDisplay } from '../../composables/useChipDisplay'
 import { useKeyboardNav } from '../../composables/useKeyboardNav'
 import { useDropdownPosition } from '../../composables/useDropdownPosition'
+import { usePopoverBehavior } from '../../composables/usePopoverBehavior'
 import type { CreatableSelectProps } from './types'
 
 const props = withDefaults(defineProps<CreatableSelectProps>(), {
@@ -273,36 +274,13 @@ function handleSearchKeyDown(e: KeyboardEvent) {
 }
 
 /* ─── Watches ─── */
+usePopoverBehavior(isOpen, wrapperRef, floatingRef, () => closeDropdown(), recompute)
+
+// Focus search when opening
 watch(isOpen, (open) => {
-  if (!open) return
-
-  const handleClick = (e: MouseEvent) => {
-    const target = e.target as Node
-    if (!wrapperRef.value?.contains(target) && !floatingRef.value?.contains(target)) {
-      closeDropdown()
-    }
+  if (open) {
+    nextTick(() => searchRef.value?.focus({ preventScroll: true }))
   }
-
-  const handleScroll = (e: Event) => {
-    if (!floatingRef.value?.contains(e.target as Node)) {
-      closeDropdown()
-    }
-  }
-
-  const handleResize = () => recompute()
-  document.addEventListener('mousedown', handleClick)
-  window.addEventListener('scroll', handleScroll, true)
-  window.addEventListener('resize', handleResize)
-
-  nextTick(() => searchRef.value?.focus({ preventScroll: true }))
-
-  watch(isOpen, (newOpen) => {
-    if (!newOpen) {
-      document.removeEventListener('mousedown', handleClick)
-      window.removeEventListener('scroll', handleScroll, true)
-      window.removeEventListener('resize', handleResize)
-    }
-  }, { once: true })
 })
 
 watch(query, (q) => {
