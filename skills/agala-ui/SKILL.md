@@ -2,7 +2,7 @@
 name: agala-ui
 description: >
   Expert knowledge of @el-agala/ui — a zero-dependency Vue 3 component library
-  with 28+ components, HSL design tokens, theming, and accessibility.
+  with 29+ components, HSL design tokens, theming, and accessibility.
   Auto-triggered when the user mentions "agala", "el-agala/ui", "agala ui",
   or asks to build UI with these components.
 ---
@@ -176,6 +176,52 @@ html[data-theme="forja"] {
 ```
 - Dropdown teleports to body
 - Uses `useDropdownPosition` with `width: 'auto'` so calendar expands to `280px` instead of being clipped to trigger width
+
+### Calendar
+```vue
+<Calendar
+  v-model:view="calendarView"
+  v-model:currentDate="calendarDate"
+  :events="events"
+  @select="handleEventSelect"
+  @day-click="handleDayClick"
+/>
+```
+- **Four view modes**: `month` | `week` | `day` | `list`
+- `events`: `CalendarEvent[]` with `id`, `title`, `subtitle`, `start` (ISO), `end` (ISO), `allDay?`, `color?`
+- `color`: token name (`primary`, `danger`, `success`, `warning`, `secondary`, `accent`) OR arbitrary CSS color string
+- `dayStart` / `dayEnd`: visible hour range for week/day views (default `"00:00"` / `"24:00"`)
+- `v-model:view`: controls active view
+- `v-model:currentDate`: controls focused/visible date
+- `@select(event)`: clicked an event
+- `@day-click(date)`: clicked a day cell (ISO date string)
+- **Slots**: `#event` (scoped, overrides event rendering), `#empty-day` (custom empty cell content), `#header` (override entire header)
+- **Responsive**: month grid adapts cell size, week view scrolls horizontally on mobile, list view uses compact cards
+- **Current time**: red indicator line shown in all views
+- **Keyboard**: arrow keys navigate month grid, Enter selects, Escape clears focus
+
+```ts
+import type { CalendarEvent, CalendarView } from '@el-agala/ui'
+
+const events = ref<CalendarEvent[]>([
+  {
+    id: '1',
+    title: 'Team Standup',
+    subtitle: 'Daily sync',
+    start: '2024-05-15T09:00:00',
+    end: '2024-05-15T09:30:00',
+    color: 'primary' // or '#8b5cf6' for arbitrary colors
+  },
+  {
+    id: '2',
+    title: 'Holiday',
+    start: '2024-05-15T00:00:00',
+    end: '2024-05-15T23:59:59',
+    allDay: true,
+    color: 'danger'
+  }
+])
+```
 
 ### Badge
 ```vue
@@ -523,6 +569,45 @@ watch(isOpen, async (open) => {
 - Call `recompute()` on `resize` events while dropdown is open
 - `position: fixed` teleported to `<body>` is relative to viewport UNLESS an ancestor has `transform`, `perspective`, or `filter`
 
+### useDateUtils
+Date formatting and parsing utilities (powered by `date-fns`).
+
+```ts
+import {
+  parseDate,
+  formatISODate,
+  formatISODateTime,
+  formatTime,
+  formatTime24,
+  formatDateLabel,
+  formatMonthYear,
+  formatFullDate,
+  isSameDay,
+  isToday,
+  startOfWeek,
+  addDays,
+  getMonthGrid,
+  getWeekDays,
+} from '@el-agala/ui'
+
+// Parse ISO string
+const date = parseDate('2024-05-15T09:00:00') // Date | null
+
+// Formatters
+formatTime(date)        // "9:00 AM"
+formatTime24(date)      // "09:00"
+formatDateLabel(date)   // "Monday, May 15"
+formatMonthYear(date)   // "May 2024"
+formatFullDate(date)    // "May 15, 2024"
+formatISODate(date)     // "2024-05-15"
+
+// Utilities
+isToday(date)           // boolean
+isSameDay(a, b)         // boolean
+getWeekDays(date)       // Date[] (7 days starting Sunday)
+getMonthGrid(date)      // Date[] (42 days = 6 weeks)
+```
+
 ---
 
 ## Imperative Patterns
@@ -579,7 +664,7 @@ toastManager.show({
 
 ## Common Gotchas
 
-1. **Icons** — Use `AgalaIcon` with `name` string, NOT slots. Available names: `search`, `mail`, `eye`, `user`, `users`, `flag`, `chevron`, `chevron-left`, `chevron-right`, `chevron-up`, `check`, `x`, `calendar`, `clock`, `refresh`, `minus`, `check-circle`, `alert-triangle`, `alert-circle`, `info`, `more-vertical`, `more-horizontal`, `arrow-up`, `arrow-down`, `trending-up`, `trending-down`, `home`, `bell`, `settings`, `menu`, `panel-left`, `pencil`, `trash`, `plus`, `filter`, `building`, `document`, `credit-card`, `lock`, `sign-out`, `chart-bar`, `archive`, `inbox`, `key`, `spinner`.
+1. **Icons** — Use `AgalaIcon` with `name` string, NOT slots. Available names: `search`, `mail`, `eye`, `user`, `users`, `flag`, `chevron`, `chevron-left`, `chevron-right`, `chevron-up`, `check`, `x`, `calendar`, `clock`, `refresh`, `minus`, `check-circle`, `alert-triangle`, `alert-circle`, `info`, `more-vertical`, `more-horizontal`, `arrow-up`, `arrow-down`, `trending-up`, `trending-down`, `home`, `bell`, `settings`, `menu`, `panel-left`, `pencil`, `trash`, `plus`, `filter`, `building`, `document`, `credit-card`, `lock`, `sign-out`, `chart-bar`, `archive`, `inbox`, `key`, `spinner`, `grid`, `columns`, `list`.
 
 2. **ModalProvider / ToastProvider** — Must be mounted once at app root. Imperative modals/toasts won't work without them.
 
@@ -614,6 +699,14 @@ toastManager.show({
 17. **Breakpoint tokens** — `--agala-breakpoint-sm: 640px` and `--agala-breakpoint-md: 768px` are exposed as CSS custom properties for documentation/JS reference only. Component media queries hardcode these values; they cannot be consumed via `var()` inside `@media` rules.
 
 18. **Table responsive** — `Table` does not have built-in responsive column hiding. Wrap it in a container with `overflow-x: auto` for horizontal scrolling on mobile, or use custom CSS to hide less important columns.
+
+19. **Calendar event colors** — `color` prop accepts token names (`primary`, `danger`, `success`, `warning`, `secondary`, `accent`) OR arbitrary CSS color strings. Token names apply a subtle transparent background + colored text + left border. Arbitrary colors use `color-mix` for background transparency. The consumer is responsible for contrast in both light and dark modes when using arbitrary colors.
+
+20. **Calendar event times** — `start` and `end` must be ISO 8601 strings (e.g. `2024-05-15T09:00:00`). The component does not handle recurring events or multi-day spanning events in v1. Events must start and end on the same calendar day.
+
+21. **Calendar "+N more"** — In month view, cells show max 3 event indicators. Clicking `+N more` emits `@day-click` with the date so the consumer can switch to day view or open a modal to see all events.
+
+22. **Calendar list view** — Not designed for "available slots" browsing. Pass free time slots as fake `CalendarEvent` objects with `color: 'success'` if you want to use it for booking, but a custom component is usually better for that UX.
 
 ---
 
