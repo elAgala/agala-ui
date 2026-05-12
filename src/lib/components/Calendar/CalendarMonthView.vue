@@ -264,9 +264,14 @@ function handleGridKeyDown(e: KeyboardEvent) {
               />
             </div>
 
-            <span v-if="cell.hiddenCount > 0" class="moreLabel">
+            <button
+              v-if="cell.hiddenCount > 0"
+              type="button"
+              class="moreLabel"
+              @click.stop="handleDayClick(cell)"
+            >
               +{{ cell.hiddenCount }} more
-            </span>
+            </button>
           </div>
         </div>
       </div>
@@ -440,10 +445,29 @@ function handleGridKeyDown(e: KeyboardEvent) {
 }
 
 .moreLabel {
+  display: inline-flex;
+  align-items: center;
   font-size: 0.6875rem;
+  font-weight: var(--agala-font-weight-medium);
   color: hsl(var(--agala-muted-foreground));
-  padding: 0 0.25rem;
+  padding: 0.125rem 0.375rem;
   line-height: 1.25rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: var(--agala-radius-sm);
+  transition: background-color var(--agala-transition-fast);
+  text-align: left;
+}
+
+.moreLabel:hover {
+  background-color: hsl(var(--agala-accent));
+  color: hsl(var(--agala-foreground));
+}
+
+.moreLabel:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px hsl(var(--agala-ring) / 0.5);
 }
 
 /* ── Token color classes ── */
