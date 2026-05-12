@@ -380,32 +380,6 @@ const AckDialog = {
     </div>
   </div>
 
-  <!-- ─── Theme Tester ─── -->
-  <section id="theme">
-    <h2>Theme Tester</h2>
-    <p class="muted" style="margin: 0 0 0.75rem; font-size: 0.875rem">
-      Paste custom CSS variables below and click <strong>Apply</strong> to see all components update instantly.
-    </p>
-    <div class="stack" style="max-width: 640px">
-      <Textarea
-        v-model="customThemeCss"
-        :rows="6"
-        resize="vertical"
-        placeholder="/* Paste your custom theme CSS here */\n:root {\n  --agala-primary: 200 90% 50%;\n  --agala-background: 0 0% 98%;\n  --agala-card: 0 0% 100%;\n  /* … */\n}"
-      />
-      <div class="row" style="margin-bottom: 0">
-        <Button variant="primary" icon @click="applyCustomTheme">
-          <template #icon><AgalaIcon name="refresh" :size="14" /></template>
-          Apply Custom Theme
-        </Button>
-        <Button variant="outline" @click="resetCustomTheme">Reset to Default</Button>
-        <span v-if="activeTheme === 'custom'" class="muted" style="font-size: 0.75rem; margin-left: auto">
-          ✅ Custom theme active
-        </span>
-      </div>
-    </div>
-  </section>
-
   <nav class="playground-nav">
     <span class="playground-nav__title">Components</span>
     <a href="#banner">Dev Banner</a>
@@ -446,6 +420,32 @@ const AckDialog = {
   </nav>
 
   <div class="playground">
+    <!-- ─── Theme Tester ─── -->
+    <section id="theme">
+      <h2>Theme Tester</h2>
+      <p class="muted" style="margin: 0 0 0.75rem; font-size: 0.875rem">
+        Paste custom CSS variables below and click <strong>Apply</strong> to see all components update instantly.
+      </p>
+      <div class="stack" style="max-width: 640px">
+        <Textarea
+          v-model="customThemeCss"
+          :rows="6"
+          resize="vertical"
+          placeholder="/* Paste your custom theme CSS here */\n:root {\n  --agala-primary: 200 90% 50%;\n  --agala-background: 0 0% 98%;\n  --agala-card: 0 0% 100%;\n  /* … */\n}"
+        />
+        <div class="row" style="margin-bottom: 0">
+          <Button variant="primary" icon @click="applyCustomTheme">
+            <template #icon><AgalaIcon name="refresh" :size="14" /></template>
+            Apply Custom Theme
+          </Button>
+          <Button variant="outline" @click="resetCustomTheme">Reset to Default</Button>
+          <span v-if="activeTheme === 'custom'" class="muted" style="font-size: 0.75rem; margin-left: auto">
+            ✅ Custom theme active
+          </span>
+        </div>
+      </div>
+    </section>
+
     <header>
       <h1>Agala UI</h1>
       <p>Elegant, modern, themable components. Toggle dark mode on your OS to switch palettes.</p>
