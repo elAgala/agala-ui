@@ -44,13 +44,19 @@ const props = withDefaults(defineProps<Props>(), {
   height: 280,
 })
 
-const { getBaseOption } = useChartTheme()
+const { getBaseOption, getColorPalette } = useChartTheme()
 const option = shallowRef<Record<string, unknown>>({})
 
 function buildOption() {
   const base = getBaseOption(props.type) as Record<string, unknown>
+  const palette = getColorPalette()
 
   if (props.type === 'pie') {
+    const data = props.datasets[0]?.data.map((value, i) => ({
+      value,
+      name: props.labels[i] || `Item ${i + 1}`,
+      itemStyle: { color: palette[i % palette.length] },
+    })) || []
     option.value = {
       ...base,
       series: [
@@ -67,10 +73,12 @@ function buildOption() {
             show: true,
             formatter: '{b}: {d}%',
           },
-          data: props.datasets[0]?.data.map((value, i) => ({
-            value,
-            name: props.labels[i] || `Item ${i + 1}`,
-          })),
+          emphasis: {
+            itemStyle: {
+              color: undefined, // inherit original
+            },
+          },
+          data,
         },
       ],
     }
@@ -83,18 +91,33 @@ function buildOption() {
       ...((base.xAxis as Record<string, unknown>) || {}),
       data: props.labels,
     },
-    series: props.datasets.map((ds) => ({
-      type: props.type,
-      name: ds.name,
-      data: ds.data,
-      smooth: ds.smooth ?? true,
-      symbol: 'circle' as const,
-      symbolSize: 6,
-      areaStyle: ds.areaStyle ? { opacity: 0.12 } : undefined,
-      lineStyle: {
-        width: 2,
-      },
-    })),
+    series: props.datasets.map((ds, i) => {
+      const color = ds.color || palette[i % palette.length]
+      return {
+        type: props.type,
+        name: ds.name,
+        data: ds.data,
+        smooth: ds.smooth ?? true,
+        symbol: 'circle' as const,
+        symbolSize: 6,
+        color,
+        areaStyle: ds.areaStyle
+          ? { color, opacity: 0.12 }
+          : undefined,
+        lineStyle: {
+          width: 2,
+          color,
+        },
+        itemStyle: {
+          color,
+        },
+        emphasis: {
+          itemStyle: {
+            color,
+          },
+        },
+      }
+    }),
   }
 }
 

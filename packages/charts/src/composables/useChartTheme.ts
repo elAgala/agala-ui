@@ -31,10 +31,15 @@ export function useChartTheme() {
     }
   }
 
+  function getColorPalette(): string[] {
+    const t = readTokens()
+    return [t.primary, t.success, t.warning, t.danger, '#8b5cf6', '#06b6d4', '#f97316', '#84cc16']
+  }
+
   function getBaseOption(type: 'line' | 'bar' | 'pie') {
     const t = readTokens()
 
-    const colorPalette = [t.primary, t.success, t.warning, t.danger, '#8b5cf6', '#06b6d4', '#f97316', '#84cc16']
+    const colorPalette = getColorPalette()
 
     const base: Record<string, unknown> = {
       color: colorPalette,
@@ -95,6 +100,6 @@ export function useChartTheme() {
     }
   }
 
-  return { getBaseOption }
+  return { getBaseOption, getColorPalette }
 }
 
