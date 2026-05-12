@@ -43,4 +43,7 @@ export type IconName =
   | 'archive'
   | 'inbox'
   | 'key'
+  | 'grid'
+  | 'columns'
+  | 'list'
   | 'spinner'

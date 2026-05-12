@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref, h, watch } from 'vue'
-import { Button, Input, FormField, Select, CreatableSelect, DatePicker, Modal, ModalProvider, modalManager, Badge, Checkbox, Toggle, Avatar, ToastProvider, toastManager, Textarea, DropdownMenu, Table, Tabs, Card, Tooltip, RadioGroup, Navbar, Sidebar, SidebarItem, SidebarGroup, SidebarToggle, Accordion, AccordionItem, Skeleton, Stat, EmptyState, Progress, Tag, Pagination, Drawer, FileUpload, DevEnvBanner } from '../lib'
+import { Button, Input, FormField, Select, CreatableSelect, DatePicker, Modal, ModalProvider, modalManager, Badge, Checkbox, Toggle, Avatar, ToastProvider, toastManager, Textarea, DropdownMenu, Table, Tabs, Card, Tooltip, RadioGroup, Navbar, Sidebar, SidebarItem, SidebarGroup, SidebarToggle, Accordion, AccordionItem, Skeleton, Stat, EmptyState, Progress, Tag, Pagination, Drawer, FileUpload, DevEnvBanner, Calendar } from '../lib'
 import { useMediaQuery } from '../lib/composables/useMediaQuery'
 import AgalaIcon from '../lib/components/AgalaIcon/AgalaIcon.vue'
-import type { TableColumn, TabItem } from '../lib'
+import type { TableColumn, TabItem, CalendarEvent, CalendarView } from '../lib'
 
 /* ─── Theme ─── */
 type Theme = 'default' | 'forja' | 'custom'
@@ -214,6 +214,57 @@ const TABLE_ROWS = [
 
 const statusVariant = (s: string) =>
   s === 'active' ? 'success' : s === 'paused' ? 'warning' : 'danger'
+
+/* ─── Calendar state ─── */
+const calendarView = ref<CalendarView>('month')
+const calendarDate = ref(toISODate(new Date()))
+const selectedEvent = ref<CalendarEvent | null>(null)
+const clickedDay = ref<string | null>(null)
+
+function toISODate(d: Date): string {
+  const year = d.getFullYear()
+  const month = String(d.getMonth() + 1).padStart(2, '0')
+  const day = String(d.getDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
+
+function addDaysToDate(d: Date, days: number): Date {
+  const result = new Date(d)
+  result.setDate(result.getDate() + days)
+  return result
+}
+
+const today = new Date()
+
+function makeDatetime(date: Date, hour: number, minute: number): string {
+  const y = date.getFullYear()
+  const m = String(date.getMonth() + 1).padStart(2, '0')
+  const d = String(date.getDate()).padStart(2, '0')
+  const h = String(hour).padStart(2, '0')
+  const min = String(minute).padStart(2, '0')
+  return `${y}-${m}-${d}T${h}:${min}:00`
+}
+
+const calendarEvents = ref<CalendarEvent[]>([
+  /* yesterday */
+  { id: '1', title: 'Design Review', subtitle: 'Figma walkthrough', start: makeDatetime(addDaysToDate(today, -1), 10, 0), end: makeDatetime(addDaysToDate(today, -1), 11, 30), color: 'primary' },
+  /* today */
+  { id: '2', title: 'Team Standup', subtitle: 'Daily sync', start: makeDatetime(today, 9, 0), end: makeDatetime(today, 9, 30), color: 'primary' },
+  { id: '3', title: 'Lunch with Client', start: makeDatetime(today, 12, 0), end: makeDatetime(today, 13, 30), color: 'success' },
+  { id: '4', title: 'Sprint Planning', subtitle: 'Q3 roadmap', start: makeDatetime(today, 14, 0), end: makeDatetime(today, 15, 30), color: 'warning' },
+  { id: '5', title: 'Holiday', start: makeDatetime(today, 0, 0), end: makeDatetime(today, 23, 59), allDay: true, color: 'danger' },
+  /* tomorrow */
+  { id: '6', title: '1:1 with Manager', subtitle: 'Career growth', start: makeDatetime(addDaysToDate(today, 1), 11, 0), end: makeDatetime(addDaysToDate(today, 1), 11, 45), color: 'secondary' },
+  { id: '7', title: 'Code Review', start: makeDatetime(addDaysToDate(today, 1), 15, 0), end: makeDatetime(addDaysToDate(today, 1), 16, 0), color: '#8b5cf6' },
+  /* future */
+  { id: '8', title: 'Product Launch', subtitle: 'Marketing kickoff', start: makeDatetime(addDaysToDate(today, 2), 10, 0), end: makeDatetime(addDaysToDate(today, 2), 12, 0), color: 'accent' },
+  { id: '9', title: 'Conference', start: makeDatetime(addDaysToDate(today, 3), 0, 0), end: makeDatetime(addDaysToDate(today, 3), 23, 59), allDay: true, color: 'success' },
+  { id: '10', title: 'Backend Sync', start: makeDatetime(addDaysToDate(today, 3), 13, 0), end: makeDatetime(addDaysToDate(today, 3), 14, 0), color: 'danger' },
+  { id: '11', title: 'User Testing', subtitle: 'Usability session', start: makeDatetime(addDaysToDate(today, 4), 9, 30), end: makeDatetime(addDaysToDate(today, 4), 11, 0), color: 'primary' },
+  { id: '12', title: 'All-hands', start: makeDatetime(addDaysToDate(today, 4), 16, 0), end: makeDatetime(addDaysToDate(today, 4), 17, 0), color: 'warning' },
+  { id: '13', title: 'Release Party', start: makeDatetime(addDaysToDate(today, 5), 18, 0), end: makeDatetime(addDaysToDate(today, 5), 21, 0), color: '#ec4899' },
+  { id: '14', title: 'Quarterly Review', subtitle: 'Board presentation', start: makeDatetime(addDaysToDate(today, 6), 10, 0), end: makeDatetime(addDaysToDate(today, 6), 11, 30), color: 'secondary' },
+])
 
 /* ─── Demo data ─── */
 const USERS = [
@@ -579,6 +630,29 @@ const AckDialog = {
       <div class="stack" style="max-width: 320px">
         <DatePicker placeholder="Error state" error error-message="Please select a valid date." />
         <DatePicker placeholder="Disabled" disabled />
+      </div>
+    </section>
+
+    <!-- ─── Calendar ─── -->
+    <section>
+      <h2>Calendar</h2>
+      <p class="muted" style="margin: 0 0 0.75rem; font-size: 0.875rem">
+        Interactive calendar with month, week, day, and list views. Click events or days to see debug info below.
+      </p>
+      <div style="height: 600px; border: 1px solid hsl(var(--agala-border)); border-radius: var(--agala-radius-lg); overflow: hidden">
+        <Calendar
+          v-model:view="calendarView"
+          v-model:currentDate="calendarDate"
+          :events="calendarEvents"
+          @select="event => { selectedEvent = event; console.log('Selected event:', event.title) }"
+          @day-click="date => { clickedDay = date; console.log('Clicked day:', date) }"
+        />
+      </div>
+      <div style="margin-top: 0.75rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 0.25rem 1rem">
+        <p class="muted" style="margin: 0; font-size: 0.875rem">Selected view: {{ calendarView }}</p>
+        <p class="muted" style="margin: 0; font-size: 0.875rem">Current date: {{ calendarDate }}</p>
+        <p class="muted" style="margin: 0; font-size: 0.875rem">Last selected event: {{ selectedEvent?.title || 'none' }}</p>
+        <p class="muted" style="margin: 0; font-size: 0.875rem">Last clicked day: {{ clickedDay || 'none' }}</p>
       </div>
     </section>
 
