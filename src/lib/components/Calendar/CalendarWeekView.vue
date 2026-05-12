@@ -113,6 +113,8 @@ const weekDays = computed(() => {
 /* ─── Hours ─── */
 const hours = computed(() => getHoursRange(props.dayStart, props.dayEnd))
 
+const slotsPerHour = computed(() => 60 / props.snapMinutes)
+
 /* ─── Current time ─── */
 const now = ref(new Date())
 let timeInterval: ReturnType<typeof setInterval> | null = null
@@ -331,7 +333,13 @@ function getAllDayEventStyle(event: CalendarEvent): Record<string, string> | und
             v-for="hour in hours"
             :key="hour"
             class="hourRow"
-          />
+          >
+            <div
+              v-for="s in slotsPerHour"
+              :key="s"
+              class="timeSlot"
+            ></div>
+          </div>
 
           <!-- Selection overlay -->
           <div
@@ -507,6 +515,19 @@ function getAllDayEventStyle(event: CalendarEvent): Record<string, string> | und
   height: 3rem;
   border-bottom: var(--agala-border-width) solid hsl(var(--agala-border) / 0.4);
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.timeSlot {
+  flex: 1;
+  min-height: 0;
+}
+.timeSlot:not(:last-child) {
+  border-bottom: 1px solid hsl(var(--agala-border) / 0.12);
+}
+.timeSlot:hover {
+  background: hsl(var(--agala-primary) / 0.06);
 }
 
 /* ─── Events ─── */

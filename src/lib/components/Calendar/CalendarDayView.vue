@@ -127,6 +127,8 @@ function onMouseUp() {
 // Computed data
 const hours = computed(() => getHoursRange(props.dayStart, props.dayEnd))
 
+const slotsPerHour = computed(() => 60 / props.snapMinutes)
+
 const dayEvents = computed(() => getDayEvents(props.events, props.currentDate))
 const allDayEvents = computed(() => dayEvents.value.filter(e => e.allDay))
 const timedEvents = computed(() => dayEvents.value.filter(e => !e.allDay))
@@ -280,7 +282,13 @@ function formatSelectionTime(minutes: number): string {
           v-for="hour in hours"
           :key="hour"
           class="hourRow"
-        ></div>
+        >
+          <div
+            v-for="s in slotsPerHour"
+            :key="s"
+            class="timeSlot"
+          ></div>
+        </div>
 
         <!-- Selection overlay -->
         <div
@@ -439,6 +447,19 @@ function formatSelectionTime(minutes: number): string {
   height: 3rem;
   border-bottom: var(--agala-border-width) solid hsl(var(--agala-border) / 0.5);
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.timeSlot {
+  flex: 1;
+  min-height: 0;
+}
+.timeSlot:not(:last-child) {
+  border-bottom: 1px solid hsl(var(--agala-border) / 0.12);
+}
+.timeSlot:hover {
+  background: hsl(var(--agala-primary) / 0.06);
 }
 
 .selectionOverlay {
