@@ -141,8 +141,8 @@ const progressValue = ref(65)
 /* ─── Sidebar state ─── */
 const sidebarCollapsed = ref(false)
 const sidebarOpen = ref(false)
-const isMobileViewport = useMediaQuery('(max-width: 639px)')
-const isDesktopViewport = useMediaQuery('(min-width: 768px)')
+const { matches: isMobileViewport } = useMediaQuery('(max-width: 639px)')
+const { matches: isDesktopViewport } = useMediaQuery('(min-width: 768px)')
 
 /* ─── Tag state ─── */
 const tagList = ref([
