@@ -74,11 +74,21 @@ function buildOption() {
             formatter: '{b}: {d}%',
           },
           emphasis: {
+            scale: false,
             itemStyle: {
-              color: undefined, // inherit original
+              shadowBlur: 10,
+              shadowOffsetX: 0,
+              shadowColor: 'rgba(0,0,0,0.2)',
             },
           },
-          data,
+          data: data.map(d => ({
+            ...d,
+            emphasis: {
+              itemStyle: {
+                color: d.itemStyle.color,
+              },
+            },
+          })),
         },
       ],
     }
@@ -93,6 +103,7 @@ function buildOption() {
     },
     series: props.datasets.map((ds, i) => {
       const color = ds.color || palette[i % palette.length]
+      const hasArea = ds.areaStyle
       return {
         type: props.type,
         name: ds.name,
@@ -101,7 +112,7 @@ function buildOption() {
         symbol: 'circle' as const,
         symbolSize: 6,
         color,
-        areaStyle: ds.areaStyle
+        areaStyle: hasArea
           ? { color, opacity: 0.12 }
           : undefined,
         lineStyle: {
@@ -111,11 +122,16 @@ function buildOption() {
         itemStyle: {
           color,
         },
-        emphasis: {
-          itemStyle: {
-            color,
-          },
-        },
+        emphasis: hasArea
+          ? {
+              lineStyle: { width: 2, color },
+              itemStyle: { color },
+              areaStyle: { color, opacity: 0.12 },
+            }
+          : {
+              lineStyle: { width: 2, color },
+              itemStyle: { color },
+            },
       }
     }),
   }
