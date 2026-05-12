@@ -12,25 +12,30 @@ import {
   parseISO,
   minutesFromMidnight,
   formatEventTimeRange,
+  minutesToTimeString,
 } from './utils'
+import { useGridSelection } from '../../composables/useGridSelection'
 
 const props = withDefaults(defineProps<{
   events: CalendarEvent[]
   currentDate: string
   dayStart: string
   dayEnd: string
+  snapMinutes?: number
   class?: string
 }>(), {
   events: () => [],
   currentDate: () => toISODate(new Date()),
   dayStart: '00:00',
   dayEnd: '24:00',
+  snapMinutes: 30,
   class: '',
 })
 
 const emit = defineEmits<{
   select: [event: CalendarEvent]
   'day-click': [date: string]
+  'slot-select': [payload: { start: string; end: string }]
 }>()
 
 // Token color map
@@ -58,7 +63,7 @@ onUnmounted(() => {
   if (timer) clearInterval(timer)
 })
 
-// Hour height measurement - use CSS custom property approach
+// Hour height measurement
 const dayColumnRef = ref<HTMLDivElement>()
 const hourHeight = ref(48)
 
@@ -71,7 +76,6 @@ function measureHourHeight() {
 }
 
 onMounted(() => {
-  // Measure after layout is complete
   nextTick(() => {
     requestAnimationFrame(() => {
       measureHourHeight()
@@ -84,7 +88,6 @@ onUnmounted(() => {
   window.removeEventListener('resize', measureHourHeight)
 })
 
-// Re-measure when hours change (dayStart/dayEnd)
 watch(() => [props.dayStart, props.dayEnd], () => {
   nextTick(() => {
     requestAnimationFrame(() => {
@@ -92,6 +95,34 @@ watch(() => [props.dayStart, props.dayEnd], () => {
     })
   })
 })
+
+// Grid selection
+const gridSelection = useGridSelection({
+  containerRef: dayColumnRef,
+  hourHeightRef: hourHeight,
+  snapMinutes: props.snapMinutes,
+  dayStart: props.dayStart,
+  dayEnd: props.dayEnd,
+})
+
+function handleMouseDown(e: MouseEvent) {
+  // If clicking on an event, let the event handle it
+  if ((e.target as HTMLElement).closest('.event')) return
+  gridSelection.startSelection(e)
+}
+
+function onMouseUp() {
+  const range = gridSelection.endSelection()
+  if (range) {
+    const date = props.currentDate
+    const startTime = minutesToTimeString(range.startMinutes)
+    const endTime = minutesToTimeString(range.endMinutes)
+    emit('slot-select', {
+      start: `${date}T${startTime}:00`,
+      end: `${date}T${endTime}:00`,
+    })
+  }
+}
 
 // Computed data
 const hours = computed(() => getHoursRange(props.dayStart, props.dayEnd))
@@ -177,10 +208,6 @@ function eventStyle(item: {
   return style
 }
 
-function handleDayClick() {
-  emit('day-click', props.currentDate)
-}
-
 function hourDate(hour: number): Date {
   return new Date(2000, 0, 1, hour, 0, 0)
 }
@@ -192,10 +219,22 @@ function eventShowTime(height: number): boolean {
 function eventShowSubtitle(height: number): boolean {
   return height >= 40
 }
+
+function formatSelectionTime(minutes: number): string {
+  const h = Math.floor(minutes / 60)
+  const m = minutes % 60
+  const d = new Date(2000, 0, 1, h, m)
+  return formatTimeLabel(d)
+}
 </script>
 
 <template>
-  <div class="dayView" role="region" aria-label="Calendar day view" :class="props.class">
+  <div
+    class="dayView"
+    :class="[props.class, { isSelecting: gridSelection.isSelecting.value }]"
+    role="region"
+    aria-label="Calendar day view"
+  >
     <!-- All-day header -->
     <div v-if="allDayEvents.length" class="allDayHeader">
       <div class="timeAxisLabel">All day</div>
@@ -231,12 +270,38 @@ function eventShowSubtitle(height: number): boolean {
       </div>
 
       <!-- Day column -->
-      <div ref="dayColumnRef" class="dayColumn" @click="handleDayClick">
+      <div
+        ref="dayColumnRef"
+        class="dayColumn"
+        @mousedown="handleMouseDown"
+        @mouseup="onMouseUp"
+      >
         <div
           v-for="hour in hours"
           :key="hour"
           class="hourRow"
         ></div>
+
+        <!-- Selection overlay -->
+        <div
+          v-if="gridSelection.selectionStyle.value"
+          class="selectionOverlay"
+          aria-hidden="true"
+          :style="gridSelection.selectionStyle.value"
+        >
+          <span
+            v-if="gridSelection.selectionRange.value"
+            class="selectionLabel selectionLabelStart"
+          >
+            {{ formatSelectionTime(gridSelection.selectionRange.value.startMinutes) }}
+          </span>
+          <span
+            v-if="gridSelection.selectionRange.value && gridSelection.selectionRange.value.endMinutes - gridSelection.selectionRange.value.startMinutes >= 40"
+            class="selectionLabel selectionLabelEnd"
+          >
+            {{ formatSelectionTime(gridSelection.selectionRange.value.endMinutes) }}
+          </span>
+        </div>
 
         <!-- Current time line -->
         <div
@@ -277,6 +342,10 @@ function eventShowSubtitle(height: number): boolean {
   height: 100%;
   overflow: hidden;
   background: hsl(var(--agala-background));
+}
+
+.dayView.isSelecting {
+  cursor: crosshair;
 }
 
 .allDayHeader {
@@ -363,12 +432,43 @@ function eventShowSubtitle(height: number): boolean {
   flex: 1;
   position: relative;
   min-width: 0;
+  user-select: none;
 }
 
 .hourRow {
   height: 3rem;
   border-bottom: var(--agala-border-width) solid hsl(var(--agala-border) / 0.5);
   box-sizing: border-box;
+}
+
+.selectionOverlay {
+  position: absolute;
+  left: 2px;
+  right: 2px;
+  background: hsl(var(--agala-primary) / 0.15);
+  border: 2px dashed hsl(var(--agala-primary) / 0.5);
+  border-radius: var(--agala-radius-sm);
+  z-index: 10;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 2px 4px;
+  box-sizing: border-box;
+}
+
+.selectionLabel {
+  font-size: 0.625rem;
+  font-weight: var(--agala-font-weight-semibold);
+  color: hsl(var(--agala-primary));
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1;
+}
+
+.selectionLabelEnd {
+  align-self: flex-start;
 }
 
 .currentTimeLine {

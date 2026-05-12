@@ -12,21 +12,26 @@ import {
   formatTimeLabel,
   parseISO,
   parseTime,
+  minutesToTimeString,
 } from './utils'
+import { useGridSelection } from '../../composables/useGridSelection'
 
 const props = withDefaults(defineProps<{
   events: CalendarEvent[]
   currentDate: string
   dayStart?: string
   dayEnd?: string
+  snapMinutes?: number
 }>(), {
   dayStart: '00:00',
   dayEnd: '24:00',
+  snapMinutes: 30,
 })
 
 const emit = defineEmits<{
   select: [event: CalendarEvent]
   'day-click': [date: string]
+  'slot-select': [payload: { start: string; end: string }]
 }>()
 
 /* ─── Responsive hour height ─── */
@@ -51,6 +56,52 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('resize', updateHourHeight)
 })
+
+/* ─── Grid selection (per day column) ─── */
+const dayGridRefs = ref<(HTMLDivElement | null)[]>([])
+
+function getDayGridRef(dayIndex: number) {
+  return computed(() => dayGridRefs.value[dayIndex])
+}
+
+function createSelectionForDay(dayIndex: number) {
+  return useGridSelection({
+    containerRef: getDayGridRef(dayIndex),
+    hourHeightRef: hourHeight,
+    snapMinutes: props.snapMinutes,
+    dayStart: props.dayStart,
+    dayEnd: props.dayEnd,
+  })
+}
+
+const selections = Array.from({ length: 7 }, (_, i) => createSelectionForDay(i))
+
+const anySelecting = computed(() => selections.some(s => s.isSelecting.value))
+
+function handleGridMouseDown(e: MouseEvent, dayIndex: number) {
+  if ((e.target as HTMLElement).closest('.event')) return
+  selections[dayIndex].startSelection(e)
+}
+
+function handleGridMouseUp(dayIndex: number) {
+  const range = selections[dayIndex].endSelection()
+  if (range) {
+    const date = toISODate(weekDays.value[dayIndex])
+    const startTime = minutesToTimeString(range.startMinutes)
+    const endTime = minutesToTimeString(range.endMinutes)
+    emit('slot-select', {
+      start: `${date}T${startTime}:00`,
+      end: `${date}T${endTime}:00`,
+    })
+  }
+}
+
+function formatSelectionTime(minutes: number): string {
+  const h = Math.floor(minutes / 60)
+  const m = minutes % 60
+  const d = new Date(2000, 0, 1, h, m)
+  return formatTimeLabel(d)
+}
 
 /* ─── Week days ─── */
 const weekDays = computed(() => {
@@ -189,10 +240,6 @@ function formatHourLabel(hour: number): string {
   return formatTimeLabel(d)
 }
 
-function handleDayClick(day: Date) {
-  emit('day-click', toISODate(day))
-}
-
 function handleEventClick(event: CalendarEvent, e: MouseEvent) {
   e.stopPropagation()
   emit('select', event)
@@ -221,7 +268,11 @@ function getAllDayEventStyle(event: CalendarEvent): Record<string, string> | und
 </script>
 
 <template>
-  <div class="weekView" role="region">
+  <div
+    class="weekView"
+    :class="{ isSelecting: anySelecting }"
+    role="region"
+  >
     <div class="scrollWrapper">
       <!-- Time axis column -->
       <div class="timeAxisCol">
@@ -270,15 +321,38 @@ function getAllDayEventStyle(event: CalendarEvent): Record<string, string> | und
         </div>
 
         <div
+          :ref="(el) => { if (el) dayGridRefs[dayIndex] = el as HTMLDivElement }"
           class="dayGrid"
           :style="{ minHeight: `${hours.length * hourHeight}px` }"
-          @click="handleDayClick(day)"
+          @mousedown="(e) => handleGridMouseDown(e, dayIndex)"
+          @mouseup="() => handleGridMouseUp(dayIndex)"
         >
           <div
             v-for="hour in hours"
             :key="hour"
             class="hourRow"
           />
+
+          <!-- Selection overlay -->
+          <div
+            v-if="selections[dayIndex].selectionStyle.value"
+            class="selectionOverlay"
+            aria-hidden="true"
+            :style="selections[dayIndex].selectionStyle.value"
+          >
+            <span
+              v-if="selections[dayIndex].selectionRange.value"
+              class="selectionLabel selectionLabelStart"
+            >
+              {{ formatSelectionTime(selections[dayIndex].selectionRange.value.startMinutes) }}
+            </span>
+            <span
+              v-if="selections[dayIndex].selectionRange.value && selections[dayIndex].selectionRange.value.endMinutes - selections[dayIndex].selectionRange.value.startMinutes >= 40"
+              class="selectionLabel selectionLabelEnd"
+            >
+              {{ formatSelectionTime(selections[dayIndex].selectionRange.value.endMinutes) }}
+            </span>
+          </div>
 
           <button
             v-for="eventInfo in timedEventsByDay[dayIndex]"
@@ -564,6 +638,41 @@ function getAllDayEventStyle(event: CalendarEvent): Record<string, string> | und
   background-color: hsl(var(--agala-danger));
   transform: translateY(-50%);
   z-index: 4;
+}
+
+/* ─── Selection overlay ─── */
+.weekView.isSelecting {
+  cursor: crosshair;
+}
+
+.selectionOverlay {
+  position: absolute;
+  left: 2px;
+  right: 2px;
+  background: hsl(var(--agala-primary) / 0.15);
+  border: 2px dashed hsl(var(--agala-primary) / 0.5);
+  border-radius: var(--agala-radius-sm);
+  z-index: 10;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 2px 4px;
+  box-sizing: border-box;
+}
+
+.selectionLabel {
+  font-size: 0.625rem;
+  font-weight: var(--agala-font-weight-semibold);
+  color: hsl(var(--agala-primary));
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1;
+}
+
+.selectionLabelEnd {
+  align-self: flex-start;
 }
 
 /* ─── Tablet ─── */

@@ -40,7 +40,7 @@ export { default as DatePicker } from './components/DatePicker/DatePicker.vue'
 export type { DatePickerProps, DatePickerSize } from './components/DatePicker'
 
 export { default as Calendar } from './components/Calendar/Calendar.vue'
-export type { CalendarEvent, CalendarView, CalendarProps, CalendarEmits } from './components/Calendar'
+export type { CalendarEvent, CalendarView, CalendarProps, CalendarEmits, SlotSelectPayload } from './components/Calendar'
 
 export { default as Modal } from './components/Modal/Modal.vue'
 export { default as ModalProvider } from './components/Modal/ModalProvider.vue'

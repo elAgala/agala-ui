@@ -219,3 +219,16 @@ export function formatEventTime(event: CalendarEvent): string {
   if (!start) return ''
   return formatTime(start)
 }
+
+/** Snap minutes to nearest interval boundary */
+export function snapToInterval(minutes: number, interval: number): number {
+  if (interval <= 0) return minutes
+  return Math.floor(minutes / interval) * interval
+}
+
+/** Convert total minutes to HH:MM string */
+export function minutesToTimeString(minutes: number): string {
+  const h = Math.floor(minutes / 60)
+  const m = minutes % 60
+  return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`
+}

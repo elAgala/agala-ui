@@ -18,12 +18,14 @@ const props = withDefaults(
     currentDate: string
     dayStart?: string
     dayEnd?: string
+    snapMinutes?: number
     class?: string
   }>(),
   {
     events: () => [],
     dayStart: '00:00',
     dayEnd: '24:00',
+    snapMinutes: 30,
     class: '',
   },
 )

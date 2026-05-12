@@ -220,6 +220,7 @@ const calendarView = ref<CalendarView>('month')
 const calendarDate = ref(toISODate(new Date()))
 const selectedEvent = ref<CalendarEvent | null>(null)
 const clickedDay = ref<string | null>(null)
+const selectedSlot = ref<{ start: string; end: string } | null>(null)
 
 function toISODate(d: Date): string {
   const year = d.getFullYear()
@@ -646,6 +647,7 @@ const AckDialog = {
           :events="calendarEvents"
           @select="event => { selectedEvent = event; console.log('Selected event:', event.title) }"
           @day-click="date => { clickedDay = date; console.log('Clicked day:', date) }"
+          @slot-select="slot => { selectedSlot = slot; console.log('Selected slot:', slot) }"
         />
       </div>
       <div style="margin-top: 0.75rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 0.25rem 1rem">
@@ -653,6 +655,7 @@ const AckDialog = {
         <p class="muted" style="margin: 0; font-size: 0.875rem">Current date: {{ calendarDate }}</p>
         <p class="muted" style="margin: 0; font-size: 0.875rem">Last selected event: {{ selectedEvent?.title || 'none' }}</p>
         <p class="muted" style="margin: 0; font-size: 0.875rem">Last clicked day: {{ clickedDay || 'none' }}</p>
+        <p class="muted" style="margin: 0; font-size: 0.875rem">Last slot: {{ selectedSlot ? `${selectedSlot.start} → ${selectedSlot.end}` : 'none' }}</p>
       </div>
     </section>
 

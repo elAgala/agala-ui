@@ -9,11 +9,13 @@ const props = withDefaults(defineProps<{
   currentDate?: string
   dayStart?: string
   dayEnd?: string
+  snapMinutes?: number
 }>(), {
   events: () => [],
   currentDate: () => toISODate(new Date()),
   dayStart: '00:00',
   dayEnd: '24:00',
+  snapMinutes: 30,
 })
 
 const emit = defineEmits<{

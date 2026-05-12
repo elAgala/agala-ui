@@ -18,6 +18,7 @@ const props = withDefaults(defineProps<CalendarProps>(), {
   currentDate: () => toISODate(new Date()),
   dayStart: '00:00',
   dayEnd: '24:00',
+  snapMinutes: 30,
   class: '',
 })
 
@@ -165,6 +166,10 @@ function handleSelect(event: CalendarEvent) {
 function handleDayClick(date: string) {
   emit('day-click', date)
 }
+
+function handleSlotSelect(payload: { start: string; end: string }) {
+  emit('slot-select', payload)
+}
 </script>
 
 <template>
@@ -222,8 +227,10 @@ function handleDayClick(date: string) {
         :current-date="internalDate"
         :day-start="props.dayStart"
         :day-end="props.dayEnd"
+        :snap-minutes="props.snapMinutes"
         @select="handleSelect"
         @day-click="handleDayClick"
+        @slot-select="handleSlotSelect"
       >
         <template v-if="$slots.event" #event="slotProps">
           <slot name="event" v-bind="slotProps" />
