@@ -42,6 +42,7 @@ class ModalManagerImpl {
         props: options.props ?? ({} as P),
         options: {
           size: options.size,
+          title: options.title,
           dismissible: options.dismissible,
           escapeCloses: options.escapeCloses,
           hideHeader: options.hideHeader,
@@ -80,7 +81,7 @@ export const modalManager = new ModalManagerImpl()
 export function renderModalEntry(entry: ModalEntry): VNode {
   return h(Modal, {
     open: true,
-    title: entry.options.hideHeader ? undefined : '',
+    title: entry.options.title,
     size: entry.options.size,
     dismissible: entry.options.dismissible,
     escapeCloses: entry.options.escapeCloses,
