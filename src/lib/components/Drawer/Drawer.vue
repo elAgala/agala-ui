@@ -46,22 +46,28 @@ function onKeydown(e: KeyboardEvent) {
   }
 }
 
-watch(isOpen, (open) => {
-  if (typeof document !== 'undefined') {
-    document.body.style.overflow = open ? 'hidden' : ''
+function lockBodyScroll(lock: boolean) {
+  if (typeof document === 'undefined') return
+  if (lock) {
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth
+    document.body.style.paddingRight = `${scrollbarWidth}px`
+    document.body.style.overflow = 'hidden'
+  } else {
+    document.body.style.paddingRight = ''
+    document.body.style.overflow = ''
   }
+}
+
+watch(isOpen, (open) => {
+  lockBodyScroll(open)
 })
 
 onMounted(() => {
-  if (isOpen.value && typeof document !== 'undefined') {
-    document.body.style.overflow = 'hidden'
-  }
+  if (isOpen.value) lockBodyScroll(true)
 })
 
 onUnmounted(() => {
-  if (typeof document !== 'undefined') {
-    document.body.style.overflow = ''
-  }
+  lockBodyScroll(false)
 })
 </script>
 
