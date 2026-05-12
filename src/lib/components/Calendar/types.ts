@@ -22,6 +22,7 @@ export interface CalendarProps {
   dayStart?: string    // "HH:MM", default "00:00"
   dayEnd?: string      // "HH:MM", default "24:00"
   snapMinutes?: number // default 30
+  availableViews?: CalendarView[]
   class?: string
 }
 

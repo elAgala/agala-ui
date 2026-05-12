@@ -19,6 +19,7 @@ const props = withDefaults(defineProps<CalendarProps>(), {
   dayStart: '00:00',
   dayEnd: '24:00',
   snapMinutes: 30,
+  availableViews: undefined,
   class: '',
 })
 
@@ -29,7 +30,17 @@ const internalView = ref<CalendarView>(props.view)
 const internalDate = ref<string>(props.currentDate)
 
 watch(() => props.view, (v) => {
-  if (v && v !== internalView.value) internalView.value = v
+  if (!v) return
+  const allowed = effectiveViews.value.map(o => o.value)
+  if (allowed.includes(v)) {
+    if (v !== internalView.value) internalView.value = v
+  } else {
+    // Override to first allowed view when parent sets an excluded view
+    const fallback = allowed[0]
+    if (fallback && fallback !== internalView.value) {
+      internalView.value = fallback
+    }
+  }
 })
 
 watch(() => props.currentDate, (v) => {
@@ -38,6 +49,17 @@ watch(() => props.currentDate, (v) => {
 
 watch(internalView, (v) => {
   if (v !== props.view) emit('update:view', v)
+})
+
+/* ── availableViews changed at runtime ── */
+watch(() => props.availableViews, () => {
+  const allowed = effectiveViews.value.map(o => o.value)
+  if (!allowed.includes(internalView.value)) {
+    const fallback = allowed[0]
+    if (fallback) {
+      internalView.value = fallback
+    }
+  }
 })
 
 watch(internalDate, (v) => {
@@ -67,6 +89,34 @@ const viewOptions: ViewOption[] = [
   { value: 'day', label: 'Day', icon: 'clock' },
   { value: 'list', label: 'List', icon: 'list' },
 ]
+
+/* ── Effective views (filtered by availableViews) ── */
+const ALL_VIEWS: CalendarView[] = ['month', 'week', 'day', 'list']
+
+const effectiveViews = computed<ViewOption[]>(() => {
+  if (!props.availableViews || props.availableViews.length === 0) {
+    return viewOptions
+  }
+
+  const warned = new Set<string>()
+  const allowed = new Set<CalendarView>()
+
+  for (const v of props.availableViews) {
+    if (ALL_VIEWS.includes(v)) {
+      allowed.add(v)
+    } else if (!warned.has(v)) {
+      warned.add(v)
+      console.warn(`[Agala UI] Calendar: invalid view "${v}" in availableViews. Valid values are: month, week, day, list.`)
+    }
+  }
+
+  // If all values were invalid (allowed is empty), fall back to all views
+  if (allowed.size === 0) {
+    return viewOptions
+  }
+
+  return viewOptions.filter(option => allowed.has(option.value))
+})
 
 /* ── Title ── */
 const title = computed(() => {
@@ -205,7 +255,7 @@ function handleSlotSelect(payload: { start: string; end: string }) {
           aria-label="Calendar views"
         >
           <Button
-            v-for="option in viewOptions"
+            v-for="option in effectiveViews"
             :key="option.value"
             :variant="internalView === option.value ? 'default' : 'outline'"
             size="sm"
