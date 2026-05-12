@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref, h, watch } from 'vue'
 import { Button, Input, FormField, Select, CreatableSelect, DatePicker, ColorPicker, Modal, ModalProvider, modalManager, Badge, Checkbox, Toggle, Avatar, ToastProvider, toastManager, Textarea, DropdownMenu, Table, Tabs, Card, Tooltip, RadioGroup, Navbar, Sidebar, SidebarItem, SidebarGroup, SidebarToggle, Accordion, AccordionItem, Skeleton, Stat, EmptyState, Progress, Tag, Pagination, Drawer, FileUpload, DevEnvBanner, Calendar, Alert } from '../lib'
+
+import { BaseChart } from '../../packages/charts/src/index'
 import { useMediaQuery } from '../lib/composables/useMediaQuery'
 import AgalaIcon from '../lib/components/AgalaIcon/AgalaIcon.vue'
 import type { TableColumn, TabItem, CalendarEvent, CalendarView } from '../lib'
@@ -1535,6 +1537,40 @@ const AckDialog = {
         <Alert variant="success" flat>Changes saved.</Alert>
         <Alert variant="warning" flat>Session expires in 5 minutes.</Alert>
         <Alert variant="danger" flat>Connection lost. Reconnecting…</Alert>
+      </div>
+    </section>
+
+    <!-- ─── Charts (from @el-agala/charts) ─── -->
+    <section>
+      <h2>Charts — BaseChart</h2>
+      <div class="charts-grid" style="max-width: 900px">
+        <div class="chart-item" style="background: hsl(var(--agala-card)); border-radius: var(--agala-radius); padding: 1rem;">
+          <h3 style="margin: 0 0 0.5rem; font-size: 0.875rem; font-weight: 600;">Line</h3>
+          <BaseChart
+            type="line"
+            :labels="['Jan','Feb','Mar','Apr','May','Jun']"
+            :datasets="[{ name: 'Revenue', data: [1200, 1900, 1500, 2100, 1800, 2400], smooth: true, areaStyle: true }]"
+            :height="250"
+          />
+        </div>
+        <div class="chart-item" style="background: hsl(var(--agala-card)); border-radius: var(--agala-radius); padding: 1rem;">
+          <h3 style="margin: 0 0 0.5rem; font-size: 0.875rem; font-weight: 600;">Bar</h3>
+          <BaseChart
+            type="bar"
+            :labels="['Mon','Tue','Wed','Thu','Fri','Sat','Sun']"
+            :datasets="[{ name: 'Check-ins', data: [45, 52, 38, 61, 48, 72, 80] }]"
+            :height="250"
+          />
+        </div>
+        <div class="chart-item" style="background: hsl(var(--agala-card)); border-radius: var(--agala-radius); padding: 1rem;">
+          <h3 style="margin: 0 0 0.5rem; font-size: 0.875rem; font-weight: 600;">Pie</h3>
+          <BaseChart
+            type="pie"
+            :labels="['Active','Inactive','Pending']"
+            :datasets="[{ data: [65, 20, 15] }]"
+            :height="250"
+          />
+        </div>
       </div>
     </section>
 
