@@ -10,7 +10,6 @@ import type { TableColumn, TabItem, CalendarEvent, CalendarView } from '../lib'
 /* ─── Theme ─── */
 type Theme = 'default' | 'forja' | 'custom'
 const activeTheme = ref<Theme>('default')
-const themeTesterOpen = ref(false)
 const customThemeCss = ref(`/* Paste your custom theme CSS here */
 :root {
   --agala-primary: 200 90% 50%;
@@ -382,93 +381,35 @@ const AckDialog = {
   </div>
 
   <!-- ─── Theme Tester ─── -->
-  <section class="themeTester">
-    <div class="themeTester__header">
-      <h2 style="margin: 0">🎨 Theme Tester</h2>
-      <Button
-        variant="ghost"
-        size="sm"
-        style="margin-left: auto"
-        @click="themeTesterOpen = !themeTesterOpen"
-      >
-        {{ themeTesterOpen ? 'Hide' : 'Show' }}
-      </Button>
-    </div>
-    <Transition name="themeTester-slide">
-      <div v-show="themeTesterOpen" class="themeTester__body">
-        <p class="muted" style="margin: 0 0 0.75rem; font-size: 0.875rem">
-          Paste custom CSS variables below and click <strong>Apply</strong> to see all components update instantly.
-        </p>
-        <div class="stack" style="max-width: 640px">
-          <Textarea
-            v-model="customThemeCss"
-            :rows="8"
-            resize="vertical"
-            placeholder="/* Paste your custom theme CSS here */\n:root {\n  --agala-primary: 200 90% 50%;\n  --agala-background: 0 0% 98%;\n  --agala-card: 0 0% 100%;\n  /* … */\n}"
-          />
-          <div class="row" style="margin-bottom: 0">
-            <Button variant="primary" icon @click="applyCustomTheme">
-              <template #icon><AgalaIcon name="refresh" :size="14" /></template>
-              Apply Custom Theme
-            </Button>
-            <Button variant="outline" @click="resetCustomTheme">Reset to Default</Button>
-            <span v-if="activeTheme === 'custom'" class="muted" style="font-size: 0.75rem; margin-left: auto">
-              ✅ Custom theme active
-            </span>
-          </div>
-        </div>
+  <section id="theme">
+    <h2>Theme Tester</h2>
+    <p class="muted" style="margin: 0 0 0.75rem; font-size: 0.875rem">
+      Paste custom CSS variables below and click <strong>Apply</strong> to see all components update instantly.
+    </p>
+    <div class="stack" style="max-width: 640px">
+      <Textarea
+        v-model="customThemeCss"
+        :rows="6"
+        resize="vertical"
+        placeholder="/* Paste your custom theme CSS here */\n:root {\n  --agala-primary: 200 90% 50%;\n  --agala-background: 0 0% 98%;\n  --agala-card: 0 0% 100%;\n  /* … */\n}"
+      />
+      <div class="row" style="margin-bottom: 0">
+        <Button variant="primary" icon @click="applyCustomTheme">
+          <template #icon><AgalaIcon name="refresh" :size="14" /></template>
+          Apply Custom Theme
+        </Button>
+        <Button variant="outline" @click="resetCustomTheme">Reset to Default</Button>
+        <span v-if="activeTheme === 'custom'" class="muted" style="font-size: 0.75rem; margin-left: auto">
+          ✅ Custom theme active
+        </span>
       </div>
-    </Transition>
+    </div>
   </section>
 
-  <nav class="playground-nav">
-    <span class="playground-nav__title">Components</span>
-    <a href="#banner">Dev Banner</a>
-    <a href="#btn">Button</a>
-    <a href="#input">Input</a>
-    <a href="#formfield">FormField</a>
-    <a href="#select">Select</a>
-    <a href="#creatable">Creatable</a>
-    <a href="#datepicker">DatePicker</a>
-    <a href="#calendar">Calendar</a>
-    <a href="#colorpicker">ColorPicker</a>
-    <a href="#modal">Modal</a>
-    <a href="#badge">Badge</a>
-    <a href="#checkbox">Checkbox</a>
-    <a href="#toggle">Toggle</a>
-    <a href="#avatar">Avatar</a>
-    <a href="#toast">Toast</a>
-    <a href="#textarea">Textarea</a>
-    <a href="#dropdown">Dropdown</a>
-    <a href="#table">Table</a>
-    <a href="#tabs">Tabs</a>
-    <a href="#card">Card</a>
-    <a href="#tooltip">Tooltip</a>
-    <a href="#radio">Radio</a>
-    <a href="#navbar">Navbar</a>
-    <a href="#sidebar">Sidebar</a>
-    <a href="#accordion">Accordion</a>
-    <a href="#skeleton">Skeleton</a>
-    <a href="#stat">Stat</a>
-    <a href="#progress">Progress</a>
-    <a href="#tag">Tag</a>
-    <a href="#pagination">Pagination</a>
-    <a href="#drawer">Drawer</a>
-    <a href="#fileupload">File</a>
-    <a href="#alert">Alert</a>
-    <a href="#charts">Charts</a>
-  </nav>
-
-  <div class="playground">
-    <header>
-      <h1>Agala UI</h1>
-      <p>Elegant, modern, themable components. Toggle dark mode on your OS to switch palettes.</p>
-    </header>
-
-    <!-- ─── DevEnvBanner ─── -->
-    <section id="banner">
-      <h2>DevEnvBanner</h2>
-      <p class="muted" style="margin: 0 0 0.75rem; font-size: 0.875rem">Close button removes the banner from the DOM. Refresh to reset.</p>
+  <!-- ─── DevEnvBanner ─── -->
+  <section id="banner">
+    <h2>DevEnvBanner</h2>
+    <p class="muted" style="margin: 0 0 0.75rem; font-size: 0.875rem">Close button removes the banner from the DOM. Refresh to reset.</p>
       <div class="stack" style="gap: 0">
         <DevEnvBanner />
         <DevEnvBanner text="Custom: Preview environment — data resets daily." class="custom-banner" />
@@ -1695,6 +1636,7 @@ h2 {
 
 section {
   margin-bottom: 3rem;
+  scroll-margin-top: 1.5rem;
 }
 
 .row {
@@ -1840,19 +1782,4 @@ section {
 }
 
 /* ─── Theme Tester ─── */
-.themeTester {
-  position: sticky;
-  top: 0;
-  z-index: 998;
-  background: hsl(var(--agala-card));
-  border-bottom: var(--agala-border-width) solid hsl(var(--agala-border));
-  padding: 1.5rem 1.5rem;
-  box-shadow: var(--agala-shadow-sm);
-}
-
-.themeTester h2 {
-  font-size: 1rem;
-  font-weight: 600;
-  margin: 0 0 0.5rem;
-}
 </style>
