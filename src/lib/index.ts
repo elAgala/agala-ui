@@ -42,6 +42,9 @@ export type { DatePickerProps, DatePickerSize } from './components/DatePicker'
 export { default as Calendar } from './components/Calendar/Calendar.vue'
 export type { CalendarEvent, CalendarView, CalendarProps, CalendarEmits, SlotSelectPayload } from './components/Calendar'
 
+export { default as ColorPicker } from './components/ColorPicker/ColorPicker.vue'
+export type { ColorPickerProps, ColorPickerSize } from './components/ColorPicker'
+
 export { default as Modal } from './components/Modal/Modal.vue'
 export { default as ModalProvider } from './components/Modal/ModalProvider.vue'
 export { modalManager } from './components/Modal/ModalManager'

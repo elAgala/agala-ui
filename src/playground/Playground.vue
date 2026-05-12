@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, h, watch } from 'vue'
-import { Button, Input, FormField, Select, CreatableSelect, DatePicker, Modal, ModalProvider, modalManager, Badge, Checkbox, Toggle, Avatar, ToastProvider, toastManager, Textarea, DropdownMenu, Table, Tabs, Card, Tooltip, RadioGroup, Navbar, Sidebar, SidebarItem, SidebarGroup, SidebarToggle, Accordion, AccordionItem, Skeleton, Stat, EmptyState, Progress, Tag, Pagination, Drawer, FileUpload, DevEnvBanner, Calendar } from '../lib'
+import { Button, Input, FormField, Select, CreatableSelect, DatePicker, ColorPicker, Modal, ModalProvider, modalManager, Badge, Checkbox, Toggle, Avatar, ToastProvider, toastManager, Textarea, DropdownMenu, Table, Tabs, Card, Tooltip, RadioGroup, Navbar, Sidebar, SidebarItem, SidebarGroup, SidebarToggle, Accordion, AccordionItem, Skeleton, Stat, EmptyState, Progress, Tag, Pagination, Drawer, FileUpload, DevEnvBanner, Calendar } from '../lib'
 import { useMediaQuery } from '../lib/composables/useMediaQuery'
 import AgalaIcon from '../lib/components/AgalaIcon/AgalaIcon.vue'
 import type { TableColumn, TabItem, CalendarEvent, CalendarView } from '../lib'
@@ -90,6 +90,9 @@ function handleCreateEmpty(text: string) {
 const pickedDate = ref('')
 const minDate = ref('')
 const maxDate = ref('')
+
+/* ─── ColorPicker state ─── */
+const pickedColor = ref('')
 
 /* ─── Modal state ─── */
 const basicOpen = ref(false)
@@ -657,6 +660,24 @@ const AckDialog = {
         <p class="muted" style="margin: 0; font-size: 0.875rem">Last selected event: {{ selectedEvent?.title || 'none' }}</p>
         <p class="muted" style="margin: 0; font-size: 0.875rem">Last clicked day: {{ clickedDay || 'none' }}</p>
         <p class="muted" style="margin: 0; font-size: 0.875rem">Last slot: {{ selectedSlot ? `${selectedSlot.start} → ${selectedSlot.end}` : 'none' }}</p>
+      </div>
+    </section>
+
+    <!-- ═══════════════════ COLORPICKER ═══════════════════ -->
+    <section>
+      <h2>ColorPicker — Sizes</h2>
+      <div class="stack" style="max-width: 320px">
+        <ColorPicker v-model="pickedColor" size="sm" placeholder="Small" />
+        <ColorPicker v-model="pickedColor" size="md" placeholder="Medium" />
+        <ColorPicker v-model="pickedColor" size="lg" placeholder="Large" />
+      </div>
+      <p class="muted" style="margin-top: 0.5rem; font-size: 0.875rem">Selected: {{ pickedColor || '—' }}</p>
+
+      <h2>ColorPicker — Clearable + Error + Disabled</h2>
+      <div class="stack" style="max-width: 320px">
+        <ColorPicker v-model="pickedColor" clearable placeholder="Pick a color (clearable)" />
+        <ColorPicker placeholder="Error state" error error-message="Please select a valid color." />
+        <ColorPicker placeholder="Disabled" disabled />
       </div>
     </section>
 
