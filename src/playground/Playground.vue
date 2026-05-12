@@ -142,6 +142,7 @@ const progressValue = ref(65)
 const sidebarCollapsed = ref(false)
 const sidebarOpen = ref(false)
 const isMobileViewport = useMediaQuery('(max-width: 639px)')
+const isDesktopViewport = useMediaQuery('(min-width: 768px)')
 
 /* ─── Tag state ─── */
 const tagList = ref([
@@ -1187,7 +1188,23 @@ const AckDialog = {
       <div style="border: 1px solid hsl(var(--agala-border)); border-radius: var(--agala-radius-lg); overflow: hidden">
         <Navbar>
           <template #brand>
-            <SidebarToggle v-if="isMobileViewport" aria-controls="responsive-sidebar" :aria-expanded="sidebarOpen" @click="sidebarOpen = !sidebarOpen" />
+            <SidebarToggle
+              v-if="isMobileViewport"
+              aria-controls="responsive-sidebar"
+              :aria-expanded="sidebarOpen"
+              @click="sidebarOpen = !sidebarOpen"
+            />
+            <Button
+              v-else-if="isDesktopViewport"
+              variant="ghost"
+              size="icon"
+              :aria-label="sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'"
+              :aria-expanded="!sidebarCollapsed"
+              aria-controls="responsive-sidebar"
+              @click="sidebarCollapsed = !sidebarCollapsed"
+            >
+              <AgalaIcon name="panel-left" :size="18" />
+            </Button>
             <span style="font-weight: 600; font-size: 0.875rem; margin-left: 0.5rem">My App</span>
           </template>
           <Button variant="ghost" size="sm">Dashboard</Button>
@@ -1203,13 +1220,7 @@ const AckDialog = {
             v-model:collapsed="sidebarCollapsed"
             v-model:open="sidebarOpen"
           >
-            <template #header="{ collapsed, toggle }">
-              <span v-if="!collapsed" style="font-weight: 700; font-size: 0.875rem; white-space: nowrap; letter-spacing: var(--agala-letter-spacing-tight)">FORJA</span>
-              <span v-if="!collapsed" class="muted" style="font-size: 0.625rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; margin-left: 0.5rem">ADMIN</span>
-              <Button variant="ghost" size="icon" style="margin-left: auto; flex-shrink: 0" @click="toggle" aria-label="Toggle sidebar">
-                <AgalaIcon name="panel-left" :size="16" />
-              </Button>
-            </template>
+            <!-- No #header when paired with Navbar — app identity lives in Navbar #brand -->
 
             <SidebarGroup label="Operación">
               <SidebarItem icon="home" label="Panel" active />
