@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, nextTick } from 'vue'
 import { AgalaIcon } from '../AgalaIcon'
 import type { InputVariant, InputSize } from './types'
 
@@ -35,6 +35,7 @@ const emit = defineEmits<{
 }>()
 
 const showPassword = ref(false)
+const inputRef = ref<HTMLInputElement | null>(null)
 
 const effectiveType = computed(() => {
   if (props.type === 'password' && showPassword.value) return 'text'
@@ -47,8 +48,16 @@ const endIconName = computed(() => {
 })
 
 function handleEndIconClick() {
-  if (props.type === 'password') {
+  if (props.type === 'password' && inputRef.value) {
+    const value = inputRef.value.value
     showPassword.value = !showPassword.value
+    // Changing input type resets the value in the DOM (browser behavior).
+    // Restore it after Vue reconciles.
+    if (value) {
+      nextTick(() => {
+        if (inputRef.value) inputRef.value.value = value
+      })
+    }
   }
 }
 
@@ -76,6 +85,7 @@ const cls = computed(() => [
         <AgalaIcon name="search" :size="14" />
       </span>
       <input
+        ref="inputRef"
         :class="cls"
         :value="modelValue"
         :disabled="disabled"
