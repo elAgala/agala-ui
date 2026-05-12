@@ -22,7 +22,7 @@ const iconMap: Record<AlertVariant, IconName> = {
 const cls = computed(() => [
   'alert',
   `alert--${props.variant}`,
-  props.title ? 'alert--has-title' : '',
+  props.title && !props.flat ? 'alert--has-title' : '',
   props.flat ? 'alert--flat' : '',
   props.class,
 ].filter(Boolean).join(' '))
@@ -34,7 +34,7 @@ const cls = computed(() => [
       <AgalaIcon :name="iconMap[props.variant]" :size="20" />
     </span>
     <div class="alert__content">
-      <h4 v-if="props.title" class="alert__title">{{ props.title }}</h4>
+      <h4 v-if="props.title && !props.flat" class="alert__title">{{ props.title }}</h4>
       <div v-if="$slots.default" class="alert__body">
         <slot />
       </div>
@@ -75,9 +75,19 @@ const cls = computed(() => [
   align-items: flex-start;
 }
 
-/* Flat variant — no background tint */
+/* Flat variant — no background, no border, minimal icon+text */
 .alert--flat {
   background: transparent;
+  border-left: none;
+  padding: 0.5rem 0;
+  gap: 0.5rem;
+}
+.alert--flat .alert__icon {
+  margin-top: 0;
+}
+.alert--flat .alert__body {
+  color: hsl(var(--agala-muted-foreground));
+  font-size: var(--agala-font-size-sm);
 }
 
 .alert__icon {
