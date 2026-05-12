@@ -256,26 +256,30 @@ function handleClear() {
   close()
 }
 
-/* ─── Click outside ─── */
-function onDocumentMouseDown(e: MouseEvent) {
-  if (!isOpen.value) return
-  const target = e.target as Node
-  if (
-    wrapperRef.value &&
-    floatingRef.value &&
-    !wrapperRef.value.contains(target) &&
-    !floatingRef.value.contains(target)
-  ) {
-    close()
-  }
-}
-
+/* ─── Click outside + scroll close + resize reposition ─── */
 watch(isOpen, (open) => {
-  if (open) {
-    document.addEventListener('mousedown', onDocumentMouseDown, true)
-  } else {
-    document.removeEventListener('mousedown', onDocumentMouseDown, true)
+  if (!open) return
+  const handleClick = (e: MouseEvent) => {
+    if (!wrapperRef.value?.contains(e.target as Node) && !floatingRef.value?.contains(e.target as Node)) {
+      close()
+    }
   }
+  const handleScroll = (e: Event) => {
+    if (!floatingRef.value?.contains(e.target as Node)) {
+      close()
+    }
+  }
+  const handleResize = () => recompute()
+  document.addEventListener('mousedown', handleClick)
+  window.addEventListener('scroll', handleScroll, true)
+  window.addEventListener('resize', handleResize)
+  watch(isOpen, (newOpen) => {
+    if (!newOpen) {
+      document.removeEventListener('mousedown', handleClick)
+      window.removeEventListener('scroll', handleScroll, true)
+      window.removeEventListener('resize', handleResize)
+    }
+  }, { once: true })
 })
 
 /* ─── Tab trapping ─── */
@@ -306,11 +310,6 @@ function handlePopoverKeyDown(e: KeyboardEvent) {
   }
 }
 
-/* ─── Cleanup on unmount ─── */
-import { onUnmounted } from 'vue'
-onUnmounted(() => {
-  document.removeEventListener('mousedown', onDocumentMouseDown, true)
-})
 </script>
 
 <template>
