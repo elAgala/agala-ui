@@ -9,7 +9,9 @@ import {
   isSameDay,
   parseISO,
   toISODate,
+  formatEventTimeRange,
 } from './utils'
+import { formatDateLabel } from '../../composables/useDateUtils'
 
 const props = withDefaults(
   defineProps<{
@@ -31,7 +33,7 @@ const emit = defineEmits<{
   select: [event: CalendarEvent]
 }>()
 
-/* ── reactive “now” clock (updates every minute) ── */
+/* ── reactive "now" clock (updates every minute) ── */
 const now = ref(new Date())
 let intervalId: number | undefined
 
@@ -48,14 +50,6 @@ onUnmounted(() => {
 })
 
 /* ── helpers ── */
-function formatDateLabel(date: Date): string {
-  return date.toLocaleDateString(undefined, {
-    weekday: 'long',
-    month: 'short',
-    day: 'numeric',
-  })
-}
-
 function safeFormatTime(iso: string): string {
   const d = parseISO(iso)
   return d ? formatTimeLabel(d) : ''
@@ -207,11 +201,17 @@ const totalEvents = computed(() => {
           {{ formatDateLabel(group.date) }}
         </div>
 
-        <div role="list" class="dayEvents">
+        <!-- No events for this day -->
+        <div v-if="group.events.length === 0" class="noEvents">
+          No events
+        </div>
+
+        <div v-else role="list" class="dayEvents">
           <template
             v-for="(event, index) in group.events"
             :key="event.id"
           >
+            <!-- Now separator -->
             <div
               v-if="group.separatorIndex === index"
               class="nowSeparator"
@@ -221,6 +221,7 @@ const totalEvents = computed(() => {
               <span class="nowLabel">Now</span>
             </div>
 
+            <!-- Event card -->
             <div
               role="listitem"
               class="eventCard"
@@ -254,6 +255,9 @@ const totalEvents = computed(() => {
                 <div v-if="event.subtitle" class="eventSubtitle">
                   {{ event.subtitle }}
                 </div>
+                <div v-if="!event.allDay" class="eventTimeRange">
+                  {{ formatEventTimeRange(event) }}
+                </div>
               </div>
             </div>
           </template>
@@ -272,6 +276,8 @@ const totalEvents = computed(() => {
   background-color: hsl(var(--agala-background));
   color: hsl(var(--agala-foreground));
   font-family: var(--agala-font-sans);
+  overflow-y: auto;
+  height: 100%;
 }
 
 .dayGroup {
@@ -294,6 +300,13 @@ const totalEvents = computed(() => {
 
 .dayHeaderToday {
   color: hsl(var(--agala-primary));
+}
+
+.noEvents {
+  padding: 1rem 0.75rem;
+  color: hsl(var(--agala-muted-foreground));
+  font-size: var(--agala-font-size-sm);
+  font-style: italic;
 }
 
 .dayEvents {
@@ -345,11 +358,11 @@ const totalEvents = computed(() => {
 }
 
 .accentSecondary {
-  border-left-color: hsl(var(--agala-secondary));
+  border-left-color: hsl(var(--agala-secondary-foreground));
 }
 
 .accentAccent {
-  border-left-color: hsl(var(--agala-accent));
+  border-left-color: hsl(var(--agala-accent-foreground));
 }
 
 .timeColumn {
@@ -405,6 +418,12 @@ const totalEvents = computed(() => {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.eventTimeRange {
+  font-size: 0.6875rem;
+  color: hsl(var(--agala-muted-foreground));
+  font-weight: var(--agala-font-weight-medium);
 }
 
 .eventBadge {

@@ -1,6 +1,22 @@
 import './tokens.css'
 
 export { useMediaQuery } from './composables/useMediaQuery'
+export {
+  parseDate,
+  formatISODate,
+  formatISODateTime,
+  formatTime,
+  formatTime24,
+  formatDateLabel,
+  formatMonthYear,
+  formatFullDate,
+  isSameDay,
+  isToday,
+  startOfWeek,
+  addDays,
+  getMonthGrid,
+  getWeekDays,
+} from './composables/useDateUtils'
 
 export { AgalaIcon } from './components/AgalaIcon'
 export type { IconName } from './components/AgalaIcon/types'

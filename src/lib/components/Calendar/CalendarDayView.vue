@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, onMounted, onUnmounted } from 'vue'
+import { computed, ref, onMounted, onUnmounted, nextTick, watch } from 'vue'
 import type { CalendarEvent } from './types'
 import {
   getDayEvents,
@@ -11,6 +11,7 @@ import {
   formatTimeLabel,
   parseISO,
   minutesFromMidnight,
+  formatEventTimeRange,
 } from './utils'
 
 const props = withDefaults(defineProps<{
@@ -57,27 +58,39 @@ onUnmounted(() => {
   if (timer) clearInterval(timer)
 })
 
-// Hour height measurement
-const firstRowRef = ref<HTMLElement | null>(null)
+// Hour height measurement - use CSS custom property approach
+const dayColumnRef = ref<HTMLDivElement>()
 const hourHeight = ref(48)
 
-function updateHourHeight() {
-  if (firstRowRef.value) {
-    hourHeight.value = firstRowRef.value.getBoundingClientRect().height
+function measureHourHeight() {
+  if (!dayColumnRef.value) return
+  const firstRow = dayColumnRef.value.querySelector('.hourRow') as HTMLElement | null
+  if (firstRow) {
+    hourHeight.value = firstRow.getBoundingClientRect().height
   }
 }
 
-function setFirstRowRef(el: Element | null) {
-  if (el) firstRowRef.value = el as HTMLElement
-}
-
 onMounted(() => {
-  updateHourHeight()
-  window.addEventListener('resize', updateHourHeight)
+  // Measure after layout is complete
+  nextTick(() => {
+    requestAnimationFrame(() => {
+      measureHourHeight()
+    })
+  })
+  window.addEventListener('resize', measureHourHeight)
 })
 
 onUnmounted(() => {
-  window.removeEventListener('resize', updateHourHeight)
+  window.removeEventListener('resize', measureHourHeight)
+})
+
+// Re-measure when hours change (dayStart/dayEnd)
+watch(() => [props.dayStart, props.dayEnd], () => {
+  nextTick(() => {
+    requestAnimationFrame(() => {
+      measureHourHeight()
+    })
+  })
 })
 
 // Computed data
@@ -144,19 +157,21 @@ function eventStyle(item: {
   const style: Record<string, string> = {}
 
   if (item.event.color && !tokenColorMap[item.event.color]) {
-    style.backgroundColor = item.event.color
+    style.backgroundColor = `${item.event.color}20`
+    style.color = item.event.color
+    style.borderLeft = `3px solid ${item.event.color}`
   }
 
   style.top = `${item.position.top}px`
-  style.height = `${Math.max(item.position.height, 20)}px`
+  style.height = `${Math.max(item.position.height, 24)}px`
 
   if (item.overlap && item.overlap.totalColumns > 1) {
     const pct = 100 / item.overlap.totalColumns
-    style.left = `${item.overlap.column * pct}%`
-    style.width = `calc(${pct}% - 2px)`
+    style.left = `${item.overlap.column * pct + 0.5}%`
+    style.width = `calc(${pct}% - 1%)`
   } else {
-    style.left = '0'
-    style.width = 'calc(100% - 2px)'
+    style.left = '0.5%'
+    style.width = 'calc(99%)'
   }
 
   return style
@@ -168,6 +183,14 @@ function handleDayClick() {
 
 function hourDate(hour: number): Date {
   return new Date(2000, 0, 1, hour, 0, 0)
+}
+
+function eventShowTime(height: number): boolean {
+  return height >= 28
+}
+
+function eventShowSubtitle(height: number): boolean {
+  return height >= 40
 }
 </script>
 
@@ -182,7 +205,11 @@ function hourDate(hour: number): Date {
           :key="event.id"
           class="allDayEvent"
           :class="event.color && tokenColorMap[event.color]"
-          :style="event.color && !tokenColorMap[event.color] ? { backgroundColor: event.color } : {}"
+          :style="event.color && !tokenColorMap[event.color] ? {
+            backgroundColor: `${event.color}20`,
+            color: event.color,
+            borderLeft: `3px solid ${event.color}`,
+          } : {}"
           @click.stop="emit('select', event)"
         >
           {{ event.title }}
@@ -204,12 +231,11 @@ function hourDate(hour: number): Date {
       </div>
 
       <!-- Day column -->
-      <div class="dayColumn" @click="handleDayClick">
+      <div ref="dayColumnRef" class="dayColumn" @click="handleDayClick">
         <div
-          v-for="(hour, index) in hours"
+          v-for="hour in hours"
           :key="hour"
           class="hourRow"
-          :ref="index === 0 ? setFirstRowRef : undefined"
         ></div>
 
         <!-- Current time line -->
@@ -217,7 +243,9 @@ function hourDate(hour: number): Date {
           v-if="isToday && currentTimeTop >= 0"
           class="currentTimeLine"
           :style="{ top: `${currentTimeTop}px` }"
-        ></div>
+        >
+          <div class="currentTimeDot"></div>
+        </div>
 
         <!-- Events -->
         <button
@@ -227,7 +255,15 @@ function hourDate(hour: number): Date {
           :style="eventStyle(item)"
           @click.stop="emit('select', item.event)"
         >
-          {{ item.event.title }}
+          <div class="eventContent">
+            <div v-if="eventShowTime(item.position.height)" class="eventTime">
+              {{ formatEventTimeRange(item.event) }}
+            </div>
+            <div class="eventTitle">{{ item.event.title }}</div>
+            <div v-if="eventShowSubtitle(item.position.height) && item.event.subtitle" class="eventSubtitle">
+              {{ item.event.subtitle }}
+            </div>
+          </div>
         </button>
       </div>
     </div>
@@ -240,8 +276,6 @@ function hourDate(hour: number): Date {
   flex-direction: column;
   height: 100%;
   overflow: hidden;
-  border: var(--agala-border-width) solid hsl(var(--agala-border));
-  border-radius: var(--agala-radius);
   background: hsl(var(--agala-background));
 }
 
@@ -249,6 +283,7 @@ function hourDate(hour: number): Date {
   display: flex;
   border-bottom: var(--agala-border-width) solid hsl(var(--agala-border));
   min-height: 2.5rem;
+  flex-shrink: 0;
 }
 
 .timeAxisLabel {
@@ -282,12 +317,13 @@ function hourDate(hour: number): Date {
   font-weight: var(--agala-font-weight-medium);
   border: none;
   cursor: pointer;
-  background: hsl(var(--agala-primary) / 0.15);
+  background: hsl(var(--agala-primary) / 0.12);
   color: hsl(var(--agala-primary));
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 100%;
+  border-left: 3px solid hsl(var(--agala-primary));
 }
 
 .allDayEvent:focus-visible {
@@ -341,13 +377,23 @@ function hourDate(hour: number): Date {
   right: 0;
   height: 2px;
   background: hsl(var(--agala-danger));
-  z-index: 2;
+  z-index: 5;
   pointer-events: none;
+}
+
+.currentTimeDot {
+  position: absolute;
+  left: -5px;
+  top: -4px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: hsl(var(--agala-danger));
 }
 
 .event {
   position: absolute;
-  padding: 0.125rem 0.25rem;
+  padding: 0.125rem 0.375rem;
   border-radius: var(--agala-radius-sm);
   font-size: var(--agala-font-size-sm);
   font-weight: var(--agala-font-weight-medium);
@@ -357,8 +403,11 @@ function hourDate(hour: number): Date {
   border: none;
   line-height: 1.25;
   box-sizing: border-box;
-  background: hsl(var(--agala-primary) / 0.15);
+  background: hsl(var(--agala-primary) / 0.12);
   color: hsl(var(--agala-foreground));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .event:focus-visible {
@@ -366,35 +415,44 @@ function hourDate(hour: number): Date {
   box-shadow: 0 0 0 2px hsl(var(--agala-ring));
 }
 
-.eventPrimary {
-  background: hsl(var(--agala-primary) / 0.15);
-  color: hsl(var(--agala-primary));
+.eventContent {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-width: 0;
+  overflow: hidden;
 }
 
-.eventDanger {
-  background: hsl(var(--agala-danger) / 0.15);
-  color: hsl(var(--agala-danger));
+.eventTime {
+  font-size: 0.625rem;
+  font-weight: var(--agala-font-weight-semibold);
+  opacity: 0.8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.eventSuccess {
-  background: hsl(var(--agala-success) / 0.15);
-  color: hsl(var(--agala-success));
+.eventTitle {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: var(--agala-font-weight-semibold);
 }
 
-.eventWarning {
-  background: hsl(var(--agala-warning) / 0.15);
-  color: hsl(var(--agala-warning));
+.eventSubtitle {
+  font-size: 0.625rem;
+  opacity: 0.7;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.eventSecondary {
-  background: hsl(var(--agala-secondary) / 0.5);
-  color: hsl(var(--agala-secondary-foreground));
-}
-
-.eventAccent {
-  background: hsl(var(--agala-accent) / 0.5);
-  color: hsl(var(--agala-accent-foreground));
-}
+.eventPrimary { background-color: hsl(var(--agala-primary) / 0.12); color: hsl(var(--agala-primary)); border-left: 3px solid hsl(var(--agala-primary)); }
+.eventDanger { background-color: hsl(var(--agala-danger) / 0.12); color: hsl(var(--agala-danger)); border-left: 3px solid hsl(var(--agala-danger)); }
+.eventSuccess { background-color: hsl(var(--agala-success) / 0.12); color: hsl(var(--agala-success)); border-left: 3px solid hsl(var(--agala-success)); }
+.eventWarning { background-color: hsl(var(--agala-warning) / 0.15); color: hsl(var(--agala-warning)); border-left: 3px solid hsl(var(--agala-warning)); }
+.eventSecondary { background-color: hsl(var(--agala-secondary) / 0.5); color: hsl(var(--agala-secondary-foreground)); border-left: 3px solid hsl(var(--agala-secondary-foreground) / 0.5); }
+.eventAccent { background-color: hsl(var(--agala-accent) / 0.5); color: hsl(var(--agala-accent-foreground)); border-left: 3px solid hsl(var(--agala-accent-foreground) / 0.5); }
 
 @media (max-width: 639px) {
   .timeLabel,

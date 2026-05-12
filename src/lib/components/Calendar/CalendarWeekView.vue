@@ -164,13 +164,14 @@ function getEventStyle(
 ): Record<string, string> {
   const style: Record<string, string> = {
     top: `${top}px`,
-    height: `${Math.max(height, 4)}px`,
-    left: `${(column / totalColumns) * 100}%`,
-    width: `${(1 / totalColumns) * 100}%`,
+    height: `${Math.max(height, 20)}px`,
+    left: `${(column / totalColumns) * 100 + 0.5}%`,
+    width: `${(1 / totalColumns) * 100 - 1}%`,
   }
   if (event.color && !tokenColors.includes(event.color)) {
-    style.backgroundColor = event.color
-    style.color = '#fff'
+    style.backgroundColor = `${event.color}20`
+    style.color = event.color
+    style.borderLeft = `3px solid ${event.color}`
   }
   return style
 }
@@ -209,7 +210,11 @@ function getAllDayEventClasses(event: CalendarEvent): string[] {
 
 function getAllDayEventStyle(event: CalendarEvent): Record<string, string> | undefined {
   if (event.color && !tokenColors.includes(event.color)) {
-    return { backgroundColor: event.color, color: '#fff' }
+    return {
+      backgroundColor: `${event.color}20`,
+      color: event.color,
+      borderLeft: `3px solid ${event.color}`,
+    }
   }
   return undefined
 }
@@ -502,33 +507,39 @@ function getAllDayEventStyle(event: CalendarEvent): Record<string, string> | und
 
 /* ─── Token color classes ─── */
 .eventPrimary {
-  background-color: hsl(var(--agala-primary));
-  color: hsl(var(--agala-primary-foreground));
+  background-color: hsl(var(--agala-primary) / 0.12);
+  color: hsl(var(--agala-primary));
+  border-left: 3px solid hsl(var(--agala-primary));
 }
 
 .eventDanger {
-  background-color: hsl(var(--agala-danger));
-  color: hsl(var(--agala-danger-foreground));
+  background-color: hsl(var(--agala-danger) / 0.12);
+  color: hsl(var(--agala-danger));
+  border-left: 3px solid hsl(var(--agala-danger));
 }
 
 .eventSuccess {
-  background-color: hsl(var(--agala-success));
-  color: hsl(var(--agala-success-foreground));
+  background-color: hsl(var(--agala-success) / 0.12);
+  color: hsl(var(--agala-success));
+  border-left: 3px solid hsl(var(--agala-success));
 }
 
 .eventWarning {
-  background-color: hsl(var(--agala-warning));
-  color: hsl(var(--agala-warning-foreground));
+  background-color: hsl(var(--agala-warning) / 0.15);
+  color: hsl(var(--agala-warning));
+  border-left: 3px solid hsl(var(--agala-warning));
 }
 
 .eventSecondary {
-  background-color: hsl(var(--agala-secondary));
+  background-color: hsl(var(--agala-secondary) / 0.5);
   color: hsl(var(--agala-secondary-foreground));
+  border-left: 3px solid hsl(var(--agala-secondary-foreground) / 0.5);
 }
 
 .eventAccent {
-  background-color: hsl(var(--agala-accent));
+  background-color: hsl(var(--agala-accent) / 0.5);
   color: hsl(var(--agala-accent-foreground));
+  border-left: 3px solid hsl(var(--agala-accent-foreground) / 0.5);
 }
 
 /* ─── Current time indicator ─── */

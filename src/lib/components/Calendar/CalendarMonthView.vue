@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, nextTick } from 'vue'
 import type { CalendarEvent } from './types'
-import { getMonthGrid, getDayEvents, isSameDay, toISODate, parseISO } from './utils'
+import { getMonthGrid, getDayEvents, isSameDay, toISODate, parseISO, formatEventTime } from './utils'
 
 /* ── Props / Emits ── */
 const props = withDefaults(defineProps<{
@@ -100,7 +100,11 @@ function colorClass(color?: string): string | undefined {
 function eventStyle(event: CalendarEvent): Record<string, string> | undefined {
   const cls = colorClass(event.color)
   if (cls) return undefined
-  return { backgroundColor: event.color || 'hsl(var(--agala-primary))' }
+  return {
+    backgroundColor: `${event.color}20`,
+    color: event.color,
+    borderLeft: `3px solid ${event.color}`,
+  }
 }
 
 function dayCellClass(cell: DayCellData): string {
@@ -241,6 +245,7 @@ function handleGridKeyDown(e: KeyboardEvent) {
               tabindex="0"
               @click.stop="handleEventClick(event, $event)"
             >
+              <span class="eventTime">{{ formatEventTime(event) }}</span>
               <span class="eventBarText">{{ event.title }}</span>
             </button>
 
@@ -252,7 +257,7 @@ function handleGridKeyDown(e: KeyboardEvent) {
                 type="button"
                 class="eventDot"
                 :class="[colorClass(event.color)]"
-                :style="eventStyle(event)"
+                :style="event.color && !colorClass(event.color) ? { backgroundColor: event.color } : {}"
                 tabindex="0"
                 :aria-label="event.title"
                 @click.stop="handleEventClick(event, $event)"
@@ -372,16 +377,18 @@ function handleGridKeyDown(e: KeyboardEvent) {
 .eventBar {
   display: flex;
   align-items: center;
+  gap: 0.25rem;
   width: 100%;
-  height: 1.25rem;
-  padding: 0 0.25rem;
+  min-height: 1.25rem;
+  padding: 0.125rem 0.375rem;
   border: none;
   border-radius: var(--agala-radius-sm);
-  font-size: var(--agala-font-size-sm);
-  color: hsl(var(--agala-foreground));
+  font-size: 0.6875rem;
+  font-weight: var(--agala-font-weight-medium);
   cursor: pointer;
   overflow: hidden;
   transition: opacity var(--agala-transition-fast);
+  text-align: left;
 }
 
 .eventBar:hover {
@@ -393,14 +400,21 @@ function handleGridKeyDown(e: KeyboardEvent) {
   box-shadow: 0 0 0 2px hsl(var(--agala-ring) / 0.5);
 }
 
+.eventTime {
+  font-weight: var(--agala-font-weight-semibold);
+  flex-shrink: 0;
+  opacity: 0.8;
+}
+
 .eventBarText {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  min-width: 0;
 }
 
 .allDayBar {
-  font-weight: var(--agala-font-weight-medium);
+  font-weight: var(--agala-font-weight-semibold);
 }
 
 .timedBarDesktop {
@@ -426,20 +440,20 @@ function handleGridKeyDown(e: KeyboardEvent) {
 }
 
 .moreLabel {
-  font-size: var(--agala-font-size-sm);
+  font-size: 0.6875rem;
   color: hsl(var(--agala-muted-foreground));
   padding: 0 0.25rem;
   line-height: 1.25rem;
 }
 
 /* ── Token color classes ── */
-.eventPrimary { background-color: hsl(var(--agala-primary)); color: hsl(var(--agala-primary-foreground)); }
-.eventSecondary { background-color: hsl(var(--agala-secondary)); color: hsl(var(--agala-secondary-foreground)); }
-.eventMuted { background-color: hsl(var(--agala-muted)); color: hsl(var(--agala-muted-foreground)); }
-.eventDanger { background-color: hsl(var(--agala-danger)); color: hsl(var(--agala-danger-foreground)); }
-.eventWarning { background-color: hsl(var(--agala-warning)); color: hsl(var(--agala-warning-foreground)); }
-.eventSuccess { background-color: hsl(var(--agala-success)); color: hsl(var(--agala-success-foreground)); }
-.eventAccent { background-color: hsl(var(--agala-accent)); color: hsl(var(--agala-accent-foreground)); }
+.eventPrimary { background-color: hsl(var(--agala-primary) / 0.12); color: hsl(var(--agala-primary)); border-left: 3px solid hsl(var(--agala-primary)); }
+.eventSecondary { background-color: hsl(var(--agala-secondary) / 0.5); color: hsl(var(--agala-secondary-foreground)); border-left: 3px solid hsl(var(--agala-secondary-foreground) / 0.5); }
+.eventMuted { background-color: hsl(var(--agala-muted)); color: hsl(var(--agala-muted-foreground)); border-left: 3px solid hsl(var(--agala-muted-foreground) / 0.5); }
+.eventDanger { background-color: hsl(var(--agala-danger) / 0.12); color: hsl(var(--agala-danger)); border-left: 3px solid hsl(var(--agala-danger)); }
+.eventWarning { background-color: hsl(var(--agala-warning) / 0.15); color: hsl(var(--agala-warning)); border-left: 3px solid hsl(var(--agala-warning)); }
+.eventSuccess { background-color: hsl(var(--agala-success) / 0.12); color: hsl(var(--agala-success)); border-left: 3px solid hsl(var(--agala-success)); }
+.eventAccent { background-color: hsl(var(--agala-accent) / 0.5); color: hsl(var(--agala-accent-foreground)); border-left: 3px solid hsl(var(--agala-accent-foreground) / 0.5); }
 
 /* ── Desktop ── */
 @media (min-width: 768px) {

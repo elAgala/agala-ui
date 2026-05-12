@@ -1,4 +1,8 @@
 import type { CalendarEvent } from './types'
+import { parseDate, formatISODate, formatTime, isSameDay } from '../../composables/useDateUtils'
+
+// Re-export date utils for convenience
+export { parseDate as parseISO, formatISODate as toISODate, formatTime as formatTimeLabel, isSameDay }
 
 export function parseTime(timeStr: string): { hours: number; minutes: number } {
   const [h, m] = timeStr.split(':').map(Number)
@@ -8,14 +12,6 @@ export function parseTime(timeStr: string): { hours: number; minutes: number } {
 export function minutesFromMidnight(timeStr: string): number {
   const { hours, minutes } = parseTime(timeStr)
   return hours * 60 + minutes
-}
-
-export function formatTimeLabel(date: Date): string {
-  return date.toLocaleTimeString(undefined, {
-    hour: 'numeric',
-    minute: '2-digit',
-    hour12: true,
-  })
 }
 
 export function startOfWeek(date: Date): Date {
@@ -31,14 +27,6 @@ export function addDays(date: Date, days: number): Date {
   return d
 }
 
-export function isSameDay(a: Date, b: Date): boolean {
-  return (
-    a.getFullYear() === b.getFullYear() &&
-    a.getMonth() === b.getMonth() &&
-    a.getDate() === b.getDate()
-  )
-}
-
 export function getHoursRange(dayStart: string, dayEnd: string): number[] {
   const start = parseTime(dayStart)
   const end = parseTime(dayEnd)
@@ -52,53 +40,16 @@ export function getHoursRange(dayStart: string, dayEnd: string): number[] {
 }
 
 export function getDayEvents(events: CalendarEvent[], date: string): CalendarEvent[] {
-  const dayStart = parseISO(`${date}T00:00:00`)
-  const dayEnd = parseISO(`${date}T23:59:59`)
+  const dayStart = parseDate(`${date}T00:00:00`)
+  const dayEnd = parseDate(`${date}T23:59:59`)
   if (!dayStart || !dayEnd) return []
 
   return events.filter(event => {
-    const eventStart = parseISO(event.start)
-    const eventEnd = parseISO(event.end)
+    const eventStart = parseDate(event.start)
+    const eventEnd = parseDate(event.end)
     if (!eventStart || !eventEnd) return false
     return eventStart <= dayEnd && eventEnd >= dayStart
   })
-}
-
-export function parseISO(iso: string): Date | null {
-  const [datePart, timePart] = iso.split('T')
-  const [y, m, d] = datePart.split('-').map(Number)
-  if (!y || !m || !d) return null
-
-  let hours = 0
-  let minutes = 0
-  let seconds = 0
-
-  if (timePart) {
-    const cleanTime = timePart.replace('Z', '').split('.')[0]
-    const [h, min, s] = cleanTime.split(':').map(Number)
-    if (h !== undefined && min !== undefined) {
-      hours = h
-      minutes = min
-      seconds = s || 0
-    }
-  }
-
-  const date = new Date(y, m - 1, d, hours, minutes, seconds)
-  if (
-    date.getFullYear() !== y ||
-    date.getMonth() !== m - 1 ||
-    date.getDate() !== d
-  ) {
-    return null
-  }
-  return date
-}
-
-export function toISODate(date: Date): string {
-  const yyyy = date.getFullYear()
-  const mm = String(date.getMonth() + 1).padStart(2, '0')
-  const dd = String(date.getDate()).padStart(2, '0')
-  return `${yyyy}-${mm}-${dd}`
 }
 
 export function toISODateTime(date: Date): string {
@@ -152,8 +103,8 @@ export function getEventPosition(
   dayEnd: string,
   hourHeight: number,
 ): { top: number; height: number } | null {
-  const start = parseISO(event.start)
-  const end = parseISO(event.end)
+  const start = parseDate(event.start)
+  const end = parseDate(event.end)
   if (!start || !end) return null
 
   const dayStartMins = minutesFromMidnight(dayStart)
@@ -161,6 +112,7 @@ export function getEventPosition(
   const eventStartMins = start.getHours() * 60 + start.getMinutes()
   const eventEndMins = end.getHours() * 60 + end.getMinutes()
 
+  // Event is completely outside visible range
   if (eventEndMins <= dayStartMins || eventStartMins >= dayEndMins) {
     return null
   }
@@ -169,7 +121,7 @@ export function getEventPosition(
   const visibleEndMins = Math.min(eventEndMins, dayEndMins)
 
   const top = (visibleStartMins - dayStartMins) * (hourHeight / 60)
-  const height = (visibleEndMins - visibleStartMins) * (hourHeight / 60)
+  const height = Math.max((visibleEndMins - visibleStartMins) * (hourHeight / 60), 20)
 
   return { top, height }
 }
@@ -179,77 +131,91 @@ export function detectOverlap(
   date: string,
 ): Array<{ event: CalendarEvent; column: number; totalColumns: number }> {
   const dayEvents = getDayEvents(events, date)
+  if (dayEvents.length === 0) return []
 
+  // Sort by start time
   const parsed = dayEvents
     .map(event => {
-      const start = parseISO(event.start)
-      const end = parseISO(event.end)
+      const start = parseDate(event.start)
+      const end = parseDate(event.end)
       if (!start || !end) return null
       const startMins = start.getHours() * 60 + start.getMinutes()
       const endMins = end.getHours() * 60 + end.getMinutes()
       return { event, startMins, endMins }
     })
     .filter((item): item is NonNullable<typeof item> => item !== null)
+    .sort((a, b) => a.startMins - b.startMins)
 
   if (parsed.length === 0) return []
 
-  // Build overlap adjacency (including self)
-  const adj = parsed.map((a, i) =>
-    parsed.reduce<Set<number>>((set, b, j) => {
-      if (i === j || (a.startMins < b.endMins && b.startMins < a.endMins)) {
-        set.add(j)
-      }
-      return set
-    }, new Set()),
-  )
+  // Group overlapping events into clusters
+  const clusters: Array<typeof parsed> = []
+  let currentCluster: typeof parsed = [parsed[0]]
+  let clusterEnd = parsed[0].endMins
 
-  // Merge connected components
-  let components = adj
-  let changed = true
-  while (changed) {
-    changed = false
-    const merged: Array<Set<number>> = []
-
-    for (const comp of components) {
-      const target = merged.find(m =>
-        Array.from(comp).some(idx => m.has(idx)),
-      )
-      if (target) {
-        comp.forEach(idx => target.add(idx))
-        changed = true
-      } else {
-        merged.push(new Set(comp))
-      }
+  for (let i = 1; i < parsed.length; i++) {
+    const item = parsed[i]
+    if (item.startMins < clusterEnd) {
+      // Overlaps with current cluster
+      currentCluster.push(item)
+      clusterEnd = Math.max(clusterEnd, item.endMins)
+    } else {
+      // New cluster
+      clusters.push(currentCluster)
+      currentCluster = [item]
+      clusterEnd = item.endMins
     }
-    components = merged
   }
+  clusters.push(currentCluster)
 
-  // Assign columns greedily within each cluster
+  // Assign columns within each cluster
   const result: Array<{ event: CalendarEvent; column: number; totalColumns: number }> = []
 
-  for (const component of components) {
-    const cluster = Array.from(component)
-      .map(idx => parsed[idx])
-      .sort((a, b) => a.startMins - b.startMins)
-
-    const columnEndTimes: number[] = []
-    const clusterResult: Array<{ event: CalendarEvent; column: number; totalColumns: number }> = []
+  for (const cluster of clusters) {
+    const columns: number[] = [] // end time of each column
 
     for (const item of cluster) {
-      const availableCol = columnEndTimes.findIndex(end => end <= item.startMins)
-      if (availableCol !== -1) {
-        columnEndTimes[availableCol] = item.endMins
-        clusterResult.push({ event: item.event, column: availableCol, totalColumns: 0 })
-      } else {
-        columnEndTimes.push(item.endMins)
-        clusterResult.push({ event: item.event, column: columnEndTimes.length - 1, totalColumns: 0 })
+      // Find first column that doesn't overlap
+      let placed = false
+      for (let i = 0; i < columns.length; i++) {
+        if (columns[i] <= item.startMins) {
+          columns[i] = item.endMins
+          result.push({ event: item.event, column: i, totalColumns: columns.length })
+          placed = true
+          break
+        }
+      }
+
+      if (!placed) {
+        columns.push(item.endMins)
+        result.push({ event: item.event, column: columns.length - 1, totalColumns: columns.length })
       }
     }
 
-    const totalColumns = columnEndTimes.length
-    clusterResult.forEach(item => { item.totalColumns = totalColumns })
-    result.push(...clusterResult)
+    // Update totalColumns for all items in this cluster
+    const totalColumns = columns.length
+    for (let i = result.length - cluster.length; i < result.length; i++) {
+      result[i].totalColumns = totalColumns
+    }
   }
 
   return result
+}
+
+/** Format event time range like "9:00 AM – 10:30 AM" */
+export function formatEventTimeRange(event: CalendarEvent): string {
+  const start = parseDate(event.start)
+  const end = parseDate(event.end)
+  if (!start || !end) return ''
+
+  if (event.allDay) return 'All day'
+
+  return `${formatTime(start)} – ${formatTime(end)}`
+}
+
+/** Format a short time label for events in month view */
+export function formatEventTime(event: CalendarEvent): string {
+  const start = parseDate(event.start)
+  if (!start) return ''
+  return formatTime(start)
 }

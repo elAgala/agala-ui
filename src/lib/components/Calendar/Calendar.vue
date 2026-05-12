@@ -9,6 +9,7 @@ import CalendarDayView from './CalendarDayView.vue'
 import CalendarListView from './CalendarListView.vue'
 import type { CalendarEvent, CalendarView, CalendarProps, CalendarEmits } from './types'
 import { addDays, parseISO, toISODate } from './utils'
+import { formatMonthYear, formatFullDate } from '../../composables/useDateUtils'
 
 /* ── Props / Emits ── */
 const props = withDefaults(defineProps<CalendarProps>(), {
@@ -74,9 +75,9 @@ const title = computed(() => {
   switch (internalView.value) {
     case 'month':
     case 'week':
-      return date.toLocaleDateString(undefined, { month: 'long', year: 'numeric' })
+      return formatMonthYear(date)
     case 'day':
-      return date.toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' })
+      return formatFullDate(date)
     case 'list':
       return 'Upcoming'
     default:
