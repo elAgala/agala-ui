@@ -24,7 +24,7 @@ description: >
 - Custom themes via `data-theme="forja"` attribute on `<html>`
 - Icon system: internal `AgalaIcon` with `name` string prop (40+ icons, zero icon deps)
 - Accessibility: focus rings, ARIA, keyboard nav
-- Composables: `useSelectFilter`, `useChipDisplay`, `useKeyboardNav`, `useDropdownPosition`, `useMediaQuery`
+- Composables: `useSelectFilter`, `useChipDisplay`, `useKeyboardNav`, `useDropdownPosition`, `usePopoverBehavior`, `useMediaQuery`
 - **Responsive by default** — Sidebar, Modal, Tabs, Pagination, and Navbar adapt to mobile/tablet viewports via CSS media queries (no custom CSS needed)
 - **ColorPicker** — popover-based with saturation/luminance square, hue slider, presets, manual HEX input
 
@@ -589,6 +589,44 @@ watch(isOpen, async (open) => {
 - Always call `recompute()` imperatively after `nextTick()` + `requestAnimationFrame()`
 - Call `recompute()` on `resize` events while dropdown is open
 - `position: fixed` teleported to `<body>` is relative to viewport UNLESS an ancestor has `transform`, `perspective`, or `filter`
+
+### usePopoverBehavior
+Shared click-outside + scroll-close + resize-reposition behavior for popover components.
+
+```ts
+import { usePopoverBehavior } from '@el-agala/ui'
+
+usePopoverBehavior(isOpen, wrapperRef, floatingRef, () => close(), recompute)
+```
+
+**Parameters:**
+- `isOpen`: `Ref<boolean>` — controls when listeners are active
+- `wrapperRef`: `Ref<HTMLElement | null>` — trigger/wrapper element (click outside target)
+- `floatingRef`: `Ref<HTMLElement | null>` — the floating popover element
+- `close`: `() => void` — callback to close the popover
+- `recompute`: `() => void` — callback to recompute position (from `useDropdownPosition`)
+
+**What it handles:**
+- `mousedown` outside both wrapper and floating element → calls `close()`
+- `scroll` (capture phase) on any element not inside floating element → calls `close()`
+- `resize` on window → calls `recompute()` to reposition
+
+**Usage pattern:**
+```ts
+const isOpen = ref(false)
+const wrapperRef = ref<HTMLElement | null>(null)
+const floatingRef = ref<HTMLElement | null>(null)
+const { dropdownStyle, recompute } = useDropdownPosition(triggerRef)
+
+// All behavior in one line — replaces ~23 lines of manual event wiring
+usePopoverBehavior(isOpen, wrapperRef, floatingRef, () => close(), recompute)
+```
+
+**Used by:** Select, CreatableSelect, DatePicker, ColorPicker.
+- Select/CreatableSelect add a separate `watch(isOpen)` for search input focus
+- DatePicker/ColorPicker use it standalone
+
+**Critical:** Must be called in `<script setup>`, not inside callbacks. The composable manages its own `watch(isOpen)` internally — do NOT wrap it in another reactive context.
 
 ### useDateUtils
 Date formatting and parsing utilities (powered by `date-fns`).
