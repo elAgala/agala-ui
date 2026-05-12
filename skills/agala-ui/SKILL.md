@@ -183,8 +183,10 @@ html[data-theme="forja"] {
   v-model:view="calendarView"
   v-model:currentDate="calendarDate"
   :events="events"
+  :snap-minutes="30"
   @select="handleEventSelect"
   @day-click="handleDayClick"
+  @slot-select="handleSlotSelect"
 />
 ```
 - **Four view modes**: `month` | `week` | `day` | `list`
@@ -193,12 +195,15 @@ html[data-theme="forja"] {
 - `dayStart` / `dayEnd`: visible hour range for week/day views (default `"00:00"` / `"24:00"`)
 - `v-model:view`: controls active view
 - `v-model:currentDate`: controls focused/visible date
+- `snapMinutes`: interval for time-slot snapping (default 30)
 - `@select(event)`: clicked an event
 - `@day-click(date)`: clicked a day cell (ISO date string)
+- `@slot-select({ start, end })`: clicked or dragged on Week/Day time grid to select a time slot (ISO datetimes)
 - **Slots**: `#event` (scoped, overrides event rendering), `#empty-day` (custom empty cell content), `#header` (override entire header)
 - **Responsive**: month grid adapts cell size, week view scrolls horizontally on mobile, list view uses compact cards
 - **Current time**: red indicator line shown in all views
 - **Keyboard**: arrow keys navigate month grid, Enter selects, Escape clears focus
+- **Slot selection**: click or drag on Week/Day time grid to select time slots. Snaps to `snapMinutes` interval. Visual overlay during drag.
 
 ```ts
 import type { CalendarEvent, CalendarView } from '@el-agala/ui'
