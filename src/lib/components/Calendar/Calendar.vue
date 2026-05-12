@@ -74,8 +74,23 @@ const title = computed(() => {
 
   switch (internalView.value) {
     case 'month':
-    case 'week':
       return formatMonthYear(date)
+    case 'week': {
+      const sunday = new Date(date)
+      sunday.setDate(date.getDate() - date.getDay())
+      sunday.setHours(0, 0, 0, 0)
+      const saturday = new Date(sunday)
+      saturday.setDate(sunday.getDate() + 6)
+      const sameMonth = sunday.getMonth() === saturday.getMonth()
+      const sameYear = sunday.getFullYear() === saturday.getFullYear()
+      if (sameMonth && sameYear) {
+        return `${sunday.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })} – ${saturday.toLocaleDateString(undefined, { day: 'numeric' })}, ${saturday.getFullYear()}`
+      } else if (sameYear) {
+        return `${sunday.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })} – ${saturday.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}, ${saturday.getFullYear()}`
+      } else {
+        return `${sunday.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })} – ${saturday.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}`
+      }
+    }
     case 'day':
       return formatFullDate(date)
     case 'list':

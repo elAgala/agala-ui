@@ -9,7 +9,6 @@ import {
   isSameDay,
   parseISO,
   toISODate,
-  formatEventTimeRange,
 } from './utils'
 import { formatDateLabel } from '../../composables/useDateUtils'
 
@@ -236,9 +235,6 @@ const totalEvents = computed(() => {
                 <div class="timeStart">
                   {{ event.allDay ? 'All day' : safeFormatTime(event.start) }}
                 </div>
-                <div v-if="!event.allDay" class="timeEnd">
-                  {{ safeFormatTime(event.end) }}
-                </div>
               </div>
 
               <div class="eventContent">
@@ -254,9 +250,6 @@ const totalEvents = computed(() => {
                 </div>
                 <div v-if="event.subtitle" class="eventSubtitle">
                   {{ event.subtitle }}
-                </div>
-                <div v-if="!event.allDay" class="eventTimeRange">
-                  {{ formatEventTimeRange(event) }}
                 </div>
               </div>
             </div>
@@ -369,22 +362,17 @@ const totalEvents = computed(() => {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+  justify-content: center;
   width: 4rem;
   flex-shrink: 0;
-  gap: 0.125rem;
 }
 
 .timeStart {
-  font-size: var(--agala-font-size-base);
-  font-weight: var(--agala-font-weight-semibold);
-  color: hsl(var(--agala-foreground));
-  line-height: 1.25;
-}
-
-.timeEnd {
   font-size: var(--agala-font-size-sm);
+  font-weight: var(--agala-font-weight-medium);
   color: hsl(var(--agala-muted-foreground));
   line-height: 1.25;
+  text-align: right;
 }
 
 .eventContent {
@@ -418,12 +406,6 @@ const totalEvents = computed(() => {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-.eventTimeRange {
-  font-size: 0.6875rem;
-  color: hsl(var(--agala-muted-foreground));
-  font-weight: var(--agala-font-weight-medium);
 }
 
 .eventBadge {

@@ -134,7 +134,7 @@ const timedEventsByDay = computed(() => {
           ...position,
           column,
           totalColumns,
-          isShort: duration < 30,
+          isShort: duration < 20,
         }
       })
       .filter((item): item is NonNullable<typeof item> => item !== null)
@@ -164,7 +164,7 @@ function getEventStyle(
 ): Record<string, string> {
   const style: Record<string, string> = {
     top: `${top}px`,
-    height: `${Math.max(height, 20)}px`,
+    height: `${Math.max(height, 28)}px`,
     left: `${(column / totalColumns) * 100 + 0.5}%`,
     width: `${(1 / totalColumns) * 100 - 1}%`,
   }
@@ -440,19 +440,21 @@ function getAllDayEventStyle(event: CalendarEvent): Record<string, string> | und
   position: absolute;
   border: none;
   border-radius: var(--agala-radius-sm);
-  padding: 0.125rem 0.25rem;
-  font-size: var(--agala-font-size-sm);
+  padding: 0.125rem 0.375rem;
+  font-size: 0.6875rem;
   font-family: inherit;
   text-align: left;
   cursor: pointer;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  line-height: 1.2;
+  line-height: 1.25;
   display: flex;
   flex-direction: column;
-  gap: 0.125rem;
+  justify-content: center;
+  gap: 0;
   z-index: 1;
+  box-sizing: border-box;
 }
 
 .event:focus-visible {

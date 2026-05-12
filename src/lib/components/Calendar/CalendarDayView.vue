@@ -163,7 +163,7 @@ function eventStyle(item: {
   }
 
   style.top = `${item.position.top}px`
-  style.height = `${Math.max(item.position.height, 24)}px`
+  style.height = `${Math.max(item.position.height, 28)}px`
 
   if (item.overlap && item.overlap.totalColumns > 1) {
     const pct = 100 / item.overlap.totalColumns
@@ -395,7 +395,7 @@ function eventShowSubtitle(height: number): boolean {
   position: absolute;
   padding: 0.125rem 0.375rem;
   border-radius: var(--agala-radius-sm);
-  font-size: var(--agala-font-size-sm);
+  font-size: 0.6875rem;
   font-weight: var(--agala-font-weight-medium);
   text-align: left;
   overflow: hidden;
