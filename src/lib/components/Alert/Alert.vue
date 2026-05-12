@@ -1,0 +1,137 @@
+<script setup lang="ts">
+import { ref, computed } from 'vue'
+import AgalaIcon from '../AgalaIcon/AgalaIcon.vue'
+import type { IconName } from '../AgalaIcon/types'
+import type { AlertProps, AlertVariant } from './types'
+
+const props = withDefaults(defineProps<AlertProps>(), {
+  variant: 'info',
+  dismissible: false,
+})
+
+const dismissed = ref(false)
+
+const iconMap: Record<AlertVariant, IconName> = {
+  info: 'info',
+  success: 'check-circle',
+  warning: 'alert-triangle',
+  danger: 'alert-circle',
+}
+
+const cls = computed(() => [
+  'alert',
+  `alert--${props.variant}`,
+  props.title ? 'alert--has-title' : '',
+  props.class,
+].filter(Boolean).join(' '))
+</script>
+
+<template>
+  <div v-if="!dismissed" role="alert" aria-atomic="true" :class="cls">
+    <span class="alert__icon" aria-hidden="true">
+      <AgalaIcon :name="iconMap[props.variant]" :size="20" />
+    </span>
+    <div class="alert__content">
+      <h4 v-if="props.title" class="alert__title">{{ props.title }}</h4>
+      <div v-if="$slots.default" class="alert__body">
+        <slot />
+      </div>
+    </div>
+    <button
+      v-if="props.dismissible"
+      type="button"
+      class="alert__dismiss"
+      aria-label="Dismiss alert"
+      @click="dismissed = true"
+    >
+      <AgalaIcon name="x" :size="16" />
+    </button>
+  </div>
+</template>
+
+<style scoped>
+.alert {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  border-radius: var(--agala-radius);
+  border-left: 4px solid hsl(var(--alert-accent));
+  background: hsl(var(--alert-accent) / 0.1);
+  font-family: var(--agala-font-sans);
+}
+
+/* Variants — only set the accent variable */
+.alert--info     { --alert-accent: var(--agala-primary); }
+.alert--success  { --alert-accent: var(--agala-success); }
+.alert--warning  { --alert-accent: var(--agala-warning); }
+.alert--danger   { --alert-accent: var(--agala-danger); }
+
+/* When title is present, align items to top */
+.alert--has-title {
+  align-items: flex-start;
+}
+
+.alert__icon {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-top: 0.125rem;
+  color: hsl(var(--alert-accent));
+}
+
+.alert__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.alert__title {
+  margin: 0;
+  font-weight: var(--agala-font-weight-semibold);
+  font-size: var(--agala-font-size-base);
+  line-height: var(--agala-line-height-normal);
+  color: hsl(var(--alert-accent));
+  overflow-wrap: break-word;
+}
+
+.alert__body {
+  font-size: var(--agala-font-size-base);
+  line-height: var(--agala-line-height-relaxed);
+  color: hsl(var(--agala-foreground));
+  overflow-wrap: break-word;
+}
+
+.alert__dismiss {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0;
+  border: none;
+  border-radius: var(--agala-radius-sm);
+  background: transparent;
+  color: hsl(var(--agala-muted-foreground));
+  cursor: pointer;
+  opacity: 0.5;
+  transition: opacity var(--agala-transition-fast), background var(--agala-transition-fast);
+}
+
+.alert__dismiss:hover {
+  opacity: 1;
+  background: hsl(var(--agala-muted-foreground) / 0.1);
+}
+
+.alert__dismiss:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px hsl(var(--agala-ring));
+}
+</style>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, h, watch } from 'vue'
-import { Button, Input, FormField, Select, CreatableSelect, DatePicker, ColorPicker, Modal, ModalProvider, modalManager, Badge, Checkbox, Toggle, Avatar, ToastProvider, toastManager, Textarea, DropdownMenu, Table, Tabs, Card, Tooltip, RadioGroup, Navbar, Sidebar, SidebarItem, SidebarGroup, SidebarToggle, Accordion, AccordionItem, Skeleton, Stat, EmptyState, Progress, Tag, Pagination, Drawer, FileUpload, DevEnvBanner, Calendar } from '../lib'
+import { Button, Input, FormField, Select, CreatableSelect, DatePicker, ColorPicker, Modal, ModalProvider, modalManager, Badge, Checkbox, Toggle, Avatar, ToastProvider, toastManager, Textarea, DropdownMenu, Table, Tabs, Card, Tooltip, RadioGroup, Navbar, Sidebar, SidebarItem, SidebarGroup, SidebarToggle, Accordion, AccordionItem, Skeleton, Stat, EmptyState, Progress, Tag, Pagination, Drawer, FileUpload, DevEnvBanner, Calendar, Alert } from '../lib'
 import { useMediaQuery } from '../lib/composables/useMediaQuery'
 import AgalaIcon from '../lib/components/AgalaIcon/AgalaIcon.vue'
 import type { TableColumn, TabItem, CalendarEvent, CalendarView } from '../lib'
@@ -1490,6 +1490,43 @@ const AckDialog = {
             :disabled="true"
           />
         </div>
+      </div>
+    </section>
+
+    <!-- ─── Alert ─── -->
+    <section>
+      <h2>Alert — Variants</h2>
+      <div class="stack" style="max-width: 600px">
+        <Alert variant="info">This is an informational message.</Alert>
+        <Alert variant="success">Your changes have been saved successfully.</Alert>
+        <Alert variant="warning">Your session will expire in 5 minutes.</Alert>
+        <Alert variant="danger">An error occurred while processing your request.</Alert>
+      </div>
+
+      <h2 style="margin-top: 1.5rem">Alert — With Title</h2>
+      <div class="stack" style="max-width: 600px">
+        <Alert variant="info" title="Did you know?">
+          You can customize the entire look of your dashboard using the theme settings.
+        </Alert>
+        <Alert variant="success" title="All good!">
+          Your profile has been updated and changes are now live.
+        </Alert>
+        <Alert variant="warning" title="Heads up">
+          You have used 85% of your storage quota. Consider upgrading your plan.
+        </Alert>
+        <Alert variant="danger" title="Update failed">
+          The system encountered an unexpected error. Please try again later.
+        </Alert>
+      </div>
+
+      <h2 style="margin-top: 1.5rem">Alert — Dismissible</h2>
+      <div class="stack" style="max-width: 600px">
+        <Alert variant="info" title="Welcome back!" dismissible>
+          You have 3 new notifications waiting for you.
+        </Alert>
+        <Alert variant="warning" dismissible>
+          This alert can be dismissed by clicking the × button.
+        </Alert>
       </div>
     </section>
 

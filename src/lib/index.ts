@@ -127,3 +127,6 @@ export type { FileUploadProps, FileItem, FileStatus } from './components/FileUpl
 
 export { default as DevEnvBanner } from './components/DevEnvBanner/DevEnvBanner.vue'
 export type { DevEnvBannerProps } from './components/DevEnvBanner'
+
+export { default as Alert } from './components/Alert/Alert.vue'
+export type { AlertProps, AlertVariant } from './components/Alert'
