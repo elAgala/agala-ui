@@ -37,7 +37,7 @@ const floatingRef = ref<HTMLDivElement>()
 const colorSquareRef = ref<InstanceType<typeof ColorSquare>>()
 
 /* ─── Popover positioning ─── */
-const { dropdownStyle, recompute } = useDropdownPosition(triggerRef, { width: 'auto' })
+const { dropdownStyle, recompute } = useDropdownPosition(triggerRef, floatingRef, { width: 'auto' })
 
 /* ─── State ─── */
 const isOpen = ref(false)
