@@ -2,6 +2,7 @@ export type IconName =
   | 'search'
   | 'mail'
   | 'eye'
+  | 'eye-off'
   | 'user'
   | 'users'
   | 'flag'

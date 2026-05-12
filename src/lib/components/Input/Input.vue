@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
 import { AgalaIcon } from '../AgalaIcon'
 import type { InputVariant, InputSize } from './types'
 
@@ -30,9 +30,27 @@ const props = withDefaults(defineProps<{
   class: '',
 })
 
-defineEmits<{
+const emit = defineEmits<{
   'update:modelValue': [value: string]
 }>()
+
+const showPassword = ref(false)
+
+const effectiveType = computed(() => {
+  if (props.type === 'password' && showPassword.value) return 'text'
+  return props.type
+})
+
+const endIconName = computed(() => {
+  if (props.type === 'password') return showPassword.value ? 'eye-off' : 'eye'
+  return 'search'
+})
+
+function handleEndIconClick() {
+  if (props.type === 'password') {
+    showPassword.value = !showPassword.value
+  }
+}
 
 const sizeMap: Record<InputSize, string> = {
   sm: 'inputSm',
@@ -63,12 +81,23 @@ const cls = computed(() => [
         :disabled="disabled"
         :readonly="readonly"
         :aria-invalid="error"
-        :type="type"
+        :type="effectiveType"
         :placeholder="placeholder"
         @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"
       />
-      <span v-if="iconEnd" class="iconEnd" aria-hidden="true">
-        <AgalaIcon name="eye" :size="14" />
+      <span
+        v-if="iconEnd"
+        class="iconEnd"
+        :class="{ iconEndClickable: type === 'password' }"
+        :aria-label="type === 'password' ? (showPassword ? 'Hide password' : 'Show password') : undefined"
+        :role="type === 'password' ? 'button' : undefined"
+        :tabindex="type === 'password' ? 0 : undefined"
+        aria-hidden="false"
+        @click="handleEndIconClick"
+        @keydown.enter.prevent="handleEndIconClick"
+        @keydown.space.prevent="handleEndIconClick"
+      >
+        <AgalaIcon :name="endIconName" :size="14" />
       </span>
     </div>
     <p v-if="errorMessage" class="errorMessage">{{ errorMessage }}</p>
@@ -155,9 +184,15 @@ const cls = computed(() => [
   position: absolute;
   right: 0.625rem;
   color: hsl(var(--agala-muted-foreground));
-  pointer-events: none;
   display: inline-flex;
   align-items: center;
+}
+
+.iconEndClickable {
+  cursor: pointer;
+}
+.iconEndClickable:hover {
+  color: hsl(var(--agala-foreground));
 }
 
 .hasIconStart {
