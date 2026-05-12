@@ -4,7 +4,8 @@ import type { SidebarGroupProps } from './types'
 
 const props = defineProps<SidebarGroupProps>()
 
-const isCollapsed = computed(() => unref(inject('sidebar-collapsed', false)))
+const injected = inject('sidebar-collapsed', false)
+const isCollapsed = computed(() => unref(injected))
 
 const cls = computed(() => [
   'sidebarGroup',
