@@ -690,7 +690,7 @@ const AckDialog = {
     </section>
 
     <!-- ═══════════════════ COLORPICKER ═══════════════════ -->
-    <section>
+    <section id="colorpicker">
       <h2>ColorPicker — Sizes</h2>
       <div class="stack" style="max-width: 320px">
         <ColorPicker v-model="pickedColor" size="sm" placeholder="Small" />
@@ -714,7 +714,7 @@ const AckDialog = {
     </section>
 
     <!-- ═══════════════════ MODAL (Responsive) ═══════════════════ -->
-    <section>
+    <section id="modal">
       <h2>Modal — Declarative</h2>
       <p class="muted" style="margin: 0 0 0.75rem; font-size: 0.875rem">
         Shrinks to near-full-width on viewports below 640 px automatically.
@@ -813,7 +813,7 @@ const AckDialog = {
     </section>
 
     <!-- ═══════════════════ BADGE ═══════════════════ -->
-    <section>
+    <section id="badge">
       <h2>Badge — Variants</h2>
       <div class="row">
         <Badge>Default</Badge>
@@ -837,7 +837,7 @@ const AckDialog = {
     </section>
 
     <!-- ═══════════════════ CHECKBOX ═══════════════════ -->
-    <section>
+    <section id="checkbox">
       <h2>Checkbox</h2>
       <div class="stack" style="max-width: 320px">
         <Checkbox v-model="cbBasic" label="Accept terms and conditions" />
@@ -850,7 +850,7 @@ const AckDialog = {
     </section>
 
     <!-- ═══════════════════ TOGGLE ═══════════════════ -->
-    <section>
+    <section id="toggle">
       <h2>Toggle — Sizes</h2>
       <div class="row" style="align-items: center; gap: 1.5rem">
         <div class="row" style="align-items: center; gap: 0.5rem; margin: 0">
@@ -873,7 +873,7 @@ const AckDialog = {
     </section>
 
     <!-- ═══════════════════ AVATAR ═══════════════════ -->
-    <section>
+    <section id="avatar">
       <h2>Avatar — Sizes</h2>
       <div class="row" style="align-items: flex-end">
         <Avatar size="xs" fallback="XS" />
@@ -898,7 +898,7 @@ const AckDialog = {
     </section>
 
     <!-- ═══════════════════ TOAST ═══════════════════ -->
-    <section>
+    <section id="toast">
       <h2>Toast</h2>
       <div class="row">
         <Button variant="outline" size="sm"
@@ -930,7 +930,7 @@ const AckDialog = {
     </section>
 
     <!-- ═══════════════════ TEXTAREA ═══════════════════ -->
-    <section>
+    <section id="textarea">
       <h2>Textarea</h2>
       <div class="stack" style="max-width: 480px">
         <FormField label="Notes" html-for="ta1" helper="Resize vertically by default.">
@@ -948,7 +948,7 @@ const AckDialog = {
     </section>
 
     <!-- ═══════════════════ DROPDOWN MENU ═══════════════════ -->
-    <section>
+    <section id="dropdown">
       <h2>DropdownMenu</h2>
       <div class="row">
         <DropdownMenu
@@ -985,7 +985,7 @@ const AckDialog = {
     </section>
 
     <!-- ═══════════════════ TABLE ═══════════════════ -->
-    <section>
+    <section id="table">
       <h2>Table</h2>
       <div class="row" style="margin-bottom: 0.75rem">
         <Button
@@ -1057,7 +1057,7 @@ const AckDialog = {
     </section>
 
     <!-- ═══════════════════ STAT ═══════════════════ -->
-    <section>
+    <section id="stat">
       <h2>Stat</h2>
       <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem">
         <Stat label="Total Members" value="2,841" :trend="12.5" trend-label="vs last month" />
@@ -1068,7 +1068,7 @@ const AckDialog = {
     </section>
 
     <!-- ═══════════════════ EMPTY STATE ═══════════════════ -->
-    <section>
+    <section id="empty">
       <h2>EmptyState</h2>
       <Card style="max-width: 480px">
         <EmptyState
@@ -1083,7 +1083,7 @@ const AckDialog = {
     </section>
 
     <!-- ═══════════════════ PROGRESS ═══════════════════ -->
-    <section>
+    <section id="progress">
       <h2>Progress — Linear</h2>
       <div class="stack" style="max-width: 480px; gap: 1rem">
         <div>
@@ -1113,7 +1113,7 @@ const AckDialog = {
     </section>
 
     <!-- ═══════════════════ TAG ═══════════════════ -->
-    <section>
+    <section id="tag">
       <h2>Tag — Variants</h2>
       <div class="row" style="flex-wrap: wrap">
         <Tag label="Default" />
@@ -1142,7 +1142,7 @@ const AckDialog = {
     </section>
 
     <!-- ═══════════════════ PAGINATION (Responsive) ═══════════════════ -->
-    <section>
+    <section id="pagination">
       <h2>Pagination — Responsive</h2>
       <p class="muted" style="margin: 0 0 0.75rem; font-size: 0.875rem">
         Switches to compact mode (Prev / "Page X of Y" / Next) on viewports below 640 px.
@@ -1159,7 +1159,7 @@ const AckDialog = {
     </section>
 
     <!-- ═══════════════════ DRAWER ═══════════════════ -->
-    <section>
+    <section id="drawer">
       <h2>Drawer — Placements</h2>
       <div class="row">
         <Button variant="outline" @click="openDrawer('left')">Left</Button>
@@ -1183,7 +1183,7 @@ const AckDialog = {
     </section>
 
     <!-- ═══════════════════ FILE UPLOAD ═══════════════════ -->
-    <section>
+    <section id="fileupload">
       <h2>FileUpload</h2>
       <div class="stack" style="max-width: 480px">
         <FileUpload
@@ -1202,7 +1202,7 @@ const AckDialog = {
     </section>
 
     <!-- ═══════════════════ NAVBAR (Responsive) ═══════════════════ -->
-    <section>
+    <section id="navbar">
       <h2>Navbar — Responsive</h2>
       <p class="muted" style="margin: 0 0 0.75rem; font-size: 0.875rem">
         Brand text truncates with ellipsis on narrow viewports.
@@ -1227,7 +1227,7 @@ const AckDialog = {
     </section>
 
     <!-- ═══════════════════ SIDEBAR (Responsive) ═══════════════════ -->
-    <section>
+    <section id="sidebar">
       <h2>Sidebar — Responsive</h2>
       <p class="muted" style="margin: 0 0 0.75rem; font-size: 0.875rem">
         Auto-collapses to icon-only on tablet (640–768 px). Hidden on mobile (&lt;640 px) — use the toggle to open the Drawer.
@@ -1314,7 +1314,7 @@ const AckDialog = {
     </section>
 
     <!-- ═══════════════════ ACCORDION ═══════════════════ -->
-    <section>
+    <section id="accordion">
       <h2>Accordion — Single open</h2>
       <Accordion style="max-width: 560px">
         <AccordionItem value="q1" title="What is Agala UI?">
@@ -1343,7 +1343,7 @@ const AckDialog = {
     </section>
 
     <!-- ═══════════════════ SKELETON ═══════════════════ -->
-    <section>
+    <section id="skeleton">
       <h2>Skeleton — Variants</h2>
       <div class="stack" style="max-width: 480px; gap: 0.75rem">
         <Skeleton variant="line" />
@@ -1362,7 +1362,7 @@ const AckDialog = {
     </section>
 
     <!-- ═══════════════════ TABS (Responsive) ═══════════════════ -->
-    <section>
+    <section id="tabs">
       <h2>Tabs — Responsive</h2>
       <p class="muted" style="margin: 0 0 0.75rem; font-size: 0.875rem">
         Horizontal scroll on viewports below 640 px. Many tabs are shown below to exercise scrolling.
@@ -1400,7 +1400,7 @@ const AckDialog = {
     </section>
 
     <!-- ═══════════════════ CARD ═══════════════════ -->
-    <section>
+    <section id="card">
       <h2>Card — Padding Variants</h2>
       <div class="row" style="align-items: flex-start">
         <Card padding="sm" style="width: 180px">
@@ -1454,7 +1454,7 @@ const AckDialog = {
     </section>
 
     <!-- ═══════════════════ TOOLTIP ═══════════════════ -->
-    <section>
+    <section id="tooltip">
       <h2>Tooltip — Placements</h2>
       <div class="row" style="gap: 2rem; justify-content: center; padding: 3rem 0">
         <Tooltip content="Top tooltip" placement="top">
@@ -1477,7 +1477,7 @@ const AckDialog = {
     </section>
 
     <!-- ═══════════════════ RADIO GROUP ═══════════════════ -->
-    <section>
+    <section id="radio">
       <h2>RadioGroup</h2>
       <div class="row" style="align-items: flex-start; gap: 3rem">
         <div>
@@ -1565,7 +1565,7 @@ const AckDialog = {
     </section>
 
     <!-- ─── Charts (from @el-agala/charts) ─── -->
-    <section>
+    <section id="charts">
       <h2>Charts — BaseChart</h2>
       <div class="charts-grid" style="max-width: 900px">
         <div class="chart-item" style="background: hsl(var(--agala-card)); border-radius: var(--agala-radius); padding: 1rem;">
