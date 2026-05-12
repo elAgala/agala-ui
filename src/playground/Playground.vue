@@ -1588,7 +1588,7 @@ const AckDialog = {
             type="line"
             :labels="['Jan','Feb','Mar','Apr','May','Jun']"
             :datasets="[{ name: 'Revenue', data: [1200, 1900, 1500, 2100, 1800, 2400], smooth: true, areaStyle: true }]"
-            :height="250"
+            :height="220"
           />
         </div>
         <div class="chart-item" style="background: hsl(var(--agala-card)); border-radius: var(--agala-radius); padding: 1rem;">
@@ -1597,7 +1597,7 @@ const AckDialog = {
             type="bar"
             :labels="['Mon','Tue','Wed','Thu','Fri','Sat','Sun']"
             :datasets="[{ name: 'Check-ins', data: [45, 52, 38, 61, 48, 72, 80] }]"
-            :height="250"
+            :height="220"
           />
         </div>
         <div class="chart-item" style="background: hsl(var(--agala-card)); border-radius: var(--agala-radius); padding: 1rem;">
@@ -1606,7 +1606,53 @@ const AckDialog = {
             type="pie"
             :labels="['Active','Inactive','Pending']"
             :datasets="[{ data: [65, 20, 15] }]"
-            :height="250"
+            :height="220"
+          />
+        </div>
+        <div class="chart-item" style="background: hsl(var(--agala-card)); border-radius: var(--agala-radius); padding: 1rem;">
+          <h3 style="margin: 0 0 0.5rem; font-size: 0.875rem; font-weight: 600;">Scatter — Age vs. Spend</h3>
+          <BaseChart
+            type="scatter"
+            :datasets="[{ name: 'Members', data: [[22,320],[25,480],[30,550],[35,420],[40,670],[45,580],[50,720],[28,390],[33,510],[38,640]] }]"
+            :height="220"
+          />
+        </div>
+        <div class="chart-item" style="background: hsl(var(--agala-card)); border-radius: var(--agala-radius); padding: 1rem;">
+          <h3 style="margin: 0 0 0.5rem; font-size: 0.875rem; font-weight: 600;">Radar — Member Profile</h3>
+          <BaseChart
+            type="radar"
+            :indicators="[{ name: 'Attendance', max: 100 }, { name: 'Renewals', max: 100 }, { name: 'Referrals', max: 100 }, { name: 'Engagement', max: 100 }, { name: 'Satisfaction', max: 100 }]"
+            :datasets="[{ name: 'Q1', data: [85, 70, 45, 60, 90] }, { name: 'Q2', data: [78, 82, 55, 72, 88] }]"
+            :height="220"
+          />
+        </div>
+        <div class="chart-item" style="background: hsl(var(--agala-card)); border-radius: var(--agala-radius); padding: 1rem;">
+          <h3 style="margin: 0 0 0.5rem; font-size: 0.875rem; font-weight: 600;">Gauge — Occupancy</h3>
+          <BaseChart
+            type="gauge"
+            :datasets="[{ name: 'Capacity', data: [72] }]"
+            :max="100"
+            :height="220"
+          />
+        </div>
+        <div class="chart-item" style="background: hsl(var(--agala-card)); border-radius: var(--agala-radius); padding: 1rem;">
+          <h3 style="margin: 0 0 0.5rem; font-size: 0.875rem; font-weight: 600;">Stacked Area — Total Members</h3>
+          <BaseChart
+            type="line"
+            stacked
+            :labels="['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']"
+            :datasets="[{ name: 'New', data: [20,28,35,42,50,55,60,58,62,70,75,80] }, { name: 'Renewed', data: [80,82,85,88,90,92,95,93,96,98,100,105] }]"
+            :height="220"
+          />
+        </div>
+        <div class="chart-item" style="background: hsl(var(--agala-card)); border-radius: var(--agala-radius); padding: 1rem;">
+          <h3 style="margin: 0 0 0.5rem; font-size: 0.875rem; font-weight: 600;">Stacked Bar — Members by Plan</h3>
+          <BaseChart
+            type="bar"
+            stacked
+            :labels="['Jan','Feb','Mar','Apr','May','Jun']"
+            :datasets="[{ name: 'Basic', data: [30,40,35,50,45,60] }, { name: 'Pro', data: [20,25,30,35,40,45] }, { name: 'Elite', data: [10,12,15,18,20,25] }]"
+            :height="220"
           />
         </div>
       </div>

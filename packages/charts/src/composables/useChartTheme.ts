@@ -36,9 +36,8 @@ export function useChartTheme() {
     return [t.primary, t.success, t.warning, t.danger, '#8b5cf6', '#06b6d4', '#f97316', '#84cc16']
   }
 
-  function getBaseOption(type: 'line' | 'bar' | 'pie') {
+  function getBaseOption(type: 'line' | 'bar' | 'pie' | 'scatter' | 'radar' | 'gauge') {
     const t = readTokens()
-
     const colorPalette = getColorPalette()
 
     const base: Record<string, unknown> = {
@@ -68,10 +67,46 @@ export function useChartTheme() {
       }
     }
 
+    if (type === 'radar') {
+      return {
+        ...base,
+        tooltip: {
+          trigger: 'item' as const,
+          backgroundColor: t.bg,
+          borderColor: t.border,
+          borderWidth: 1,
+          textStyle: { color: t.fg },
+        },
+        legend: {
+          textStyle: { color: t.fg },
+          bottom: 0,
+        },
+        splitLineColor: t.border,
+        axisLineColor: t.border,
+      }
+    }
+
+    if (type === 'gauge') {
+      return {
+        ...base,
+        tooltip: {
+          trigger: 'item' as const,
+          backgroundColor: t.bg,
+          borderColor: t.border,
+          borderWidth: 1,
+          textStyle: { color: t.fg },
+          formatter: '{b}: {c}',
+        },
+      }
+    }
+
+    /* ─── Shared axis config (line, bar, scatter) ─── */
+    const isScatter = type === 'scatter'
+
     return {
       ...base,
       tooltip: {
-        trigger: 'axis' as const,
+        trigger: isScatter ? ('item' as const) : ('axis' as const),
         backgroundColor: t.bg,
         borderColor: t.border,
         borderWidth: 1,
@@ -84,10 +119,10 @@ export function useChartTheme() {
         containLabel: true,
       },
       xAxis: {
-        type: 'category' as const,
+        type: isScatter ? ('value' as const) : ('category' as const),
         axisLine: { lineStyle: { color: t.border } },
         axisLabel: { color: t.muted },
-        splitLine: { show: false },
+        splitLine: isScatter ? { lineStyle: { color: t.border, type: 'dashed' as const } } : { show: false },
       },
       yAxis: {
         type: 'value' as const,
@@ -102,4 +137,3 @@ export function useChartTheme() {
 
   return { getBaseOption, getColorPalette }
 }
-
