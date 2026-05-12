@@ -1484,7 +1484,7 @@ const AckDialog = {
   color: hsl(var(--agala-foreground));
 }
 
-header {
+.playground > header {
   margin-bottom: 3rem;
 }
 
@@ -1495,7 +1495,7 @@ h1 {
   margin: 0 0 0.5rem;
 }
 
-header > p {
+.playground > header > p {
   color: hsl(var(--agala-muted-foreground));
   margin: 0;
 }
