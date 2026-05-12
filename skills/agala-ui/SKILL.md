@@ -2,7 +2,7 @@
 name: agala-ui
 description: >
   Expert knowledge of @el-agala/ui — a zero-dependency Vue 3 component library
-  with 29+ components, HSL design tokens, theming, and accessibility.
+  with 30+ components, HSL design tokens, theming, and accessibility.
   Auto-triggered when the user mentions "agala", "el-agala/ui", "agala ui",
   or asks to build UI with these components.
 ---
@@ -26,6 +26,7 @@ description: >
 - Accessibility: focus rings, ARIA, keyboard nav
 - Composables: `useSelectFilter`, `useChipDisplay`, `useKeyboardNav`, `useDropdownPosition`, `useMediaQuery`
 - **Responsive by default** — Sidebar, Modal, Tabs, Pagination, and Navbar adapt to mobile/tablet viewports via CSS media queries (no custom CSS needed)
+- **ColorPicker** — popover-based with saturation/luminance square, hue slider, presets, manual HEX input
 
 ---
 
@@ -176,6 +177,21 @@ html[data-theme="forja"] {
 ```
 - Dropdown teleports to body
 - Uses `useDropdownPosition` with `width: 'auto'` so calendar expands to `280px` instead of being clipped to trigger width
+
+### ColorPicker
+```vue
+<ColorPicker v-model="color" size="md" clearable placeholder="Pick a color" />
+```
+- Popover mode: trigger shows color swatch + hex text + chevron
+- Saturation/luminance square + hue slider for visual color selection
+- Preset grid: theme semantic tokens (read from CSS at runtime) + curated 24-color palette
+- Manual HEX input using the library's Input component (inside popover)
+- `v-model` with HEX string (`"#ff6600"`)
+- `size`: `sm` | `md` | `lg`
+- `clearable`, `error`, `errorMessage`, `disabled`, `placeholder`, `class`
+- Popover teleports to body, uses `useDropdownPosition` with `width: 'auto'`
+- Zero new dependencies — hand-rolled color math (hex↔rgb↔hsl↔hsb)
+- **Edge cases:** Empty state shows checkered swatch + placeholder. Invalid hex shows Input error. Escape reverts to last committed value.
 
 ### Calendar
 ```vue
