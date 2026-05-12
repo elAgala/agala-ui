@@ -458,17 +458,19 @@ function formatSelectionTime(minutes: number): string {
 }
 
 .selectionLabel {
+  display: block;
   font-size: 0.625rem;
   font-weight: var(--agala-font-weight-semibold);
   color: hsl(var(--agala-primary));
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  line-height: 1;
+  line-height: 1.2;
 }
 
 .selectionLabelEnd {
   align-self: flex-start;
+  margin-top: 0.125rem;
 }
 
 .currentTimeLine {

@@ -1160,18 +1160,20 @@ const AckDialog = {
         Brand text truncates with ellipsis on narrow viewports.
       </p>
       <div style="border: 1px solid hsl(var(--agala-border)); border-radius: var(--agala-radius-lg); overflow: hidden">
-        <Navbar>
-          <template #brand>
-            My Very Long Application Name
-          </template>
-          <Button variant="ghost" size="sm">Dashboard</Button>
-          <Button variant="ghost" size="sm">Members</Button>
-          <Button variant="ghost" size="sm">Settings</Button>
-          <template #actions>
-            <Button variant="outline" size="sm">Upgrade</Button>
-            <Avatar fallback="JD" size="sm" />
-          </template>
-        </Navbar>
+        <div style="border-bottom: 1px solid hsl(var(--agala-border));">
+          <Navbar>
+            <template #brand>
+              My Very Long Application Name
+            </template>
+            <Button variant="ghost" size="sm">Dashboard</Button>
+            <Button variant="ghost" size="sm">Members</Button>
+            <Button variant="ghost" size="sm">Settings</Button>
+            <template #actions>
+              <Button variant="outline" size="sm">Upgrade</Button>
+              <Avatar fallback="JD" size="sm" />
+            </template>
+          </Navbar>
+        </div>
         <div style="padding: 1.25rem; font-size: 0.875rem; color: hsl(var(--agala-muted-foreground))">
           Page content goes here. Resize to &lt;640 px to see the brand name truncate with ellipsis.
         </div>
@@ -1185,17 +1187,19 @@ const AckDialog = {
         Auto-collapses to icon-only on tablet (640–768 px). Hidden on mobile (&lt;640 px) — use the toggle to open the Drawer.
       </p>
       <div style="border: 1px solid hsl(var(--agala-border)); border-radius: var(--agala-radius-lg); overflow: hidden">
-        <Navbar>
-          <template #brand>
-            <SidebarToggle v-if="isMobileViewport" aria-controls="responsive-sidebar" :aria-expanded="sidebarOpen" @click="sidebarOpen = !sidebarOpen" />
-            <span style="font-weight: 600; font-size: 0.875rem; margin-left: 0.5rem">My App</span>
-          </template>
-          <Button variant="ghost" size="sm">Dashboard</Button>
-          <Button variant="ghost" size="sm">Members</Button>
-          <template #actions>
-            <Avatar fallback="JD" size="sm" />
-          </template>
-        </Navbar>
+        <div style="border-bottom: 1px solid hsl(var(--agala-border));">
+          <Navbar>
+            <template #brand>
+              <SidebarToggle v-if="isMobileViewport" aria-controls="responsive-sidebar" :aria-expanded="sidebarOpen" @click="sidebarOpen = !sidebarOpen" />
+              <span style="font-weight: 600; font-size: 0.875rem; margin-left: 0.5rem">My App</span>
+            </template>
+            <Button variant="ghost" size="sm">Dashboard</Button>
+            <Button variant="ghost" size="sm">Members</Button>
+            <template #actions>
+              <Avatar fallback="JD" size="sm" />
+            </template>
+          </Navbar>
+        </div>
         <div style="display: flex; height: 420px">
           <Sidebar
             id="responsive-sidebar"
