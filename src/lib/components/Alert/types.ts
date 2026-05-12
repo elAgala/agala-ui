@@ -4,5 +4,6 @@ export interface AlertProps {
   variant?: AlertVariant
   title?: string
   dismissible?: boolean
+  flat?: boolean
   class?: string
 }

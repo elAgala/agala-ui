@@ -7,6 +7,7 @@ import type { AlertProps, AlertVariant } from './types'
 const props = withDefaults(defineProps<AlertProps>(), {
   variant: 'info',
   dismissible: false,
+  flat: false,
 })
 
 const dismissed = ref(false)
@@ -22,6 +23,7 @@ const cls = computed(() => [
   'alert',
   `alert--${props.variant}`,
   props.title ? 'alert--has-title' : '',
+  props.flat ? 'alert--flat' : '',
   props.class,
 ].filter(Boolean).join(' '))
 </script>
@@ -71,6 +73,11 @@ const cls = computed(() => [
 /* When title is present, align items to top */
 .alert--has-title {
   align-items: flex-start;
+}
+
+/* Flat variant — no background tint */
+.alert--flat {
+  background: transparent;
 }
 
 .alert__icon {

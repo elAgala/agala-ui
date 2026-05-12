@@ -1528,6 +1528,14 @@ const AckDialog = {
           This alert can be dismissed by clicking the × button.
         </Alert>
       </div>
+
+      <h2 style="margin-top: 1.5rem">Alert — Flat (no background)</h2>
+      <div class="stack" style="max-width: 600px">
+        <Alert variant="info" flat>Flat info alert — just the accent border and icon.</Alert>
+        <Alert variant="success" flat>Flat success alert.</Alert>
+        <Alert variant="warning" flat title="Flat with title">Still shows the title in variant color.</Alert>
+        <Alert variant="danger" flat dismissible>Flat and dismissible.</Alert>
+      </div>
     </section>
 
   </div>
