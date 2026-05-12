@@ -366,7 +366,6 @@ const result = await modalManager.open(MyDialogComponent, {
   title: 'Confirm deletion',
   size: 'sm',
   dismissible: true,
-  hideHeader: false,
 })
 if (result.confirmed) { /* … */ }
 ```
