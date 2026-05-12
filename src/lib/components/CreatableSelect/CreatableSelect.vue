@@ -129,7 +129,7 @@ const flatItems = computed<FlatItemEntry[]>(() => {
 })
 
 /* ─── Dropdown position ─── */
-const { dropdownStyle, recompute } = useDropdownPosition(triggerRef)
+const { dropdownStyle, recompute } = useDropdownPosition(triggerRef, floatingRef)
 
 /* ─── Helpers ─── */
 function updateValue(newValue: string[]) {

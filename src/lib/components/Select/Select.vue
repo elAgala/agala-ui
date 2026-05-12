@@ -135,7 +135,7 @@ const activeDescendant = computed(() => {
 })
 
 /* ─── Fixed dropdown positioning (escapes overflow) ─── */
-const { dropdownStyle, recompute } = useDropdownPosition(rowRef)
+const { dropdownStyle, recompute } = useDropdownPosition(rowRef, floatingRef)
 
 /* ─── Class helpers ─── */
 const triggerRowCls = computed(() => [
@@ -441,68 +441,70 @@ watch(highlightedIdx, () => {
       </span>
     </div>
 
-    <div v-if="isOpen" ref="floatingRef" class="dropdown" :style="dropdownStyle">
-      <div v-if="searchable" class="searchWrapper">
-        <input
-          ref="searchRef"
-          type="text"
-          class="search"
-          placeholder="Search…"
-          :value="query"
-          @input="handleSearchInput"
-          @keydown="handleSearchKeyDown"
-        />
-      </div>
+    <Teleport to="body">
+      <div v-if="isOpen" ref="floatingRef" class="dropdown" :style="dropdownStyle">
+        <div v-if="searchable" class="searchWrapper">
+          <input
+            ref="searchRef"
+            type="text"
+            class="search"
+            placeholder="Search…"
+            :value="query"
+            @input="handleSearchInput"
+            @keydown="handleSearchKeyDown"
+          />
+        </div>
 
-      <div v-if="isMaxed" class="maxMessage" role="alert">
-        Max {{ maxSelections }} selections
-      </div>
+        <div v-if="isMaxed" class="maxMessage" role="alert">
+          Max {{ maxSelections }} selections
+        </div>
 
-      <ul
-        ref="listRef"
-        id="agala-select-listbox"
-        class="list"
-        role="listbox"
-        :aria-multiselectable="multiple"
-        tabindex="-1"
-        @keydown="handleListKeyDown"
-      >
-        <li v-if="flatFiltered.length === 0" class="emptyMessage">
-          {{ query ? 'No results found.' : 'No options available.' }}
-        </li>
-        <template v-for="(item, idx) in flatFiltered" :key="itemKey(item, idx)">
-          <li v-if="item.type === 'header'" role="presentation">
-            <div class="groupHeader">{{ item.label }}</div>
+        <ul
+          ref="listRef"
+          id="agala-select-listbox"
+          class="list"
+          role="listbox"
+          :aria-multiselectable="multiple"
+          tabindex="-1"
+          @keydown="handleListKeyDown"
+        >
+          <li v-if="flatFiltered.length === 0" class="emptyMessage">
+            {{ query ? 'No results found.' : 'No options available.' }}
           </li>
-          <li
-            v-else
-            :id="`agala-opt-${idx}`"
-            role="option"
-            :aria-selected="isSelected(item.option.value)"
-            :aria-disabled="item.option.disabled || (isMaxed && !isSelected(item.option.value))"
-            :class="optionCls(item, idx)"
-            @mouseenter="highlightOption(item, idx)"
-            @click="selectOption(item)"
-          >
-            <span v-if="multiple" class="checkBox" aria-hidden="true">
-              <AgalaIcon v-if="isSelected(item.option.value)" name="check" :size="10" />
-            </span>
-            <span v-else class="radioBox" aria-hidden="true">
-              <span v-if="isSelected(item.option.value)" class="radioDot" />
-            </span>
+          <template v-for="(item, idx) in flatFiltered" :key="itemKey(item, idx)">
+            <li v-if="item.type === 'header'" role="presentation">
+              <div class="groupHeader">{{ item.label }}</div>
+            </li>
+            <li
+              v-else
+              :id="`agala-opt-${idx}`"
+              role="option"
+              :aria-selected="isSelected(item.option.value)"
+              :aria-disabled="item.option.disabled || (isMaxed && !isSelected(item.option.value))"
+              :class="optionCls(item, idx)"
+              @mouseenter="highlightOption(item, idx)"
+              @click="selectOption(item)"
+            >
+              <span v-if="multiple" class="checkBox" aria-hidden="true">
+                <AgalaIcon v-if="isSelected(item.option.value)" name="check" :size="10" />
+              </span>
+              <span v-else class="radioBox" aria-hidden="true">
+                <span v-if="isSelected(item.option.value)" class="radioDot" />
+              </span>
 
-            <span class="optionContent">
-              <span class="optionText">
-                <span class="optionLabel">{{ item.option.label }}</span>
-                <span v-if="item.option.subtitle" class="optionSubtitle">
-                  {{ item.option.subtitle }}
+              <span class="optionContent">
+                <span class="optionText">
+                  <span class="optionLabel">{{ item.option.label }}</span>
+                  <span v-if="item.option.subtitle" class="optionSubtitle">
+                    {{ item.option.subtitle }}
+                  </span>
                 </span>
               </span>
-            </span>
-          </li>
-        </template>
-      </ul>
-    </div>
+            </li>
+          </template>
+        </ul>
+      </div>
+    </Teleport>
 
     <p v-if="errorMessage" class="errorMessage">{{ errorMessage }}</p>
   </div>

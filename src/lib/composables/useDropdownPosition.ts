@@ -1,4 +1,9 @@
-import { type Ref, ref } from 'vue'
+import { ref } from 'vue'
+import type { Ref } from 'vue'
+
+export interface DropdownPositionOptions {
+  width?: 'trigger' | 'auto'
+}
 
 /**
  * Returns reactive dropdown positioning style based on the trigger element.
@@ -11,7 +16,8 @@ import { type Ref, ref } from 'vue'
  */
 export function useDropdownPosition(
   triggerRef: Ref<HTMLElement | undefined>,
-  opts: { width?: 'trigger' | 'auto' } = {}
+  floatingRef?: Ref<HTMLElement | null | undefined>,
+  opts: DropdownPositionOptions = {}
 ) {
   const dropdownStyle = ref<Record<string, string>>({
     position: 'fixed',
@@ -20,15 +26,70 @@ export function useDropdownPosition(
   function recompute() {
     if (!triggerRef.value) return
     const rect = triggerRef.value.getBoundingClientRect()
+    const viewportW = window.innerWidth
+    const viewportH = window.innerHeight
+    const margin = 8
+    const gap = 4
+
+    // Determine dropdown width
+    let ddWidth: number
+    if (opts.width !== 'auto') {
+      ddWidth = rect.width
+    } else {
+      ddWidth = 280
+    }
+
+    // Horizontal positioning
+    let left = rect.left
+    const rightEdge = left + ddWidth
+    if (rightEdge > viewportW - margin) {
+      // Try right-align
+      const rightAligned = rect.right - ddWidth
+      if (rightAligned >= margin && rect.right <= viewportW - margin) {
+        left = rightAligned
+      } else {
+        left = Math.max(margin, viewportW - ddWidth - margin)
+      }
+    }
+    left = Math.max(margin, left)
+
+    // Vertical positioning — first pass: below trigger
+    const top = rect.bottom + gap
+
     const style: Record<string, string> = {
       position: 'fixed',
-      top: `${rect.bottom + 4}px`,
-      left: `${rect.left}px`,
+      top: `${top}px`,
+      left: `${left}px`,
     }
     if (opts.width !== 'auto') {
       style.width = `${rect.width}px`
     }
+
+    // Apply first-pass style
     dropdownStyle.value = style
+
+    // Second pass: measure actual dropdown and adjust vertically
+    if (floatingRef?.value) {
+      requestAnimationFrame(() => {
+        const ddEl = floatingRef.value
+        if (!ddEl) return
+        const ddHeight = ddEl.offsetHeight
+        const bottomEdge = top + ddHeight
+
+        if (bottomEdge > viewportH - margin) {
+          // Try positioning above trigger
+          const above = rect.top - ddHeight - gap
+          if (above >= margin) {
+            dropdownStyle.value = { ...dropdownStyle.value, top: `${above}px` }
+          } else {
+            dropdownStyle.value = {
+              ...dropdownStyle.value,
+              top: `${Math.max(margin, viewportH - ddHeight - margin)}px`,
+            }
+          }
+        }
+      })
+    }
   }
 
   return { dropdownStyle, recompute }

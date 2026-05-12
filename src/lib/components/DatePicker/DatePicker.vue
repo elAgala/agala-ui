@@ -46,7 +46,7 @@ const triggerRef = ref<HTMLDivElement>()
 const floatingRef = ref<HTMLDivElement>()
 const isYearPanelOpen = ref(false)
 
-const { dropdownStyle, recompute } = useDropdownPosition(triggerRef, { width: 'auto' })
+const { dropdownStyle, recompute } = useDropdownPosition(triggerRef, floatingRef, { width: 'auto' })
 
 /* Computed */
 const displayValue = computed(() => {
@@ -449,90 +449,92 @@ usePopoverBehavior(isOpen, wrapperRef, floatingRef, () => close(), recompute)
       </span>
     </div>
 
-    <div v-if="isOpen" ref="floatingRef" class="dropdown" :style="dropdownStyle" id="agala-date-grid" role="grid" aria-label="Calendar" @keydown="handleGridKeyDown">
-      <div class="header">
-        <button type="button" class="navBtn" @click="prevMonth" aria-label="Previous month">
-          <AgalaIcon name="chevron" :size="14" />
-        </button>
-    <div class="headerSelects">
-            <div class="selectWrapper">
-              <select v-model="viewMonth" class="nativeSelect monthSelect">
-                <option v-for="(label, i) in MONTH_LABELS" :key="i" :value="i" :disabled="isMonthDisabled(i)">
-                  {{ label }}
-                </option>
-              </select>
-              <AgalaIcon name="chevron" :size="12" class="selectChevron" />
-            </div>
-            <div class="selectWrapper yearPanelWrapper">
-              <button
-                type="button"
-                class="nativeSelect yearTrigger yearSelect"
-                @click.stop="isYearPanelOpen = !isYearPanelOpen"
-                :aria-expanded="isYearPanelOpen"
-                aria-haspopup="listbox"
-              >
-                {{ viewYear }}
-                <AgalaIcon name="chevron" :size="12" class="selectChevron" :class="isYearPanelOpen ? 'selectChevronOpen' : ''" />
-              </button>
-              <div
-                v-if="isYearPanelOpen"
-                class="yearPanel"
-                role="listbox"
-                aria-label="Years"
-              >
+    <Teleport to="body">
+      <div v-if="isOpen" ref="floatingRef" class="dropdown" :style="dropdownStyle" id="agala-date-grid" role="grid" aria-label="Calendar" @keydown="handleGridKeyDown">
+        <div class="header">
+          <button type="button" class="navBtn" @click="prevMonth" aria-label="Previous month">
+            <AgalaIcon name="chevron" :size="14" />
+          </button>
+      <div class="headerSelects">
+              <div class="selectWrapper">
+                <select v-model="viewMonth" class="nativeSelect monthSelect">
+                  <option v-for="(label, i) in MONTH_LABELS" :key="i" :value="i" :disabled="isMonthDisabled(i)">
+                    {{ label }}
+                  </option>
+                </select>
+                <AgalaIcon name="chevron" :size="12" class="selectChevron" />
+              </div>
+              <div class="selectWrapper yearPanelWrapper">
                 <button
-                  v-for="year in yearOptions"
-                  :key="year"
                   type="button"
-                  role="option"
-                  :class="yearCellCls(year)"
-                  :aria-selected="viewYear === year"
-                  :aria-disabled="isYearDisabled(year)"
-                  @click="selectYear(year)"
+                  class="nativeSelect yearTrigger yearSelect"
+                  @click.stop="isYearPanelOpen = !isYearPanelOpen"
+                  :aria-expanded="isYearPanelOpen"
+                  aria-haspopup="listbox"
                 >
-                  {{ year }}
+                  {{ viewYear }}
+                  <AgalaIcon name="chevron" :size="12" class="selectChevron" :class="isYearPanelOpen ? 'selectChevronOpen' : ''" />
                 </button>
+                <div
+                  v-if="isYearPanelOpen"
+                  class="yearPanel"
+                  role="listbox"
+                  aria-label="Years"
+                >
+                  <button
+                    v-for="year in yearOptions"
+                    :key="year"
+                    type="button"
+                    role="option"
+                    :class="yearCellCls(year)"
+                    :aria-selected="viewYear === year"
+                    :aria-disabled="isYearDisabled(year)"
+                    @click="selectYear(year)"
+                  >
+                    {{ year }}
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        <button type="button" class="navBtn navBtnNext" @click="nextMonth" aria-label="Next month">
-          <AgalaIcon name="chevron" :size="14" />
-        </button>
-      </div>
-
-      <div class="weekdays" role="row">
-        <div v-for="d in WEEKDAYS" :key="d" class="weekday" role="columnheader" :aria-label="d">
-          {{ d }}
+          <button type="button" class="navBtn navBtnNext" @click="nextMonth" aria-label="Next month">
+            <AgalaIcon name="chevron" :size="14" />
+          </button>
         </div>
-      </div>
 
-      <div class="days" role="rowgroup">
-        <div v-for="(week, wi) in grid" :key="wi" class="week" role="row">
-          <button
-            v-for="day in week"
-            :key="day.dateISO"
-            type="button"
-            :role="'gridcell'"
-            :aria-selected="day.selected"
-            :aria-disabled="day.disabled"
-            :aria-label="day.ariaLabel"
-            :class="cellCls(day)"
-            :tabindex="day.focused ? 0 : -1"
-            @click="selectDay(day)"
-            @mouseenter="hoverDay = day.dateISO"
-            @mouseleave="hoverDay = ''"
-          >
-            {{ day.dayNum }}
+        <div class="weekdays" role="row">
+          <div v-for="d in WEEKDAYS" :key="d" class="weekday" role="columnheader" :aria-label="d">
+            {{ d }}
+          </div>
+        </div>
+
+        <div class="days" role="rowgroup">
+          <div v-for="(week, wi) in grid" :key="wi" class="week" role="row">
+            <button
+              v-for="day in week"
+              :key="day.dateISO"
+              type="button"
+              :role="'gridcell'"
+              :aria-selected="day.selected"
+              :aria-disabled="day.disabled"
+              :aria-label="day.ariaLabel"
+              :class="cellCls(day)"
+              :tabindex="day.focused ? 0 : -1"
+              @click="selectDay(day)"
+              @mouseenter="hoverDay = day.dateISO"
+              @mouseleave="hoverDay = ''"
+            >
+              {{ day.dayNum }}
+            </button>
+          </div>
+        </div>
+
+        <div v-if="clearable && modelValue" class="footer">
+          <button type="button" class="clearBtn" @click="clear">
+            Clear
           </button>
         </div>
       </div>
-
-      <div v-if="clearable && modelValue" class="footer">
-        <button type="button" class="clearBtn" @click="clear">
-          Clear
-        </button>
-      </div>
-    </div>
+    </Teleport>
 
     <p v-if="errorMessage" class="errorMessage">{{ errorMessage }}</p>
   </div>
