@@ -48,6 +48,8 @@ const { getBaseOption } = useChartTheme()
 
 const option = computed(() => {
   const base = getBaseOption(props.type) as Record<string, unknown>
+  const fg = ((base.textStyle as Record<string, string>)?.color) || 'hsl(240 10% 3.9%)'
+  const bg = ((base.tooltip as Record<string, unknown>)?.backgroundColor as string) || '#fff'
 
   if (props.type === 'pie') {
     return {
@@ -60,15 +62,27 @@ const option = computed(() => {
           avoidLabelOverlap: true,
           itemStyle: {
             borderRadius: 4,
+            borderColor: bg,
+            borderWidth: 2,
           },
           label: {
             show: true,
             formatter: '{b}: {d}%',
-            color: (base.textStyle as Record<string, string> | undefined)?.color,
+            color: fg,
           },
           emphasis: {
-            label: { show: true, fontSize: 14, fontWeight: 'bold' },
-            itemStyle: { shadowBlur: 10, shadowOffsetX: 0, shadowColor: 'rgba(0,0,0,0.2)' },
+            scale: true,
+            label: {
+              show: true,
+              fontSize: 14,
+              fontWeight: 'bold' as const,
+              color: fg,
+            },
+            itemStyle: {
+              shadowBlur: 10,
+              shadowOffsetX: 0,
+              shadowColor: 'rgba(0,0,0,0.2)',
+            },
           },
           data: props.datasets[0]?.data.map((value, i) => ({
             value,
@@ -79,6 +93,10 @@ const option = computed(() => {
           })),
         },
       ],
+      legend: {
+        ...((base.legend as Record<string, unknown>) || {}),
+        textStyle: { color: fg },
+      },
     }
   }
 
@@ -93,10 +111,22 @@ const option = computed(() => {
       name: ds.name,
       data: ds.data,
       smooth: ds.smooth ?? true,
-      symbol: 'circle',
+      symbol: 'circle' as const,
       symbolSize: 6,
-      areaStyle: ds.areaStyle ? { opacity: 0.15 } : undefined,
-      itemStyle: ds.color ? { color: ds.color } : undefined,
+      areaStyle: ds.areaStyle ? { color: (ds.color || undefined), opacity: 0.15 } : undefined,
+      itemStyle: {
+        color: ds.color || undefined,
+        borderColor: bg,
+        borderWidth: props.type === 'bar' ? 0 : undefined,
+      },
+      emphasis: {
+        focus: 'series' as const,
+        lineStyle: { width: 2 },
+      },
+      blur: {
+        lineStyle: { opacity: 0.3 },
+        areaStyle: { opacity: 0.05 },
+      },
     })),
   }
 })
@@ -113,7 +143,8 @@ onMounted(() => {
 })
 onUnmounted(() => {
   window.removeEventListener('resize', onResize)
-})</script>
+})
+</script>
 
 <template>
   <div class="base-chart" :style="{ height: `${props.height}px` }">

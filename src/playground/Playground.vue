@@ -427,8 +427,44 @@ const AckDialog = {
       <p>Elegant, modern, themable components. Toggle dark mode on your OS to switch palettes.</p>
     </header>
 
+    <nav class="playground-nav">
+      <a href="#btn">Button</a>
+      <a href="#input">Input</a>
+      <a href="#formfield">FormField</a>
+      <a href="#select">Select</a>
+      <a href="#creatable">Creatable</a>
+      <a href="#datepicker">DatePicker</a>
+      <a href="#calendar">Calendar</a>
+      <a href="#colorpicker">ColorPicker</a>
+      <a href="#modal">Modal</a>
+      <a href="#badge">Badge</a>
+      <a href="#checkbox">Checkbox</a>
+      <a href="#toggle">Toggle</a>
+      <a href="#avatar">Avatar</a>
+      <a href="#toast">Toast</a>
+      <a href="#textarea">Textarea</a>
+      <a href="#dropdown">Dropdown</a>
+      <a href="#table">Table</a>
+      <a href="#tabs">Tabs</a>
+      <a href="#card">Card</a>
+      <a href="#tooltip">Tooltip</a>
+      <a href="#radio">Radio</a>
+      <a href="#navbar">Navbar</a>
+      <a href="#sidebar">Sidebar</a>
+      <a href="#accordion">Accordion</a>
+      <a href="#skeleton">Skeleton</a>
+      <a href="#stat">Stat</a>
+      <a href="#progress">Progress</a>
+      <a href="#tag">Tag</a>
+      <a href="#pagination">Pagination</a>
+      <a href="#drawer">Drawer</a>
+      <a href="#fileupload">File</a>
+      <a href="#alert">Alert</a>
+      <a href="#charts">Charts</a>
+    </nav>
+
     <!-- ─── DevEnvBanner ─── -->
-    <section>
+    <section id="banner">
       <h2>DevEnvBanner</h2>
       <p class="muted" style="margin: 0 0 0.75rem; font-size: 0.875rem">Close button removes the banner from the DOM. Refresh to reset.</p>
       <div class="stack" style="gap: 0">
@@ -438,7 +474,7 @@ const AckDialog = {
     </section>
 
     <!-- ─── Button ─── -->
-    <section>
+    <section id="btn">
       <h2>Button — Variants</h2>
       <div class="row">
         <Button v-for="v in variants" :key="v" :variant="v">
@@ -480,7 +516,7 @@ const AckDialog = {
     </section>
 
     <!-- ─── Input ─── -->
-    <section>
+    <section id="input">
       <h2>Input — Default</h2>
       <div class="stack" style="max-width: 400px">
         <Input placeholder="Small" size="sm" />
@@ -508,7 +544,7 @@ const AckDialog = {
     </section>
 
     <!-- ─── FormField ─── -->
-    <section>
+    <section id="formfield">
       <h2>FormField</h2>
       <div class="stack" style="max-width: 400px">
         <FormField label="Username" helper="Choose a unique username." html-for="user" required>
@@ -527,7 +563,7 @@ const AckDialog = {
     </section>
 
     <!-- ─── Select ─── -->
-    <section>
+    <section id="select">
       <h2>Select — Single</h2>
       <div class="stack" style="max-width: 400px">
         <Select :options="USERS" placeholder="Pick a user" v-model="singleUser" clearable />
@@ -578,7 +614,7 @@ const AckDialog = {
     </section>
 
     <!-- ─── CreatableSelect ─── -->
-    <section>
+    <section id="creatable">
       <h2>CreatableSelect — Basic</h2>
       <p class="muted" style="margin: 0 0 0.75rem; font-size: 0.875rem">
         Type to filter. When no match exists and creatable is true, a "Crear" option appears at the top.
@@ -612,7 +648,7 @@ const AckDialog = {
     </section>
 
     <!-- ─── DatePicker ─── -->
-    <section>
+    <section id="datepicker">
       <h2>DatePicker — Sizes</h2>
       <div class="stack" style="max-width: 320px">
         <DatePicker v-model="pickedDate" size="sm" placeholder="Small" />
@@ -641,7 +677,7 @@ const AckDialog = {
     </section>
 
     <!-- ─── Calendar ─── -->
-    <section>
+    <section id="calendar">
       <h2>Calendar</h2>
       <p class="muted" style="margin: 0 0 0.75rem; font-size: 0.875rem">
         Interactive calendar with month, week, day, and list views. Click events or days to see debug info below.
@@ -684,7 +720,7 @@ const AckDialog = {
     </section>
 
     <!-- ─── Dark Mode ─── -->
-    <section>
+    <section id="dark">
       <h2>Dark Mode</h2>
       <p class="muted">Toggle your OS dark mode preference to watch the tokens switch automatically.</p>
     </section>
@@ -1496,7 +1532,7 @@ const AckDialog = {
     </section>
 
     <!-- ─── Alert ─── -->
-    <section>
+    <section id="alert">
       <h2>Alert — Variants</h2>
       <div class="stack" style="max-width: 600px">
         <Alert variant="info">This is an informational message.</Alert>
@@ -1629,6 +1665,46 @@ section {
 
 .muted {
   color: hsl(var(--agala-muted-foreground));
+}
+
+/* ─── Playground Nav ─── */
+.playground-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.5rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid hsl(var(--agala-border));
+}
+.playground-nav a {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: hsl(var(--agala-muted-foreground));
+  text-decoration: none;
+  padding: 0.125rem 0.375rem;
+  border-radius: var(--agala-radius-sm);
+  transition: color var(--agala-transition-fast), background var(--agala-transition-fast);
+}
+.playground-nav a:hover {
+  color: hsl(var(--agala-foreground));
+  background: hsl(var(--agala-muted));
+}
+.playground-nav a:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px hsl(var(--agala-ring));
+}
+
+/* ─── Charts grid ─── */
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+@media (max-width: 640px) {
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ─── Theme switcher bar ─── */
