@@ -13,7 +13,8 @@ const emit = defineEmits<{
   click: [event: MouseEvent]
 }>()
 
-const isCollapsed = computed(() => unref(inject('sidebar-collapsed', false)))
+const injected = inject('sidebar-collapsed', false)
+const isCollapsed = computed(() => unref(injected))
 
 const cls = computed(() => [
   'sidebarItem',
