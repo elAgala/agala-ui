@@ -89,14 +89,7 @@ export function useChartTheme() {
     if (type === 'gauge') {
       return {
         ...base,
-        tooltip: {
-          trigger: 'item' as const,
-          backgroundColor: t.bg,
-          borderColor: t.border,
-          borderWidth: 1,
-          textStyle: { color: t.fg },
-          formatter: '{b}: {c}',
-        },
+        tooltip: { show: false },
       }
     }
 
