@@ -421,47 +421,49 @@ const AckDialog = {
     </Transition>
   </section>
 
+  <nav class="playground-nav">
+    <span class="playground-nav__title">Components</span>
+    <a href="#banner">Dev Banner</a>
+    <a href="#btn">Button</a>
+    <a href="#input">Input</a>
+    <a href="#formfield">FormField</a>
+    <a href="#select">Select</a>
+    <a href="#creatable">Creatable</a>
+    <a href="#datepicker">DatePicker</a>
+    <a href="#calendar">Calendar</a>
+    <a href="#colorpicker">ColorPicker</a>
+    <a href="#modal">Modal</a>
+    <a href="#badge">Badge</a>
+    <a href="#checkbox">Checkbox</a>
+    <a href="#toggle">Toggle</a>
+    <a href="#avatar">Avatar</a>
+    <a href="#toast">Toast</a>
+    <a href="#textarea">Textarea</a>
+    <a href="#dropdown">Dropdown</a>
+    <a href="#table">Table</a>
+    <a href="#tabs">Tabs</a>
+    <a href="#card">Card</a>
+    <a href="#tooltip">Tooltip</a>
+    <a href="#radio">Radio</a>
+    <a href="#navbar">Navbar</a>
+    <a href="#sidebar">Sidebar</a>
+    <a href="#accordion">Accordion</a>
+    <a href="#skeleton">Skeleton</a>
+    <a href="#stat">Stat</a>
+    <a href="#progress">Progress</a>
+    <a href="#tag">Tag</a>
+    <a href="#pagination">Pagination</a>
+    <a href="#drawer">Drawer</a>
+    <a href="#fileupload">File</a>
+    <a href="#alert">Alert</a>
+    <a href="#charts">Charts</a>
+  </nav>
+
   <div class="playground">
     <header>
       <h1>Agala UI</h1>
       <p>Elegant, modern, themable components. Toggle dark mode on your OS to switch palettes.</p>
     </header>
-
-    <nav class="playground-nav">
-      <a href="#btn">Button</a>
-      <a href="#input">Input</a>
-      <a href="#formfield">FormField</a>
-      <a href="#select">Select</a>
-      <a href="#creatable">Creatable</a>
-      <a href="#datepicker">DatePicker</a>
-      <a href="#calendar">Calendar</a>
-      <a href="#colorpicker">ColorPicker</a>
-      <a href="#modal">Modal</a>
-      <a href="#badge">Badge</a>
-      <a href="#checkbox">Checkbox</a>
-      <a href="#toggle">Toggle</a>
-      <a href="#avatar">Avatar</a>
-      <a href="#toast">Toast</a>
-      <a href="#textarea">Textarea</a>
-      <a href="#dropdown">Dropdown</a>
-      <a href="#table">Table</a>
-      <a href="#tabs">Tabs</a>
-      <a href="#card">Card</a>
-      <a href="#tooltip">Tooltip</a>
-      <a href="#radio">Radio</a>
-      <a href="#navbar">Navbar</a>
-      <a href="#sidebar">Sidebar</a>
-      <a href="#accordion">Accordion</a>
-      <a href="#skeleton">Skeleton</a>
-      <a href="#stat">Stat</a>
-      <a href="#progress">Progress</a>
-      <a href="#tag">Tag</a>
-      <a href="#pagination">Pagination</a>
-      <a href="#drawer">Drawer</a>
-      <a href="#fileupload">File</a>
-      <a href="#alert">Alert</a>
-      <a href="#charts">Charts</a>
-    </nav>
 
     <!-- ─── DevEnvBanner ─── -->
     <section id="banner">
@@ -1667,21 +1669,37 @@ section {
   color: hsl(var(--agala-muted-foreground));
 }
 
-/* ─── Playground Nav ─── */
+/* ─── Floating left nav ─── */
 .playground-nav {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 160px;
+  overflow-y: auto;
+  padding: 1rem 0.75rem;
+  background: hsl(var(--agala-card));
+  border-right: 1px solid hsl(var(--agala-border));
+  z-index: 50;
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem 0.5rem;
-  margin-bottom: 2rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid hsl(var(--agala-border));
+  flex-direction: column;
+  gap: 0.125rem;
+}
+.playground-nav__title {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: hsl(var(--agala-muted-foreground));
+  margin-bottom: 0.375rem;
+  padding: 0 0.375rem;
 }
 .playground-nav a {
   font-size: 0.75rem;
   font-weight: 500;
   color: hsl(var(--agala-muted-foreground));
   text-decoration: none;
-  padding: 0.125rem 0.375rem;
+  padding: 0.25rem 0.375rem;
   border-radius: var(--agala-radius-sm);
   transition: color var(--agala-transition-fast), background var(--agala-transition-fast);
 }
@@ -1692,6 +1710,19 @@ section {
 .playground-nav a:focus-visible {
   outline: none;
   box-shadow: 0 0 0 2px hsl(var(--agala-ring));
+}
+
+.playground {
+  margin-left: 160px;
+}
+
+@media (max-width: 768px) {
+  .playground-nav {
+    display: none;
+  }
+  .playground {
+    margin-left: 0;
+  }
 }
 
 /* ─── Charts grid ─── */

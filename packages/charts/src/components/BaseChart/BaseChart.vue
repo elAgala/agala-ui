@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, shallowRef, onMounted, onUnmounted } from 'vue'
+import { shallowRef, onMounted, onUnmounted } from 'vue'
 import VChart from 'vue-echarts'
 import { use } from 'echarts/core'
 import { LineChart, BarChart, PieChart } from 'echarts/charts'
@@ -45,14 +45,13 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const { getBaseOption } = useChartTheme()
+const option = shallowRef<Record<string, unknown>>({})
 
-const option = computed(() => {
+function buildOption() {
   const base = getBaseOption(props.type) as Record<string, unknown>
-  const fg = ((base.textStyle as Record<string, string>)?.color) || 'hsl(240 10% 3.9%)'
-  const bg = ((base.tooltip as Record<string, unknown>)?.backgroundColor as string) || '#fff'
 
   if (props.type === 'pie') {
-    return {
+    option.value = {
       ...base,
       series: [
         {
@@ -62,48 +61,26 @@ const option = computed(() => {
           avoidLabelOverlap: true,
           itemStyle: {
             borderRadius: 4,
-            borderColor: bg,
             borderWidth: 2,
           },
           label: {
             show: true,
             formatter: '{b}: {d}%',
-            color: fg,
-          },
-          emphasis: {
-            scale: true,
-            label: {
-              show: true,
-              fontSize: 14,
-              fontWeight: 'bold' as const,
-              color: fg,
-            },
-            itemStyle: {
-              shadowBlur: 10,
-              shadowOffsetX: 0,
-              shadowColor: 'rgba(0,0,0,0.2)',
-            },
           },
           data: props.datasets[0]?.data.map((value, i) => ({
             value,
             name: props.labels[i] || `Item ${i + 1}`,
-            itemStyle: props.datasets[0]?.color
-              ? { color: props.datasets[0].color }
-              : undefined,
           })),
         },
       ],
-      legend: {
-        ...((base.legend as Record<string, unknown>) || {}),
-        textStyle: { color: fg },
-      },
     }
+    return
   }
 
-  return {
+  option.value = {
     ...base,
     xAxis: {
-      ...(base.xAxis as Record<string, unknown>),
+      ...((base.xAxis as Record<string, unknown>) || {}),
       data: props.labels,
     },
     series: props.datasets.map((ds) => ({
@@ -113,43 +90,59 @@ const option = computed(() => {
       smooth: ds.smooth ?? true,
       symbol: 'circle' as const,
       symbolSize: 6,
-      areaStyle: ds.areaStyle ? { color: (ds.color || undefined), opacity: 0.15 } : undefined,
-      itemStyle: {
-        color: ds.color || undefined,
-        borderColor: bg,
-        borderWidth: props.type === 'bar' ? 0 : undefined,
-      },
-      emphasis: {
-        focus: 'series' as const,
-        lineStyle: { width: 2 },
-      },
-      blur: {
-        lineStyle: { opacity: 0.3 },
-        areaStyle: { opacity: 0.05 },
+      areaStyle: ds.areaStyle ? { opacity: 0.12 } : undefined,
+      lineStyle: {
+        width: 2,
       },
     })),
   }
-})
+}
 
-// Responsive resize
-const chartRef = shallowRef<InstanceType<typeof VChart> | null>(null)
+buildOption()
 
-function onResize() {
-  chartRef.value?.resize()
+/* ─── Theme reactivity ─── */
+let mo: MutationObserver | null = null
+let mq: MediaQueryList | null = null
+
+function onThemeChange() {
+  buildOption()
 }
 
 onMounted(() => {
-  window.addEventListener('resize', onResize)
+  // Watch for custom themes (data-theme attribute changes on <html>)
+  mo = new MutationObserver((mutations) => {
+    for (const m of mutations) {
+      if (m.type === 'attributes' && m.attributeName === 'data-theme') {
+        onThemeChange()
+        break
+      }
+      // Also watch for inline style changes (used by custom theme CSS injection)
+      if (m.type === 'childList' || m.type === 'attributes') {
+        onThemeChange()
+        break
+      }
+    }
+  })
+  mo.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['data-theme', 'style', 'class'],
+    subtree: false,
+  })
+
+  // Watch for dark mode changes
+  mq = window.matchMedia('(prefers-color-scheme: dark)')
+  mq.addEventListener('change', onThemeChange)
 })
+
 onUnmounted(() => {
-  window.removeEventListener('resize', onResize)
+  mo?.disconnect()
+  mq?.removeEventListener('change', onThemeChange)
 })
 </script>
 
 <template>
   <div class="base-chart" :style="{ height: `${props.height}px` }">
     <VChart
-      ref="chartRef"
       :option="option"
       autoresize
       style="width: 100%; height: 100%"
