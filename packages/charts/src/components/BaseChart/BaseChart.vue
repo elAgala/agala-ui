@@ -225,17 +225,6 @@ function buildOption() {
             color: (base.textStyle as Record<string, string>)?.color,
           },
           data: [{ value: val, name: props.datasets[0]?.name || '' }],
-          emphasis: {
-            itemStyle: { shadowBlur: 10, shadowOffsetX: 0, shadowColor: 'rgba(0,0,0,0.2)' },
-            detail: {
-              fontSize: 24,
-              color: (base.textStyle as Record<string, string>)?.color,
-            },
-            title: {
-              fontSize: 14,
-              color: (base.textStyle as Record<string, string>)?.color,
-            },
-          },
         },
       ],
     }
