@@ -577,7 +577,7 @@ function getAllDayEventStyle(event: CalendarEvent): Record<string, string> | und
 }
 
 .eventSubtitle {
-  font-size: var(--agala-font-size-sm);
+  font-size: 0.5625rem;
   opacity: 0.8;
   overflow: hidden;
   text-overflow: ellipsis;

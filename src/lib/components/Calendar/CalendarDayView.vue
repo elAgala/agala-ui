@@ -578,7 +578,7 @@ function formatSelectionTime(minutes: number): string {
 }
 
 .eventSubtitle {
-  font-size: 0.625rem;
+  font-size: 0.5625rem;
   opacity: 0.7;
   white-space: nowrap;
   overflow: hidden;
