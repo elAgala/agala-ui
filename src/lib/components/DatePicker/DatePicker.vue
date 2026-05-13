@@ -557,7 +557,7 @@ usePopoverBehavior(isOpen, wrapperRef, floatingRef, () => close(), recompute)
   width: 100%;
   border: var(--agala-border-width) solid hsl(var(--agala-input));
   border-radius: calc(var(--agala-radius) - 2px);
-  background-color: hsl(var(--agala-background));
+  background-color: hsl(var(--agala-card));
   color: hsl(var(--agala-foreground));
   cursor: pointer;
   transition: border-color var(--agala-transition-fast), box-shadow var(--agala-transition-fast);
