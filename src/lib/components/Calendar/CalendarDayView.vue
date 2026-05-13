@@ -302,7 +302,7 @@ function formatSelectionTime(minutes: number): string {
             {{ formatSelectionTime(gridSelection.selectionRange.value.startMinutes) }}
           </span>
           <span
-            v-if="gridSelection.selectionRange.value && gridSelection.selectionRange.value.endMinutes - gridSelection.selectionRange.value.startMinutes >= 40"
+            v-if="gridSelection.selectionRange.value && gridSelection.selectionRange.value.endMinutes - gridSelection.selectionRange.value.startMinutes >= 30"
             class="selectionLabel selectionLabelEnd"
           >
             {{ formatSelectionTime(gridSelection.selectionRange.value.endMinutes) }}
@@ -472,24 +472,24 @@ function formatSelectionTime(minutes: number): string {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 2px 4px;
+  padding: 1px 2px;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 .selectionLabel {
   display: block;
-  font-size: 0.625rem;
+  font-size: 0.5rem;
   font-weight: var(--agala-font-weight-semibold);
   color: hsl(var(--agala-primary));
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  line-height: 1.2;
+  line-height: 1.1;
 }
 
 .selectionLabelEnd {
   align-self: flex-start;
-  margin-top: 0.125rem;
 }
 
 .currentTimeLine {

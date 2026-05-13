@@ -353,7 +353,7 @@ function getAllDayEventStyle(event: CalendarEvent): Record<string, string> | und
               {{ formatSelectionTime(selections[dayIndex].selectionRange.value.startMinutes) }}
             </span>
             <span
-              v-if="selections[dayIndex].selectionRange.value && selections[dayIndex].selectionRange.value.endMinutes - selections[dayIndex].selectionRange.value.startMinutes >= 40"
+              v-if="selections[dayIndex].selectionRange.value && selections[dayIndex].selectionRange.value.endMinutes - selections[dayIndex].selectionRange.value.startMinutes >= 30"
               class="selectionLabel selectionLabelEnd"
             >
               {{ formatSelectionTime(selections[dayIndex].selectionRange.value.endMinutes) }}
@@ -679,24 +679,24 @@ function getAllDayEventStyle(event: CalendarEvent): Record<string, string> | und
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 2px 4px;
+  padding: 1px 2px;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 .selectionLabel {
   display: block;
-  font-size: 0.625rem;
+  font-size: 0.5rem;
   font-weight: var(--agala-font-weight-semibold);
   color: hsl(var(--agala-primary));
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  line-height: 1.2;
+  line-height: 1.1;
 }
 
 .selectionLabelEnd {
   align-self: flex-start;
-  margin-top: 0.125rem;
 }
 
 /* ─── Tablet ─── */
