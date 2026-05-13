@@ -715,6 +715,22 @@ const AckDialog = {
         <p class="muted" style="margin: 0; font-size: 0.875rem">Last clicked day: {{ clickedDay || 'none' }}</p>
         <p class="muted" style="margin: 0; font-size: 0.875rem">Last slot: {{ selectedSlot ? `${selectedSlot.start} → ${selectedSlot.end}` : 'none' }}</p>
       </div>
+
+      <h2 style="margin-top: 1.5rem">Calendar — 15-min intervals</h2>
+      <p class="muted" style="margin: 0 0 0.75rem; font-size: 0.875rem">
+        Same calendar with <strong>:snap-minutes="15"</strong> for finer slot selection.
+      </p>
+      <div style="height: 600px; border: 1px solid hsl(var(--agala-border)); border-radius: var(--agala-radius-lg); overflow: hidden">
+        <Calendar
+          v-model:view="calendarView"
+          v-model:currentDate="calendarDate"
+          :events="calendarEvents"
+          :snap-minutes="15"
+          @select="event => { selectedEvent = event; console.log('Selected event:', event.title) }"
+          @day-click="date => { clickedDay = date; console.log('Clicked day:', date) }"
+          @slot-select="slot => { selectedSlot = slot; console.log('Selected slot:', slot) }"
+        />
+      </div>
     </section>
 
     <!-- ═══════════════════ COLORPICKER ═══════════════════ -->
