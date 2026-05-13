@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, h, watch } from 'vue'
-import { Button, Input, FormField, Select, CreatableSelect, DatePicker, ColorPicker, Modal, ModalProvider, modalManager, Badge, Checkbox, Toggle, Avatar, ToastProvider, toastManager, Textarea, DropdownMenu, Table, Tabs, Card, Tooltip, RadioGroup, Navbar, Sidebar, SidebarItem, SidebarGroup, SidebarToggle, Accordion, AccordionItem, Skeleton, Stat, EmptyState, Progress, Tag, Pagination, Drawer, FileUpload, DevEnvBanner, Calendar, Alert } from '../lib'
+import { Button, Input, FormField, Select, CreatableSelect, DatePicker, ColorPicker, Modal, ModalProvider, modalManager, Badge, Checkbox, Toggle, Avatar, ToastProvider, toastManager, Textarea, DropdownMenu, Table, Tabs, Card, Tooltip, RadioGroup, SegmentedControl, Navbar, Sidebar, SidebarItem, SidebarGroup, SidebarToggle, Accordion, AccordionItem, Skeleton, Stat, EmptyState, Progress, Tag, Pagination, Drawer, FileUpload, DevEnvBanner, Calendar, Alert } from '../lib'
 
 import { useMediaQuery } from '../lib/composables/useMediaQuery'
 import AgalaIcon from '../lib/components/AgalaIcon/AgalaIcon.vue'
@@ -192,6 +192,35 @@ const NOTIFY_OPTIONS = [
   { value: 'email',  label: 'Email notifications' },
   { value: 'push',   label: 'Push notifications' },
   { value: 'sms',    label: 'SMS', disabled: true },
+]
+
+/* ─── SegmentedControl state ─── */
+const segValue = ref('opt-1')
+const segVariantsValue = ref('success')
+const segSizeValue = ref('sm')
+
+const SEG_OPTIONS = [
+  { value: 'opt-1', label: 'Option 1' },
+  { value: 'opt-2', label: 'Option 2' },
+  { value: 'opt-3', label: 'Option 3' },
+  { value: 'opt-4', label: 'Option 4' },
+]
+
+const SEG_VARIANT_OPTIONS = [
+  { value: 'success', label: 'Success', variant: 'success' as const },
+  { value: 'danger', label: 'Danger', variant: 'danger' as const },
+]
+
+const SEG_SIZE_OPTIONS = [
+  { value: 'sm', label: 'Small' },
+  { value: 'md', label: 'Medium' },
+  { value: 'lg', label: 'Large' },
+]
+
+const SEG_DISABLED_OPT = [
+  { value: 'a', label: 'Option A' },
+  { value: 'b', label: 'Option B', disabled: true },
+  { value: 'c', label: 'Option C' },
 ]
 
 /* ─── Table state ─── */
@@ -403,6 +432,7 @@ const AckDialog = {
     <a href="#card">Card</a>
     <a href="#tooltip">Tooltip</a>
     <a href="#radio">Radio</a>
+    <a href="#segmented">Segmented</a>
     <a href="#navbar">Navbar</a>
     <a href="#sidebar">Sidebar</a>
     <a href="#accordion">Accordion</a>
@@ -1514,6 +1544,40 @@ const AckDialog = {
             :disabled="true"
           />
         </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════ SEGMENTED CONTROL ═══════════════════ -->
+    <section id="segmented">
+      <h2>SegmentedControl</h2>
+
+      <div style="margin-bottom: 0.75rem">
+        <p class="muted" style="margin: 0 0 0.5rem; font-size: 0.875rem">Default — 4 options</p>
+        <SegmentedControl :options="SEG_OPTIONS" v-model="segValue" />
+        <p class="muted" style="font-size: 0.875rem; margin: 0.25rem 0 0">Selected: <strong>{{ segValue }}</strong></p>
+      </div>
+
+      <div style="margin-bottom: 0.75rem">
+        <p class="muted" style="margin: 0 0 0.5rem; font-size: 0.875rem">Per-option variants</p>
+        <SegmentedControl :options="SEG_VARIANT_OPTIONS" v-model="segVariantsValue" />
+        <p class="muted" style="font-size: 0.875rem; margin: 0.25rem 0 0">Selected: <strong>{{ segVariantsValue }}</strong></p>
+      </div>
+
+      <div style="margin-bottom: 0.75rem">
+        <p class="muted" style="margin: 0 0 0.5rem; font-size: 0.875rem">Sizes</p>
+        <div class="row" style="margin: 0">
+          <SegmentedControl v-for="s in (['sm', 'md', 'lg'] as const)" :key="s" :options="SEG_SIZE_OPTIONS" v-model="segSizeValue" :size="s" />
+        </div>
+      </div>
+
+      <div style="margin-bottom: 0.75rem">
+        <p class="muted" style="margin: 0 0 0.5rem; font-size: 0.875rem">Disabled group</p>
+        <SegmentedControl :options="SEG_OPTIONS" v-model="segValue" disabled />
+      </div>
+
+      <div style="margin-bottom: 0.75rem">
+        <p class="muted" style="margin: 0 0 0.5rem; font-size: 0.875rem">Disabled option (Option B)</p>
+        <SegmentedControl :options="SEG_DISABLED_OPT" v-model="segValue" />
       </div>
     </section>
 

@@ -116,6 +116,9 @@ export type { ProgressProps, ProgressVariant, ProgressSize, ProgressColor } from
 export { default as Tag } from './components/Tag/Tag.vue'
 export type { TagProps, TagVariant, TagSize } from './components/Tag'
 
+export { default as SegmentedControl } from './components/SegmentedControl/SegmentedControl.vue'
+export type { SegmentedControlProps, SegmentedControlOption, SegmentedControlSize, SegmentedControlVariant } from './components/SegmentedControl'
+
 export { default as Pagination } from './components/Pagination/Pagination.vue'
 export type { PaginationProps } from './components/Pagination'
 
