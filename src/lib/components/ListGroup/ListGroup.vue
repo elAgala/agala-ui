@@ -4,8 +4,17 @@ import type { ListGroupProps } from './types'
 
 const props = withDefaults(defineProps<ListGroupProps>(), {
   gap: '0',
+  borderless: false,
+  dividers: true,
   class: '',
 })
+
+const rootCls = computed(() => [
+  'listGroup',
+  props.borderless ? 'listGroupBorderless' : undefined,
+  props.dividers ? undefined : 'listGroupNoDividers',
+  props.class,
+].filter(Boolean).join(' '))
 
 const rootStyle = computed(() => ({
   gap: props.gap !== '0' ? props.gap : undefined,
@@ -13,7 +22,7 @@ const rootStyle = computed(() => ({
 </script>
 
 <template>
-  <div :class="['listGroup', $props.class]" :style="rootStyle" role="list">
+  <div :class="rootCls" :style="rootStyle" role="list">
     <slot />
   </div>
 </template>
@@ -22,9 +31,23 @@ const rootStyle = computed(() => ({
 .listGroup {
   display: flex;
   flex-direction: column;
-  border: 1px solid hsl(var(--agala-border));
-  border-radius: var(--agala-radius);
+  border: var(--agala-list-group-border, 1px solid hsl(var(--agala-border)));
+  border-radius: var(--agala-list-group-radius, var(--agala-radius));
   overflow: hidden;
-  padding: 0;
+  padding: var(--agala-list-group-padding, 0);
+  background: var(--agala-list-group-bg, transparent);
+}
+
+.listGroupBorderless {
+  border: none;
+  border-radius: 0;
+}
+
+.listGroupNoDividers :deep(.listItem) {
+  border-bottom: none;
+}
+
+.listGroupNoDividers .listItem:last-child {
+  border-bottom: none;
 }
 </style>

@@ -1,5 +1,9 @@
+export type ListGroupRadius = 'none' | 'sm' | 'md' | 'lg'
+
 export interface ListGroupProps {
   gap?: string
+  borderless?: boolean
+  dividers?: boolean
   class?: string
 }
 
@@ -13,5 +17,7 @@ export interface ListGroupItemProps {
   badgeVariant?: 'default' | 'primary' | 'success' | 'warning' | 'danger'
   disabled?: boolean
   variant?: ListGroupItemVariant
+  radius?: ListGroupRadius
+  actionIcon?: string
   class?: string
 }

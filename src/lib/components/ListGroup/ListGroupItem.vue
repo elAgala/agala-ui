@@ -19,6 +19,7 @@ const itemCls = computed(() => [
   'listItem',
   props.variant === 'danger' ? 'listItemDanger' : undefined,
   props.disabled ? 'listItemDisabled' : undefined,
+  props.radius ? `listItemRadius${props.radius.charAt(0).toUpperCase() + props.radius.slice(1)}` : undefined,
   props.class,
 ].filter(Boolean).join(' '))
 
@@ -31,8 +32,6 @@ function handleKeydown(e: KeyboardEvent) {
   if (props.disabled) return
   emit('click', e)
 }
-
-const hasAction = computed(() => !props.disabled)
 
 const iconName = computed(() => props.icon as IconName | undefined)
 </script>
@@ -51,22 +50,20 @@ const iconName = computed(() => props.icon as IconName | undefined)
       <AgalaIcon v-if="icon" :name="iconName" :size="16" class="listIcon" />
     </slot>
 
-    <div class="listBody">
-      <slot>
+    <slot>
+      <div class="listBody">
         <div class="listContent">
           <span class="listLabel">{{ label }}</span>
           <span v-if="subtitle" class="listSubtitle">{{ subtitle }}</span>
         </div>
-      </slot>
-    </div>
+      </div>
+    </slot>
 
     <slot name="trailing">
-      <span v-if="badge" class="listBadge">
-        <slot name="badge">
-          <span class="listBadgeInner">{{ badge }}</span>
-        </slot>
-      </span>
-      <AgalaIcon v-if="hasAction" name="chevron" :size="14" class="listChevron" />
+      <slot name="badge">
+        <span v-if="badge" class="listBadgeInner">{{ badge }}</span>
+      </slot>
+      <AgalaIcon v-if="actionIcon" :name="actionIcon as IconName" :size="14" class="listChevron" />
     </slot>
   </div>
 </template>
@@ -75,10 +72,10 @@ const iconName = computed(() => props.icon as IconName | undefined)
 .listItem {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.75rem 1rem;
-  background: hsl(var(--agala-card));
-  border-bottom: 1px solid hsl(var(--agala-border));
+  gap: var(--agala-list-item-gap, 0.75rem);
+  padding: var(--agala-list-item-padding, 0.75rem 1rem);
+  background: var(--agala-list-item-bg, hsl(var(--agala-card)));
+  border-bottom: var(--agala-list-item-border, 1px solid hsl(var(--agala-border)));
   cursor: pointer;
   outline: none;
   transition: background-color var(--agala-transition-fast);
@@ -89,7 +86,7 @@ const iconName = computed(() => props.icon as IconName | undefined)
 }
 
 .listItem:hover:not(.listItemDisabled) {
-  background: hsl(var(--agala-muted));
+  background: var(--agala-list-item-hover-bg, hsl(var(--agala-muted)));
 }
 
 .listItem:focus-visible {
@@ -107,6 +104,22 @@ const iconName = computed(() => props.icon as IconName | undefined)
 .listItemDanger .listLabel,
 .listItemDanger .listIcon {
   color: hsl(var(--agala-danger));
+}
+
+.listItemRadiusNone {
+  border-radius: 0;
+}
+
+.listItemRadiusSm {
+  border-radius: var(--agala-radius-sm);
+}
+
+.listItemRadiusMd {
+  border-radius: var(--agala-radius);
+}
+
+.listItemRadiusLg {
+  border-radius: var(--agala-radius-lg);
 }
 
 .listIcon {
@@ -142,10 +155,6 @@ const iconName = computed(() => props.icon as IconName | undefined)
   white-space: nowrap;
 }
 
-.listBadge {
-  flex-shrink: 0;
-}
-
 .listBadgeInner {
   display: inline-flex;
   align-items: center;
@@ -154,8 +163,8 @@ const iconName = computed(() => props.icon as IconName | undefined)
   height: 1.25rem;
   padding: 0 0.375rem;
   border-radius: 99px;
-  background: hsl(var(--agala-primary) / 0.1);
-  color: hsl(var(--agala-primary));
+  background: var(--agala-list-badge-bg, hsl(var(--agala-primary) / 0.1));
+  color: var(--agala-list-badge-color, hsl(var(--agala-primary)));
   font-size: 0.6875rem;
   font-weight: var(--agala-font-weight-semibold);
   line-height: 1;
