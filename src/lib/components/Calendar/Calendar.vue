@@ -301,7 +301,7 @@ function handleSlotSelect(payload: { start: string; end: string }) {
   height: 100%;
   font-family: var(--agala-font-sans);
   color: hsl(var(--agala-foreground));
-  background: hsl(var(--agala-background));
+  background: hsl(var(--agala-card));
 }
 
 .calendarHeader {

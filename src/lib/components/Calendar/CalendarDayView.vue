@@ -349,7 +349,7 @@ function formatSelectionTime(minutes: number): string {
   flex-direction: column;
   height: 100%;
   overflow: hidden;
-  background: hsl(var(--agala-background));
+  background: hsl(var(--agala-card));
 }
 
 .dayView.isSelecting {
@@ -372,7 +372,7 @@ function formatSelectionTime(minutes: number): string {
   font-size: var(--agala-font-size-sm);
   color: hsl(var(--agala-muted-foreground));
   border-right: var(--agala-border-width) solid hsl(var(--agala-border));
-  background: hsl(var(--agala-background));
+  background: hsl(var(--agala-card));
 }
 
 .allDayEvents {
@@ -420,7 +420,7 @@ function formatSelectionTime(minutes: number): string {
   flex-shrink: 0;
   position: sticky;
   left: 0;
-  background: hsl(var(--agala-background));
+  background: hsl(var(--agala-card));
   z-index: 1;
   border-right: var(--agala-border-width) solid hsl(var(--agala-border));
 }

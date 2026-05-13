@@ -402,7 +402,7 @@ function getAllDayEventStyle(event: CalendarEvent): Record<string, string> | und
 .weekView {
   font-family: var(--agala-font-sans);
   color: hsl(var(--agala-foreground));
-  background: hsl(var(--agala-background));
+  background: hsl(var(--agala-card));
   border: var(--agala-border-width) solid hsl(var(--agala-border));
   border-radius: var(--agala-radius);
   overflow: hidden;
@@ -420,7 +420,7 @@ function getAllDayEventStyle(event: CalendarEvent): Record<string, string> | und
   position: sticky;
   left: 0;
   z-index: 3;
-  background: hsl(var(--agala-background));
+  background: hsl(var(--agala-card));
   border-right: var(--agala-border-width) solid hsl(var(--agala-border));
 }
 
@@ -429,7 +429,7 @@ function getAllDayEventStyle(event: CalendarEvent): Record<string, string> | und
   border-bottom: var(--agala-border-width) solid hsl(var(--agala-border));
   position: sticky;
   top: 0;
-  background: hsl(var(--agala-background));
+  background: hsl(var(--agala-card));
   z-index: 4;
 }
 
@@ -438,7 +438,7 @@ function getAllDayEventStyle(event: CalendarEvent): Record<string, string> | und
   border-bottom: var(--agala-border-width) solid hsl(var(--agala-border));
   position: sticky;
   top: 2.5rem;
-  background: hsl(var(--agala-background));
+  background: hsl(var(--agala-card));
   z-index: 4;
 }
 
@@ -502,7 +502,7 @@ function getAllDayEventStyle(event: CalendarEvent): Record<string, string> | und
   gap: 0.125rem;
   position: sticky;
   top: 2.5rem;
-  background: hsl(var(--agala-background));
+  background: hsl(var(--agala-card));
   z-index: 2;
 }
 

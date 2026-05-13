@@ -327,7 +327,7 @@ function handleGridKeyDown(e: KeyboardEvent) {
   padding: 0.25rem;
   border: var(--agala-border-width) solid transparent;
   border-radius: var(--agala-radius-sm);
-  background-color: hsl(var(--agala-background));
+  background-color: hsl(var(--agala-card));
   color: hsl(var(--agala-foreground));
   cursor: pointer;
   outline: none;

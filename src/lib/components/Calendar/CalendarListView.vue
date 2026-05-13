@@ -268,7 +268,7 @@ const totalEvents = computed(() => {
   flex-direction: column;
   gap: 1.5rem;
   padding: 1rem;
-  background-color: hsl(var(--agala-background));
+  background-color: hsl(var(--agala-card));
   color: hsl(var(--agala-foreground));
   font-family: var(--agala-font-sans);
   overflow-y: auto;
@@ -286,7 +286,7 @@ const totalEvents = computed(() => {
   top: 0;
   z-index: 10;
   padding: 0.5rem 0.75rem;
-  background-color: hsl(var(--agala-background));
+  background-color: hsl(var(--agala-card));
   font-size: var(--agala-font-size-base);
   font-weight: var(--agala-font-weight-semibold);
   color: hsl(var(--agala-foreground));
@@ -444,7 +444,7 @@ const totalEvents = computed(() => {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  background-color: hsl(var(--agala-background));
+  background-color: hsl(var(--agala-card));
   padding: 0 0.5rem;
   font-size: var(--agala-font-size-sm);
   font-weight: var(--agala-font-weight-medium);
