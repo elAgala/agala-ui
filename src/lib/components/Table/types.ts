@@ -19,5 +19,6 @@ export interface TableProps {
   loading?: boolean
   emptyMessage?: string
   rowKey?: string
+  variant?: 'default' | 'clean' | 'minimal'
   class?: string
 }

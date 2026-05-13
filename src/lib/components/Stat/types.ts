@@ -5,6 +5,9 @@ export interface StatProps {
   value: string | number
   trend?: number
   trendLabel?: string
+  icon?: string
+  iconBg?: 'primary' | 'danger' | 'success' | 'warning' | 'info'
+  layout?: 'vertical' | 'row' | 'inline'
   bordered?: boolean
   labelTransform?: string
   class?: string

@@ -5,7 +5,9 @@ import type { TabsProps, TabItem } from './types'
 
 let idCounter = 0
 
-const props = withDefaults(defineProps<TabsProps>(), {})
+const props = withDefaults(defineProps<TabsProps>(), {
+  variant: 'underline',
+})
 
 const emit = defineEmits<{
   'update:modelValue': [value: string]
@@ -87,7 +89,7 @@ function tabCls(tab: TabItem) {
 </script>
 
 <template>
-  <div :class="['tabs', props.class].filter(Boolean).join(' ')">
+    <div :class="['tabs', props.variant === 'pills' ? 'tabsPills' : undefined, props.class].filter(Boolean).join(' ')">
     <div
       ref="tabListRef"
       :class="['tabList', { 'tabList--scrollable': hasOverflow }]"
@@ -211,5 +213,26 @@ function tabCls(tab: TabItem) {
   .tabBtn {
     flex-shrink: 0;
   }
+}
+
+/* Pills variant */
+.tabsPills {
+  border-bottom: none;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  background: hsl(var(--agala-muted) / 0.5);
+  border-radius: var(--agala-radius);
+  width: fit-content;
+}
+.tabsPills .tabBtn {
+  border-bottom: none;
+  border-radius: calc(var(--agala-radius) - 2px);
+  padding: 0.375rem 0.75rem;
+}
+.tabsPills .tabBtnActive {
+  background: hsl(var(--agala-card));
+  color: hsl(var(--agala-foreground));
+  box-shadow: var(--agala-shadow-xs);
+  border-bottom: none;
 }
 </style>

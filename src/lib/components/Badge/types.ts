@@ -1,4 +1,4 @@
-export type BadgeVariant = 'default' | 'secondary' | 'outline' | 'success' | 'warning' | 'danger'
+export type BadgeVariant = 'default' | 'secondary' | 'outline' | 'subtle' | 'success' | 'warning' | 'danger'
 export type BadgeSize = 'sm' | 'md'
 
 export interface BadgeProps {

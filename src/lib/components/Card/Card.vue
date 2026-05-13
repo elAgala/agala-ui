@@ -4,6 +4,7 @@ import type { CardProps, CardPadding, CardAccent } from './types'
 
 const props = withDefaults(defineProps<CardProps>(), {
   padding: 'md',
+  headerVariant: 'default',
 })
 
 const paddingMap: Record<CardPadding, string> = {
@@ -27,6 +28,11 @@ const resolvedAccentColor = computed(() => {
 const cls = computed(() => [
   'card',
   props.class,
+].filter(Boolean).join(' '))
+
+const headerCls = computed(() => [
+  'cardHeader',
+  props.headerVariant === 'compact' ? 'cardHeaderCompact' : undefined,
 ].filter(Boolean).join(' '))
 
 const bodyCls = computed(() => [
@@ -59,7 +65,7 @@ const cardStyle = computed(() => {
 
 <template>
   <div :class="cls" :style="cardStyle">
-    <div v-if="$slots.header" class="cardHeader">
+    <div v-if="$slots.header" :class="headerCls">
       <slot name="header" />
     </div>
 
@@ -111,4 +117,13 @@ const cardStyle = computed(() => {
 .padSm   { padding: 0.75rem; }
 .padMd   { padding: 1.25rem; }
 .padLg   { padding: 2rem; }
+
+.cardHeaderCompact {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.6875rem;
+  font-weight: var(--agala-font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: hsl(var(--agala-muted-foreground));
+}
 </style>

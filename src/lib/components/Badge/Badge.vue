@@ -19,6 +19,7 @@ const variantMap: Record<BadgeVariant, string> = {
   default:   'badgeDefault',
   secondary: 'badgeSecondary',
   outline:   'badgeOutline',
+  subtle:    'badgeSubtle',
   success:   'badgeSuccess',
   warning:   'badgeWarning',
   danger:    'badgeDanger',
@@ -114,4 +115,14 @@ const cls = computed(() => [
   color: hsl(var(--agala-danger));
   border-color: hsl(var(--agala-danger) / 0.3);
 }
+
+.badgeSubtle {
+  background: hsl(var(--agala-primary) / 0.08);
+  color: hsl(var(--agala-primary));
+  border: none;
+}
+.badgeSubtle.badgeSecondary { background: hsl(var(--agala-secondary) / 0.3); color: hsl(var(--agala-secondary-foreground)); }
+.badgeSubtle.badgeSuccess { background: hsl(var(--agala-success) / 0.08); color: hsl(var(--agala-success)); }
+.badgeSubtle.badgeWarning { background: hsl(var(--agala-warning) / 0.1); color: hsl(var(--agala-warning)); }
+.badgeSubtle.badgeDanger { background: hsl(var(--agala-danger) / 0.08); color: hsl(var(--agala-danger)); }
 </style>

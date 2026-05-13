@@ -6,6 +6,7 @@ const props = withDefaults(defineProps<ListGroupProps>(), {
   gap: '0',
   borderless: false,
   dividers: true,
+  variant: 'divided',
   class: '',
 })
 
@@ -13,6 +14,7 @@ const rootCls = computed(() => [
   'listGroup',
   props.borderless ? 'listGroupBorderless' : undefined,
   props.dividers ? undefined : 'listGroupNoDividers',
+  props.variant === 'cards' ? 'listGroupCards' : undefined,
   props.class,
 ].filter(Boolean).join(' '))
 
@@ -49,5 +51,19 @@ const rootStyle = computed(() => ({
 
 .listGroupNoDividers .listItem:last-child {
   border-bottom: none;
+}
+
+.listGroupCards {
+  border: none;
+  background: transparent;
+  padding: 0;
+  gap: 4px;
+}
+.listGroupCards :deep(.listItem) {
+  border: 1px solid hsl(var(--agala-border));
+  border-radius: var(--agala-radius);
+  background: hsl(var(--agala-card));
+  box-shadow: var(--agala-shadow-xs);
+  border-bottom: 1px solid hsl(var(--agala-border));
 }
 </style>

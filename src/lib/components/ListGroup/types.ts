@@ -4,6 +4,7 @@ export interface ListGroupProps {
   gap?: string
   borderless?: boolean
   dividers?: boolean
+  variant?: 'divided' | 'cards'
   class?: string
 }
 

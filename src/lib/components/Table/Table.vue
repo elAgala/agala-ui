@@ -9,6 +9,7 @@ const props = withDefaults(defineProps<TableProps>(), {
   loading: false,
   emptyMessage: 'No data available.',
   rowKey: 'id',
+  variant: 'default',
 })
 
 const emit = defineEmits<{
@@ -78,10 +79,17 @@ function tdCls(col: TableColumn) {
 }
 
 const colSpan = computed(() => props.columns.length + (props.selectable ? 1 : 0))
+
+const wrapperCls = computed(() => [
+  'tableWrapper',
+  props.variant === 'clean' ? 'tableClean' : undefined,
+  props.variant === 'minimal' ? 'tableMinimal' : undefined,
+  props.class,
+].filter(Boolean).join(' '))
 </script>
 
 <template>
-  <div class="tableWrapper" :class="props.class">
+  <div :class="wrapperCls">
     <table class="table">
       <thead class="thead">
         <tr class="trHead">
@@ -295,6 +303,35 @@ const colSpan = computed(() => props.columns.length + (props.selectable ? 1 : 0)
 @keyframes shimmer {
   0%   { background-position: 200% 0; }
   100% { background-position: -200% 0; }
+}
+
+/* Clean variant */
+.tableClean {
+  border: none;
+  border-radius: 0;
+}
+.tableClean :deep(.thead) {
+  background: transparent;
+}
+.tableClean :deep(.th) {
+  padding: 0.5rem 1rem;
+}
+.tableClean :deep(.tr) {
+  border-bottom: 1px solid hsl(var(--agala-border));
+}
+.tableClean :deep(.td) {
+  padding: 0.5rem 1rem;
+}
+
+/* Minimal variant */
+.tableMinimal {
+  border: none;
+}
+.tableMinimal :deep(.tr) {
+  border-bottom: none;
+}
+.tableMinimal :deep(.tr:hover) {
+  background: hsl(var(--agala-accent));
 }
 
 /* Footer (pagination) */

@@ -11,6 +11,7 @@ export interface InputProps {
   readonly?: boolean
   iconStart?: string
   iconEnd?: string
+  iconEndActionable?: boolean
   type?: string
   placeholder?: string
 }

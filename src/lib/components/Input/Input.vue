@@ -14,6 +14,7 @@ const props = withDefaults(defineProps<{
   readonly?: boolean
   iconStart?: string
   iconEnd?: string
+  iconEndActionable?: boolean
   type?: string
   placeholder?: string
   wrapperClass?: string
@@ -26,13 +27,15 @@ const props = withDefaults(defineProps<{
   readonly: false,
   iconStart: '',
   iconEnd: '',
+  iconEndActionable: false,
   type: 'text',
   wrapperClass: '',
   class: '',
 })
 
-defineEmits<{
+const emit = defineEmits<{
   'update:modelValue': [value: string]
+  'icon-end-click': []
 }>()
 
 const showPassword = ref(false)
@@ -49,18 +52,26 @@ const endIconName = computed(() => {
 })
 
 function handleEndIconClick() {
-  if (props.type === 'password' && inputRef.value) {
-    const value = inputRef.value.value
-    showPassword.value = !showPassword.value
-    // Changing input type resets the value in the DOM (browser behavior).
-    // Restore it after Vue reconciles.
-    if (value) {
-      nextTick(() => {
-        if (inputRef.value) inputRef.value.value = value
-      })
+  if (props.type === 'password') {
+    if (inputRef.value) {
+      const value = inputRef.value.value
+      showPassword.value = !showPassword.value
+      if (value) {
+        nextTick(() => {
+          if (inputRef.value) inputRef.value.value = value
+        })
+      }
     }
+  } else if (props.iconEndActionable) {
+    emit('icon-end-click')
   }
 }
+
+const endIconCls = computed(() => {
+  if (props.type === 'password') return 'iconEnd iconEndClickable'
+  if (props.iconEndActionable) return 'iconEnd iconEndActionable'
+  return 'iconEnd'
+})
 
 const sizeMap: Record<InputSize, string> = {
   sm: 'inputSm',
@@ -98,11 +109,10 @@ const cls = computed(() => [
       />
       <span
         v-if="iconEnd"
-        class="iconEnd"
-        :class="{ iconEndClickable: type === 'password' }"
+        :class="endIconCls"
         :aria-label="type === 'password' ? (showPassword ? 'Hide password' : 'Show password') : undefined"
-        :role="type === 'password' ? 'button' : undefined"
-        :tabindex="type === 'password' ? 0 : undefined"
+        :role="type === 'password' || iconEndActionable ? 'button' : undefined"
+        :tabindex="type === 'password' || iconEndActionable ? 0 : undefined"
         aria-hidden="false"
         @click="handleEndIconClick"
         @keydown.enter.prevent="handleEndIconClick"
@@ -204,6 +214,13 @@ const cls = computed(() => [
 }
 .iconEndClickable:hover {
   color: var(--agala-input-icon-color-hover, hsl(var(--agala-foreground)));
+}
+
+.iconEndActionable {
+  cursor: pointer;
+}
+.iconEndActionable:hover {
+  color: hsl(var(--agala-foreground));
 }
 
 .hasIconStart {

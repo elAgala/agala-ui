@@ -3,6 +3,7 @@ export type CardAccent = 'top' | 'left' | 'right' | 'bottom'
 
 export interface CardProps {
   padding?: CardPadding
+  headerVariant?: 'default' | 'compact'
   class?: string
   accent?: CardAccent
   accentColor?: string

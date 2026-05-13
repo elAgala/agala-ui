@@ -7,5 +7,6 @@ export interface TabItem {
 export interface TabsProps {
   modelValue: string
   tabs: TabItem[]
+  variant?: 'underline' | 'pills'
   class?: string
 }
