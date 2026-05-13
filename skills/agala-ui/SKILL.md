@@ -824,6 +824,61 @@ toastManager.show({
 
 ---
 
+## Structural Variants
+
+Several components offer `variant` or `layout` props that change DOM structure, not just CSS:
+
+### Stat
+```vue
+<Stat label="Turnos" value="7" layout="row" icon="calendar" iconBg="primary" />
+```
+- `layout`: `vertical` (default, card) | `row` (icon + label/value side by side) | `inline` (label: value text pair)
+- `icon`, `iconBg`: optional icon with colored circle background (primary/danger/success/warning/info)
+
+### Card
+```vue
+<Card header-variant="compact">
+  <template #header>Uppercase title</template>
+</Card>
+```
+- `headerVariant`: `default` | `compact` (smaller padding, uppercase bold muted text)
+
+### Badge
+```vue
+<Badge variant="subtle" color="primary">Active</Badge>
+```
+- `variant`: `default` | `secondary` | `outline` | `subtle` | `success` | `warning` | `danger`
+- `subtle`: light background + colored text, no border (new)
+
+### ListGroup
+```vue
+<ListGroup variant="cards" gap="4px">
+  <ListGroupItem label="Item" radius="sm" />
+</ListGroup>
+```
+- `variant`: `divided` (default, connected items) | `cards` (separated items with individual border/radius/shadow)
+- `gap`: spacing between items when variant="cards"
+
+### Tabs
+```vue
+<Tabs variant="pills" :tabs="tabs" v-model="active" />
+```
+- `variant`: `underline` (default, bottom-border) | `pills` (filled bg + radius, toolbar style)
+
+### Table
+```vue
+<Table variant="clean" :columns="cols" :rows="data" />
+```
+- `variant`: `default` | `clean` (no outer border, transparent header) | `minimal` (no borders, just row hover)
+
+### Input
+```vue
+<Input icon-end="x" icon-end-actionable @icon-end-click="clear" />
+```
+- `iconEndActionable`: marks the right icon as clickable, emits `icon-end-click`
+
+---
+
 ## Composables (Reusable)
 
 Available at `src/lib/composables/`:
