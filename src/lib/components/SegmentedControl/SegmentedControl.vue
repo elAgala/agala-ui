@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick } from 'vue'
+import { computed, nextTick, watch } from 'vue'
 import type { SegmentedControlProps, SegmentedControlOption } from './types'
 
 const props = withDefaults(defineProps<SegmentedControlProps>(), {
@@ -27,6 +27,15 @@ const wrapperCls = computed(() => [
   props.class,
 ].filter(Boolean).join(' '))
 
+// Auto-select first enabled option when modelValue doesn't match any option
+watch(() => props.options, () => {
+  const valid = props.options.find(o => o.value === props.modelValue && !o.disabled)
+  if (!valid) {
+    const first = props.options.find(o => !o.disabled)
+    if (first) emit('update:modelValue', first.value)
+  }
+}, { immediate: true })
+
 function optionCls(opt: SegmentedControlOption): string {
   const classes = ['segOption']
   if (props.modelValue === opt.value) {
@@ -48,7 +57,7 @@ function select(opt: SegmentedControlOption) {
 
 function handleKeyDown(e: KeyboardEvent) {
   const opts = enabledOptions.value
-  if (opts.length === 0) return
+  if (opts.length <= 1) return
 
   const idx = opts.findIndex((o) => o.value === props.modelValue)
   if (idx === -1) return
@@ -141,6 +150,7 @@ function handleKeyDown(e: KeyboardEvent) {
 
 .segOption:hover:not(.segOptionDisabled):not(.segOptionActive) {
   background: hsl(var(--agala-muted));
+  color: hsl(var(--agala-foreground));
 }
 
 .segSm {
@@ -183,6 +193,7 @@ function handleKeyDown(e: KeyboardEvent) {
 .segOptionActive {
   background: hsl(var(--agala-primary));
   color: hsl(var(--agala-primary-foreground));
+  border-color: transparent;
   z-index: 1;
 }
 
@@ -218,6 +229,5 @@ function handleKeyDown(e: KeyboardEvent) {
 .segOptionDisabled {
   opacity: 0.4;
   pointer-events: none;
-  cursor: not-allowed;
 }
 </style>
