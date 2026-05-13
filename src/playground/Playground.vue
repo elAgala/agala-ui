@@ -1707,6 +1707,13 @@ const AckDialog = {
             </template>
           </ListGroupItem>
         </ListGroup>
+
+        <p class="muted" style="margin: 0 0 0.5rem; font-size: 0.875rem">With gap (separated items)</p>
+        <ListGroup gap="6px" style="background: hsl(var(--agala-muted) / 0.3); padding: 0.5rem; border-radius: var(--agala-radius)">
+          <ListGroupItem icon="user" label="Profile" subtitle="Edit your info" style="border-radius: var(--agala-radius-sm)" />
+          <ListGroupItem icon="bell" label="Notifications" badge="12" style="border-radius: var(--agala-radius-sm)" />
+          <ListGroupItem icon="settings" label="Settings" style="border-radius: var(--agala-radius-sm)" />
+        </ListGroup>
       </div>
     </section>
 

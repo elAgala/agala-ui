@@ -495,11 +495,19 @@ toastManager.show({
   <ListGroupItem label="Delete" variant="danger" />
 </ListGroup>
 ```
-- `ListGroup`: wrapper with border and radius
+- `ListGroup`: wrapper with border and radius, `gap` prop for spacing between items
 - `ListGroupItem`: `label` (required), `subtitle`, `icon` (AgalaIcon name), `badge`, `badgeVariant`, `variant` (default/danger), `disabled`
 - Chevron indicator on right when clickable
 - Slots: `#leading` (before content, replaces icon), `#default` (replaces label+subtitle), `#trailing` (replaces badge+chevron)
 - Emits `click` (disabled items don't emit)
+
+**With gap (separated items):**
+```vue
+<ListGroup gap="6px">
+  <ListGroupItem icon="user" label="Profile" style="border-radius: var(--agala-radius-sm)" />
+  <ListGroupItem icon="settings" label="Settings" style="border-radius: var(--agala-radius-sm)" />
+</ListGroup>
+```
 
 **With slots (custom dot + trailing badge):**
 ```vue
