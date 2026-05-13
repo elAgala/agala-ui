@@ -187,7 +187,8 @@ const timedEventsByDay = computed(() => {
           ...position,
           column,
           totalColumns,
-          isShort: duration < 20,
+          isShort: duration < 15,
+          showSubtitle: duration > 30,
         }
       })
       .filter((item): item is NonNullable<typeof item> => item !== null)
@@ -378,7 +379,7 @@ function getAllDayEventStyle(event: CalendarEvent): Record<string, string> | und
           >
             <span class="eventTitle">{{ eventInfo.event.title }}</span>
             <span
-              v-if="eventInfo.event.subtitle && !eventInfo.isShort"
+              v-if="eventInfo.event.subtitle && eventInfo.showSubtitle"
               class="eventSubtitle"
             >
               {{ eventInfo.event.subtitle }}
