@@ -23,6 +23,7 @@ const props = withDefaults(defineProps<{
   disabled?: boolean
   loading?: boolean
   searchable?: boolean
+  onSearch?: (query: string) => void
   clearable?: boolean
   error?: boolean
   errorMessage?: string
@@ -71,6 +72,8 @@ const selectedValue = computed<string | string[]>(() => {
 })
 
 const filteredOptions = computed(() => {
+  // When onSearch is provided, consumer handles filtering server-side
+  if (props.onSearch) return props.options
   const q = query.value.trim().toLowerCase()
   if (!q) return props.options
   return props.options.filter(
@@ -342,8 +345,10 @@ function handleListKeyDown(e: KeyboardEvent) {
 }
 
 function handleSearchInput(e: Event) {
-  query.value = (e.target as HTMLInputElement).value
+  const q = (e.target as HTMLInputElement).value
+  query.value = q
   highlightedIdx.value = 0
+  props.onSearch?.(q)
 }
 
 function handleSearchKeyDown(e: KeyboardEvent) {
@@ -468,7 +473,11 @@ watch(highlightedIdx, () => {
           tabindex="-1"
           @keydown="handleListKeyDown"
         >
-          <li v-if="flatFiltered.length === 0" class="emptyMessage">
+          <li v-if="loading" class="loadingState">
+            <AgalaIcon name="spinner" :size="16" class="spinnerIcon" />
+            Searching…
+          </li>
+          <li v-else-if="flatFiltered.length === 0" class="emptyMessage">
             {{ query ? 'No results found.' : 'No options available.' }}
           </li>
           <template v-for="(item, idx) in flatFiltered" :key="itemKey(item, idx)">
@@ -884,6 +893,26 @@ watch(highlightedIdx, () => {
   height: 0.375rem;
   border-radius: 50%;
   background-color: hsl(var(--agala-primary));
+}
+
+/* ── Loading state ── */
+.loadingState {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem 0.625rem;
+  color: hsl(var(--agala-muted-foreground));
+  font-size: var(--agala-font-size-base);
+  line-height: var(--agala-line-height-normal);
+}
+
+.spinnerIcon {
+  animation: agala-spin 0.8s linear infinite;
+}
+
+@keyframes agala-spin {
+  to { transform: rotate(360deg); }
 }
 
 /* ── Messages ── */

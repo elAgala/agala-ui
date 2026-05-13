@@ -1,4 +1,4 @@
-import { reactive, h, type VNode, type Component } from 'vue'
+import { reactive, h, markRaw, type VNode, type Component } from 'vue'
 import Modal from './Modal.vue'
 import type { ModalResult, ModalOptions } from './types'
 
@@ -38,7 +38,7 @@ class ModalManagerImpl {
       const id = ++this._idCounter
       const entry: ModalEntry<P> = {
         id,
-        component,
+        component: markRaw(component),
         props: options.props ?? ({} as P),
         options: {
           size: options.size,

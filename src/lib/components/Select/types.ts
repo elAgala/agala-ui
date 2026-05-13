@@ -17,6 +17,7 @@ export interface SelectProps {
   disabled?: boolean
   loading?: boolean
   searchable?: boolean
+  onSearch?: (query: string) => void
   clearable?: boolean
   error?: boolean
   errorMessage?: string
