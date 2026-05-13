@@ -294,7 +294,7 @@ const events = ref<CalendarEvent[]>([
 ```
 - `options`: `{ value, label, variant?, disabled? }[]` — required
 - `modelValue`: string — v-model
-- `size`: `sm` | `md` | `lg` (default `md`, heights match Button: 2rem/2.25rem/2.5rem)
+- `size`: `sm` | `md` | `lg` (default `md`, heights and padding match Button: 2rem/2.25rem/2.5rem, padding 0.75rem/1rem/1.5rem)
 - `disabled`: boolean — disables entire group
 - `variant` per option: `'primary' | 'danger' | 'success' | 'warning' | 'info'` — overrides active state background (`info` maps to `--agala-accent`)
 - Keyboard: ArrowLeft/ArrowRight cycle, Home/End jump, roving tabindex (radiogroup ARIA 1.2)
