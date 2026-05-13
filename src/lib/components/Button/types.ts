@@ -6,7 +6,7 @@ export interface ButtonProps {
   size?: ButtonSize
   loading?: boolean
   block?: boolean
-  icon?: boolean
+  icon?: string
   disabled?: boolean
   class?: string
 }

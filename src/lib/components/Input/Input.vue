@@ -2,6 +2,7 @@
 import { ref, computed, nextTick } from 'vue'
 import { AgalaIcon } from '../AgalaIcon'
 import type { InputVariant, InputSize } from './types'
+import type { IconName } from '../AgalaIcon/types'
 
 const props = withDefaults(defineProps<{
   modelValue?: string
@@ -11,8 +12,8 @@ const props = withDefaults(defineProps<{
   errorMessage?: string
   disabled?: boolean
   readonly?: boolean
-  iconStart?: boolean
-  iconEnd?: boolean
+  iconStart?: string
+  iconEnd?: string
   type?: string
   placeholder?: string
   wrapperClass?: string
@@ -23,8 +24,8 @@ const props = withDefaults(defineProps<{
   error: false,
   disabled: false,
   readonly: false,
-  iconStart: false,
-  iconEnd: false,
+  iconStart: '',
+  iconEnd: '',
   type: 'text',
   wrapperClass: '',
   class: '',
@@ -44,7 +45,7 @@ const effectiveType = computed(() => {
 
 const endIconName = computed(() => {
   if (props.type === 'password') return showPassword.value ? 'eye-off' : 'eye'
-  return 'search'
+  return props.iconEnd as string
 })
 
 function handleEndIconClick() {
@@ -82,7 +83,7 @@ const cls = computed(() => [
   <div class="inputWrapper" :class="$props.wrapperClass">
     <div class="field">
       <span v-if="iconStart" class="iconStart" aria-hidden="true">
-        <AgalaIcon name="search" :size="14" />
+        <AgalaIcon :name="iconStart as IconName" :size="14" />
       </span>
       <input
         ref="inputRef"
@@ -107,7 +108,7 @@ const cls = computed(() => [
         @keydown.enter.prevent="handleEndIconClick"
         @keydown.space.prevent="handleEndIconClick"
       >
-        <AgalaIcon :name="endIconName" :size="14" />
+        <AgalaIcon :name="endIconName as IconName" :size="14" />
       </span>
     </div>
     <p v-if="errorMessage" class="errorMessage">{{ errorMessage }}</p>
@@ -134,14 +135,14 @@ const cls = computed(() => [
   width: 100%;
   box-sizing: border-box;
   height: var(--agala-height-md);
-  border: var(--agala-border-width) solid hsl(var(--agala-input));
-  border-radius: calc(var(--agala-radius) - 2px);
-  background-color: hsl(var(--agala-input-background, var(--agala-background)));
+  border: var(--agala-input-border, var(--agala-border-width) solid hsl(var(--agala-input)));
+  border-radius: var(--agala-input-radius, calc(var(--agala-radius) - 2px));
+  background-color: var(--agala-input-bg, hsl(var(--agala-input-background, var(--agala-background))));
   color: hsl(var(--agala-foreground));
   font-family: var(--agala-font-sans);
   font-size: var(--agala-font-size-base);
   line-height: var(--agala-line-height-normal);
-  padding: 0 0.75rem;
+  padding: var(--agala-input-padding, 0 0.75rem);
   transition:
     border-color var(--agala-transition-fast),
     box-shadow var(--agala-transition-fast);
@@ -184,7 +185,7 @@ const cls = computed(() => [
 .iconStart {
   position: absolute;
   left: 0.625rem;
-  color: hsl(var(--agala-muted-foreground));
+  color: var(--agala-input-icon-color, hsl(var(--agala-muted-foreground)));
   pointer-events: none;
   display: inline-flex;
   align-items: center;
@@ -193,7 +194,7 @@ const cls = computed(() => [
 .iconEnd {
   position: absolute;
   right: 0.625rem;
-  color: hsl(var(--agala-muted-foreground));
+  color: var(--agala-input-icon-color, hsl(var(--agala-muted-foreground)));
   display: inline-flex;
   align-items: center;
 }
@@ -202,7 +203,7 @@ const cls = computed(() => [
   cursor: pointer;
 }
 .iconEndClickable:hover {
-  color: hsl(var(--agala-foreground));
+  color: var(--agala-input-icon-color-hover, hsl(var(--agala-foreground)));
 }
 
 .hasIconStart {
@@ -215,7 +216,7 @@ const cls = computed(() => [
 
 /* Sizes */
 .inputSm {
-  height: var(--agala-height-sm);
+  height: var(--agala-input-height-sm, var(--agala-height-sm));
   font-size: var(--agala-font-size-sm);
   padding-left: 0.625rem;
   padding-right: 0.625rem;
@@ -224,11 +225,11 @@ const cls = computed(() => [
 .inputSm.hasIconEnd   { padding-right: 2rem; }
 
 .inputMd {
-  height: var(--agala-height-md);
+  height: var(--agala-input-height-md, var(--agala-height-md));
 }
 
 .inputLg {
-  height: var(--agala-height-lg);
+  height: var(--agala-input-height-lg, var(--agala-height-lg));
   font-size: var(--agala-font-size-lg);
   padding-left: 1rem;
   padding-right: 1rem;

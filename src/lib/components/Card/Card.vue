@@ -75,30 +75,35 @@ const cardStyle = computed(() => {
 
 <style scoped>
 .card {
-  background-color: hsl(var(--agala-card));
+  background: var(--agala-card-bg, hsl(var(--agala-card)));
   color: hsl(var(--agala-card-foreground));
-  border: var(--agala-border-width) solid hsl(var(--agala-border));
-  border-radius: var(--agala-radius-lg);
-  box-shadow: var(--agala-shadow-sm);
+  border: var(--agala-card-border, var(--agala-border-width) solid hsl(var(--agala-border)));
+  border-radius: var(--agala-card-radius, var(--agala-radius-lg));
+  box-shadow: var(--agala-card-shadow, var(--agala-shadow-sm));
   display: flex;
   flex-direction: column;
+  padding: var(--agala-card-padding, 0);
 }
 
 .cardHeader {
-  padding: 1rem 1.25rem;
-  border-bottom: var(--agala-border-width) solid hsl(var(--agala-border));
-  font-weight: var(--agala-font-weight-semibold);
-  font-size: var(--agala-font-size-base);
+  padding: var(--agala-card-header-padding, 1rem 1.25rem);
+  border-bottom: var(--agala-card-header-border, var(--agala-border-width) solid hsl(var(--agala-border)));
+  font-weight: var(--agala-card-header-weight, var(--agala-font-weight-semibold));
+  font-size: var(--agala-card-header-size, var(--agala-font-size-base));
   color: hsl(var(--agala-card-foreground));
 }
 
 .cardFooter {
-  padding: 0.875rem 1.25rem;
-  border-top: var(--agala-border-width) solid hsl(var(--agala-border));
+  padding: var(--agala-card-footer-padding, 0.875rem 1.25rem);
+  border-top: var(--agala-card-footer-border, var(--agala-border-width) solid hsl(var(--agala-border)));
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: var(--agala-card-footer-justify, flex-end);
   gap: 0.75rem;
+}
+
+.cardBody {
+  padding: var(--agala-card-body-padding, 0);
 }
 
 /* Padding variants applied to body */

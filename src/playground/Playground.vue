@@ -469,10 +469,7 @@ const AckDialog = {
           placeholder="/* Paste your custom theme CSS here */\n:root {\n  --agala-primary: 200 90% 50%;\n  --agala-background: 0 0% 98%;\n  --agala-card: 0 0% 100%;\n  /* … */\n}"
         />
         <div class="row" style="margin-bottom: 0">
-          <Button variant="primary" icon @click="applyCustomTheme">
-            <template #icon><AgalaIcon name="refresh" :size="14" /></template>
-            Apply Custom Theme
-          </Button>
+          <Button variant="primary" icon="search" @click="applyCustomTheme">Apply Custom Theme</Button>
           <Button variant="outline" @click="resetCustomTheme">Reset to Default</Button>
           <span v-if="activeTheme === 'custom'" class="muted" style="font-size: 0.75rem; margin-left: auto">
             ✅ Custom theme active
@@ -516,10 +513,10 @@ const AckDialog = {
     <section>
       <h2>Button — Icon</h2>
       <div class="row">
-        <Button icon>Search</Button>
-        <Button variant="outline" icon>Email</Button>
-        <Button variant="ghost" icon>Ghost</Button>
-        <Button size="icon" icon aria-label="Search" />
+        <Button icon="search">Search</Button>
+        <Button variant="outline" icon="mail">Email</Button>
+        <Button variant="ghost" icon="search">Ghost</Button>
+        <Button size="icon" icon="search" aria-label="Search" />
       </div>
     </section>
 
@@ -551,9 +548,9 @@ const AckDialog = {
     <section>
       <h2>Input — With Icons</h2>
       <div class="stack" style="max-width: 400px">
-        <Input placeholder="Search…" icon-start />
-        <Input placeholder="you@example.com" icon-start />
-        <Input placeholder="Password" type="password" icon-end />
+        <Input placeholder="Search…" icon-start="search" />
+        <Input placeholder="you@example.com" icon-start="mail" />
+        <Input placeholder="Password" type="password" icon-end="eye" />
       </div>
     </section>
 
@@ -574,10 +571,10 @@ const AckDialog = {
           <Input id="user" placeholder="agala" />
         </FormField>
         <FormField label="Email" helper="We'll never share your email." html-for="email2">
-          <Input id="email2" placeholder="you@example.com" icon-start />
+          <Input id="email2" placeholder="you@example.com" icon-start="mail" />
         </FormField>
         <FormField label="Password" error="Password must be at least 8 characters." html-for="pass" required>
-          <Input id="pass" type="password" placeholder="••••••••" icon-end error />
+          <Input id="pass" type="password" placeholder="••••••••" icon-end="eye" error />
         </FormField>
         <FormField label="Disabled field" disabled>
           <Input placeholder="Can't type here" disabled />
@@ -1028,7 +1025,7 @@ const AckDialog = {
           placement="bottom-end"
         >
           <template #trigger>
-            <Button size="icon" variant="ghost" aria-label="Row actions" icon />
+            <Button size="icon" variant="ghost" aria-label="Row actions" icon="search" />
           </template>
         </DropdownMenu>
       </div>
@@ -1088,7 +1085,7 @@ const AckDialog = {
             placement="bottom-end"
           >
             <template #trigger>
-              <Button size="icon" variant="ghost" aria-label="Row actions" icon />
+              <Button size="icon" variant="ghost" aria-label="Row actions" icon="search" />
             </template>
           </DropdownMenu>
         </template>

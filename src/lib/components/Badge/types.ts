@@ -5,5 +5,6 @@ export interface BadgeProps {
   variant?: BadgeVariant
   size?: BadgeSize
   dot?: boolean
+  color?: string
   class?: string
 }

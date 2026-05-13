@@ -110,6 +110,79 @@ import { ModalProvider, ToastProvider } from '@el-agala/ui'
 ### Dark mode
 Automatic via `@media (prefers-color-scheme: dark)` in `tokens.css`.
 
+### Component-level tokens
+
+Every component exposes its key CSS values as `--agala-<component>-*` custom properties with fallbacks to the default tokens. This allows theming without `!important`.
+
+```css
+/* Card */
+--agala-card-radius: var(--agala-radius-lg);
+--agala-card-bg: hsl(var(--agala-card));
+--agala-card-border: var(--agala-border-width) solid hsl(var(--agala-border));
+--agala-card-shadow: var(--agala-shadow-sm);
+--agala-card-padding: 0;
+--agala-card-header-padding: 1rem 1.25rem;
+--agala-card-header-border: var(--agala-border-width) solid hsl(var(--agala-border));
+--agala-card-body-padding: 0;
+--agala-card-footer-padding: 0.875rem 1.25rem;
+
+/* Button */
+--agala-btn-radius: calc(var(--agala-radius) - 2px);
+--agala-btn-gap: 0.35rem;
+--agala-btn-height: 2.25rem;
+--agala-btn-padding-sm: 0 0.75rem;
+--agala-btn-padding-md: 0 1rem;
+--agala-btn-padding-lg: 0 1.5rem;
+
+/* Input */
+--agala-input-radius: calc(var(--agala-radius) - 2px);
+--agala-input-bg: hsl(var(--agala-input-background, var(--agala-background)));
+--agala-input-border: hsl(var(--agala-input));
+--agala-input-padding: 0 0.75rem;
+--agala-input-height-sm: var(--agala-height-sm);
+--agala-input-height-md: var(--agala-height-md);
+--agala-input-height-lg: var(--agala-height-lg);
+--agala-input-icon-color: hsl(var(--agala-muted-foreground));
+
+/* Alert */
+--agala-alert-padding: 0.75rem 1rem;
+--agala-alert-radius: calc(var(--agala-radius) - 2px);
+--agala-alert-border-width: 4px;
+--agala-alert-gap: 0.75rem;
+--agala-alert-icon-size: 1rem;
+--agala-alert-title-size: var(--agala-font-size-base);
+--agala-alert-body-size: var(--agala-font-size-sm);
+--agala-alert-flat-padding: 0.25rem 0;
+
+/* Badge */
+--agala-badge-padding: 0.125rem 0.5rem;
+--agala-badge-padding-sm: 0.0625rem 0.375rem;
+--agala-badge-radius: 999px;
+--agala-badge-font-size: 0.625rem;
+--agala-badge-font-size-sm: 0.5625rem;
+
+/* ListGroup */
+--agala-list-group-border: 1px solid hsl(var(--agala-border));
+--agala-list-group-radius: var(--agala-radius);
+--agala-list-group-padding: 0;
+--agala-list-item-padding: 0.75rem 1rem;
+--agala-list-item-gap: 0.75rem;
+--agala-list-item-bg: hsl(var(--agala-card));
+--agala-list-item-hover-bg: hsl(var(--agala-muted));
+--agala-list-item-border: 1px solid hsl(var(--agala-border));
+--agala-list-badge-bg: hsl(var(--agala-primary) / 0.1);
+--agala-list-badge-color: hsl(var(--agala-primary));
+```
+
+Override any of these in your theme to customize individual components:
+```css
+html[data-theme="forja"] {
+  --agala-btn-radius: 4px;
+  --agala-card-shadow: none;
+  --agala-input-border: 240 5% 20%;
+}
+```
+
 ### Custom theme (e.g., Forja gym brand)
 Create a CSS file and set `data-theme="forja"` on `<html>`:
 

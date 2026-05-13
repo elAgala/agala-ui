@@ -6,11 +6,13 @@ const props = withDefaults(defineProps<{
   variant?: BadgeVariant
   size?: BadgeSize
   dot?: boolean
+  color?: string
   class?: string
 }>(), {
   variant: 'default',
   size: 'md',
   dot: false,
+  color: '',
 })
 
 const variantMap: Record<BadgeVariant, string> = {
@@ -27,6 +29,14 @@ const sizeMap: Record<BadgeSize, string> = {
   md: 'badgeMd',
 }
 
+const colorStyle = computed(() => {
+  if (!props.color) return undefined
+  return {
+    backgroundColor: props.color + '1A',
+    color: props.color,
+  }
+})
+
 const cls = computed(() => [
   'badge',
   variantMap[props.variant],
@@ -36,7 +46,7 @@ const cls = computed(() => [
 </script>
 
 <template>
-  <span :class="cls">
+  <span :class="cls" :style="colorStyle">
     <span v-if="dot" class="dot" aria-hidden="true" />
     <slot />
   </span>
@@ -47,16 +57,18 @@ const cls = computed(() => [
   display: inline-flex;
   align-items: center;
   gap: 0.375rem;
-  border-radius: 9999px;
+  border-radius: var(--agala-badge-radius, 9999px);
   border: var(--agala-border-width) solid transparent;
   font-family: var(--agala-font-sans);
   font-weight: var(--agala-font-weight-medium);
   white-space: nowrap;
   line-height: 1;
+  padding: var(--agala-badge-padding, 0.125rem 0.5rem);
+  font-size: var(--agala-badge-font-size, 0.625rem);
 }
 
-.badgeSm { padding: 0.1875rem 0.5rem; font-size: var(--agala-font-size-sm); }
-.badgeMd { padding: 0.25rem 0.625rem; font-size: var(--agala-font-size-base); }
+.badgeSm { font-size: var(--agala-badge-font-size-sm, 0.5625rem); padding: var(--agala-badge-padding-sm, 0.0625rem 0.375rem); }
+.badgeMd { font-size: var(--agala-badge-font-size, 0.625rem); padding: var(--agala-badge-padding, 0.125rem 0.5rem); }
 
 /* Dot */
 .dot {

@@ -30,8 +30,8 @@ const cls = computed(() => [
 
 <template>
   <div v-if="!dismissed" role="alert" aria-atomic="true" :class="cls">
-    <span class="alert__icon" aria-hidden="true">
-      <AgalaIcon :name="iconMap[props.variant]" :size="20" />
+    <span v-if="icon !== false" class="alert__icon" aria-hidden="true">
+      <AgalaIcon :name="(icon as IconName) || iconMap[props.variant]" :size="20" />
     </span>
     <div class="alert__content">
       <h4 v-if="props.title && !props.flat" class="alert__title">{{ props.title }}</h4>
@@ -56,10 +56,10 @@ const cls = computed(() => [
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 0.75rem;
-  padding: 1rem;
-  border-radius: var(--agala-radius);
-  border-left: 4px solid hsl(var(--alert-accent));
+  gap: var(--agala-alert-gap, 0.75rem);
+  padding: var(--agala-alert-padding, 0.75rem 1rem);
+  border-radius: var(--agala-alert-radius, calc(var(--agala-radius) - 2px));
+  border-left: var(--agala-alert-border-width, 4px) solid hsl(var(--alert-accent));
   background: hsl(var(--alert-accent) / 0.1);
   font-family: var(--agala-font-sans);
 }
@@ -79,8 +79,8 @@ const cls = computed(() => [
 .alert--flat {
   background: transparent;
   border-left: none;
-  padding: 0.5rem 0;
-  gap: 0.5rem;
+  padding: var(--agala-alert-flat-padding, 0.25rem 0);
+  gap: var(--agala-alert-flat-gap, 0.5rem);
 }
 .alert--flat .alert__icon {
   margin-top: 0;
@@ -95,8 +95,8 @@ const cls = computed(() => [
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 1.25rem;
-  height: 1.25rem;
+  width: var(--agala-alert-icon-size, 1rem);
+  height: var(--agala-alert-icon-size, 1rem);
   margin-top: 0.125rem;
   color: hsl(var(--alert-accent));
 }
@@ -111,15 +111,15 @@ const cls = computed(() => [
 
 .alert__title {
   margin: 0;
-  font-weight: var(--agala-font-weight-semibold);
-  font-size: var(--agala-font-size-base);
+  font-weight: var(--agala-alert-title-weight, var(--agala-font-weight-semibold));
+  font-size: var(--agala-alert-title-size, var(--agala-font-size-base));
   line-height: var(--agala-line-height-normal);
   color: hsl(var(--alert-accent));
   overflow-wrap: break-word;
 }
 
 .alert__body {
-  font-size: var(--agala-font-size-base);
+  font-size: var(--agala-alert-body-size, var(--agala-font-size-sm));
   line-height: var(--agala-line-height-relaxed);
   color: hsl(var(--agala-foreground));
   overflow-wrap: break-word;

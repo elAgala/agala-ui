@@ -9,8 +9,8 @@ export interface InputProps {
   errorMessage?: string
   disabled?: boolean
   readonly?: boolean
-  iconStart?: boolean
-  iconEnd?: boolean
+  iconStart?: string
+  iconEnd?: string
   type?: string
   placeholder?: string
 }

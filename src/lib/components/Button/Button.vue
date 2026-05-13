@@ -2,13 +2,14 @@
 import { computed } from 'vue'
 import { AgalaIcon } from '../AgalaIcon'
 import type { ButtonVariant, ButtonSize } from './types'
+import type { IconName } from '../AgalaIcon/types'
 
 const props = withDefaults(defineProps<{
   variant?: ButtonVariant
   size?: ButtonSize
   loading?: boolean
   block?: boolean
-  icon?: boolean
+  icon?: string
   disabled?: boolean
   class?: string
 }>(), {
@@ -16,7 +17,7 @@ const props = withDefaults(defineProps<{
   size: 'md',
   loading: false,
   block: false,
-  icon: false,
+  icon: '',
   disabled: false,
   class: '',
 })
@@ -56,7 +57,7 @@ const cls = computed(() => [
     <AgalaIcon v-if="loading" name="spinner" :size="14" />
     <AgalaIcon
       v-else-if="icon"
-      name="search"
+      :name="icon as IconName"
       :size="14"
     />
     <slot />
@@ -68,13 +69,13 @@ const cls = computed(() => [
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  gap: var(--agala-btn-gap, 0.5rem);
   white-space: nowrap;
   border: var(--agala-border-width) solid transparent;
-  border-radius: calc(var(--agala-radius) - 2px);
+  border-radius: var(--agala-btn-radius, calc(var(--agala-radius) - 2px));
   font-family: var(--agala-font-sans);
   font-weight: var(--agala-font-weight-medium);
-  font-size: var(--agala-font-size-base);
+  font-size: var(--agala-btn-font-size, var(--agala-font-size-base));
   line-height: 1;
   cursor: pointer;
   transition:
@@ -100,20 +101,20 @@ const cls = computed(() => [
 
 /* Sizes */
 .btnSm {
-  height: 2rem;
-  padding: 0 0.75rem;
+  height: var(--agala-btn-height, 2rem);
+  padding: var(--agala-btn-padding-sm, 0 0.75rem);
   font-size: var(--agala-font-size-sm);
   border-radius: var(--agala-radius-sm);
 }
 
 .btnMd {
-  height: 2.25rem;
-  padding: 0 1rem;
+  height: var(--agala-btn-height, 2.25rem);
+  padding: var(--agala-btn-padding-md, 0 1rem);
 }
 
 .btnLg {
-  height: 2.5rem;
-  padding: 0 1.5rem;
+  height: var(--agala-btn-height, 2.5rem);
+  padding: var(--agala-btn-padding-lg, 0 1.5rem);
   font-size: var(--agala-font-size-lg);
 }
 

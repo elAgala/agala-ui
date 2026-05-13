@@ -5,5 +5,6 @@ export interface AlertProps {
   title?: string
   dismissible?: boolean
   flat?: boolean
+  icon?: string | false
   class?: string
 }
