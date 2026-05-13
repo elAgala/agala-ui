@@ -535,7 +535,7 @@ watch(highlightedIdx, () => {
   box-sizing: border-box;
   border: var(--agala-border-width) solid hsl(var(--agala-input));
   border-radius: calc(var(--agala-radius) - 2px);
-  background-color: hsl(var(--agala-card));
+  background-color: hsl(var(--agala-input-background));
   color: hsl(var(--agala-foreground));
   cursor: pointer;
   transition: border-color var(--agala-transition-fast), box-shadow var(--agala-transition-fast);
@@ -742,7 +742,7 @@ watch(highlightedIdx, () => {
   padding: 0 0.5rem;
   border: var(--agala-border-width) solid hsl(var(--agala-input));
   border-radius: var(--agala-radius-sm);
-  background-color: hsl(var(--agala-card));
+  background-color: hsl(var(--agala-input-background));
   color: hsl(var(--agala-foreground));
   font-family: var(--agala-font-sans);
   font-size: var(--agala-font-size-base);

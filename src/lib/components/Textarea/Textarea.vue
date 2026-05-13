@@ -58,7 +58,7 @@ const wrapperCls = computed(() => [
   min-height: 4rem;
   border: var(--agala-border-width) solid hsl(var(--agala-input));
   border-radius: calc(var(--agala-radius) - 2px);
-  background-color: hsl(var(--agala-card));
+  background-color: hsl(var(--agala-input-background));
   color: hsl(var(--agala-foreground));
   font-family: var(--agala-font-sans);
   font-size: var(--agala-font-size-base);
