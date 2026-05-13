@@ -51,12 +51,14 @@ const iconName = computed(() => props.icon as IconName | undefined)
       <AgalaIcon v-if="icon" :name="iconName" :size="16" class="listIcon" />
     </slot>
 
-    <slot>
-      <div class="listContent">
-        <span class="listLabel">{{ label }}</span>
-        <span v-if="subtitle" class="listSubtitle">{{ subtitle }}</span>
-      </div>
-    </slot>
+    <div class="listBody">
+      <slot>
+        <div class="listContent">
+          <span class="listLabel">{{ label }}</span>
+          <span v-if="subtitle" class="listSubtitle">{{ subtitle }}</span>
+        </div>
+      </slot>
+    </div>
 
     <slot name="trailing">
       <span v-if="badge" class="listBadge">
@@ -112,9 +114,12 @@ const iconName = computed(() => props.icon as IconName | undefined)
   color: hsl(var(--agala-muted-foreground));
 }
 
-.listContent {
+.listBody {
   flex: 1;
   min-width: 0;
+}
+
+.listContent {
   display: flex;
   flex-direction: column;
   gap: 0.125rem;
