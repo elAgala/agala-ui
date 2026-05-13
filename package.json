@@ -26,7 +26,8 @@
     "build:lib": "vue-tsc --noEmit && vite build && cp src/lib/reset.css dist/reset.css",
     "lint": "eslint .",
     "preview": "vite preview",
-    "prepublishOnly": "npm run build:lib"
+    "prepublishOnly": "npm run build:lib",
+    "bump:charts": "npm version ${npm_config_bump:-patch} -w packages/charts && V=$(node -p 'require(\"./packages/charts/package.json\").version') && git add packages/charts/package.json package-lock.json && git commit -m \"chore(version): @el-agala/charts v$V\" && git tag \"@el-agala/charts@v$V\""
   },
   "peerDependencies": {
     "vue": "^3.3.0"
