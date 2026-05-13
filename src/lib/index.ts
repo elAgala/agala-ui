@@ -52,6 +52,10 @@ export type { DividerProps } from './components/Divider'
 
 export { default as HStack } from './components/Stack/HStack.vue'
 
+export { default as ListGroup } from './components/ListGroup/ListGroup.vue'
+export { default as ListGroupItem } from './components/ListGroup/ListGroupItem.vue'
+export type { ListGroupProps, ListGroupItemProps, ListGroupItemVariant } from './components/ListGroup'
+
 export { default as Modal } from './components/Modal/Modal.vue'
 export { default as ModalProvider } from './components/Modal/ModalProvider.vue'
 export { modalManager } from './components/Modal/ModalManager'
