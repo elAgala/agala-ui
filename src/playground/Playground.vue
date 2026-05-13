@@ -298,6 +298,11 @@ const calendarEvents = ref<CalendarEvent[]>([
   { id: '12', title: 'All-hands', start: makeDatetime(addDaysToDate(today, 4), 16, 0), end: makeDatetime(addDaysToDate(today, 4), 17, 0), color: 'warning' },
   { id: '13', title: 'Release Party', start: makeDatetime(addDaysToDate(today, 5), 18, 0), end: makeDatetime(addDaysToDate(today, 5), 21, 0), color: '#ec4899' },
   { id: '14', title: 'Quarterly Review', subtitle: 'Board presentation', start: makeDatetime(addDaysToDate(today, 6), 10, 0), end: makeDatetime(addDaysToDate(today, 6), 11, 30), color: 'secondary' },
+  /* short 15min events for slot demo */
+  { id: '15', title: 'Quick Check-in', subtitle: '15 min', start: makeDatetime(today, 10, 0), end: makeDatetime(today, 10, 15), color: 'success' },
+  { id: '16', title: 'Phone Screen', subtitle: '15 min', start: makeDatetime(today, 11, 0), end: makeDatetime(today, 11, 15), color: 'primary' },
+  { id: '17', title: 'Standup 2', subtitle: '15 min', start: makeDatetime(today, 15, 30), end: makeDatetime(today, 15, 45), color: 'warning' },
+  { id: '18', title: 'Coffee Chat', subtitle: '15 min', start: makeDatetime(today, 16, 0), end: makeDatetime(today, 16, 15), color: '#8b5cf6' },
 ])
 
 /* ─── Demo data ─── */
