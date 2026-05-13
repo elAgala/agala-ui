@@ -66,5 +66,9 @@
     "zero-dependency",
     "theming",
     "accessibility"
+  ],
+  "private": true,
+  "workspaces": [
+    "packages/charts"
   ]
 }
