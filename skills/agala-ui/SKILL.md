@@ -488,6 +488,37 @@ toastManager.show({
 - `Center`: centers children both axes
 - `Divider`: separator, `orientation` (horizontal/vertical), `label`, `label-position`
 
+### ListGroup / ListGroupItem
+```vue
+<ListGroup>
+  <ListGroupItem icon="user" label="Profile" subtitle="Edit info" badge="3" @click="..." />
+  <ListGroupItem label="Delete" variant="danger" />
+</ListGroup>
+```
+- `ListGroup`: wrapper with border and radius
+- `ListGroupItem`: `label` (required), `subtitle`, `icon` (AgalaIcon name), `badge`, `badgeVariant`, `variant` (default/danger), `disabled`
+- Chevron indicator on right when clickable
+- Slots: `#leading` (before content, replaces icon), `#default` (replaces label+subtitle), `#trailing` (replaces badge+chevron)
+- Emits `click` (disabled items don't emit)
+
+**With slots (custom dot + trailing badge):**
+```vue
+<ListGroup>
+  <ListGroupItem>
+    <template #leading>
+      <span style="width:8px;height:8px;border-radius:50%;background:hsl(var(--agala-danger));flex-shrink:0" />
+    </template>
+    <div>
+      <strong>Alergias</strong>
+      <p style="margin:0;font-size:0.75rem;color:hsl(var(--agala-muted-foreground))">Penicilina, Ibuprofeno</p>
+    </div>
+    <template #trailing>
+      <Badge variant="danger">2</Badge>
+    </template>
+  </ListGroupItem>
+</ListGroup>
+```
+
 ### Alert
 ```vue
 <Alert variant="info" title="Heads up" dismissible>

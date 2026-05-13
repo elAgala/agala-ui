@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, h, watch } from 'vue'
-import { Button, Center, Divider, Input, FormField, Select, CreatableSelect, DatePicker, ColorPicker, HStack, Modal, ModalProvider, modalManager, Badge, Checkbox, Toggle, Avatar, ToastProvider, toastManager, Textarea, DropdownMenu, Table, Tabs, Card, Tooltip, RadioGroup, SegmentedControl, Navbar, Sidebar, SidebarItem, SidebarGroup, SidebarToggle, Accordion, AccordionItem, Skeleton, Stat, EmptyState, Progress, Spacer, Stack, Tag, Pagination, Drawer, FileUpload, DevEnvBanner, Calendar, Alert, VStack } from '../lib'
+import { Button, Center, Divider, Input, FormField, Select, CreatableSelect, DatePicker, ColorPicker, HStack, ListGroup, ListGroupItem, Modal, ModalProvider, modalManager, Badge, Checkbox, Toggle, Avatar, ToastProvider, toastManager, Textarea, DropdownMenu, Table, Tabs, Card, Tooltip, RadioGroup, SegmentedControl, Navbar, Sidebar, SidebarItem, SidebarGroup, SidebarToggle, Accordion, AccordionItem, Skeleton, Stat, EmptyState, Progress, Spacer, Stack, Tag, Pagination, Drawer, FileUpload, DevEnvBanner, Calendar, Alert, VStack } from '../lib'
 
 import { useMediaQuery } from '../lib/composables/useMediaQuery'
 import AgalaIcon from '../lib/components/AgalaIcon/AgalaIcon.vue'
@@ -449,6 +449,7 @@ const AckDialog = {
     <a href="#drawer">Drawer</a>
     <a href="#fileupload">File</a>
     <a href="#layout">Layout</a>
+    <a href="#listgroup">List</a>
     <a href="#alert">Alert</a>
     <a href="#theme">Theme</a>
   </nav>
@@ -1648,6 +1649,64 @@ const AckDialog = {
         <span>Left</span>
         <Divider orientation="vertical" />
         <span>Right</span>
+      </div>
+    </section>
+
+    <!-- ═══════════════════ LIST GROUP ═══════════════════ -->
+    <section id="listgroup">
+      <h2>ListGroup</h2>
+      <div style="max-width: 400px">
+        <p class="muted" style="margin: 0 0 0.5rem; font-size: 0.875rem">Default items with icon, subtitle, badge</p>
+        <ListGroup style="margin-bottom: 1rem">
+          <ListGroupItem icon="user" label="Profile" subtitle="Edit your personal information" @click="console.log('profile')" />
+          <ListGroupItem icon="bell" label="Notifications" subtitle="Manage alert preferences" badge="12" />
+          <ListGroupItem icon="settings" label="Settings" subtitle="App configuration" />
+          <ListGroupItem icon="lock" label="Privacy" subtitle="Security settings" badge="warning" badge-variant="warning" />
+        </ListGroup>
+
+        <p class="muted" style="margin: 0 0 0.5rem; font-size: 0.875rem">Disabled item + Danger variant</p>
+        <ListGroup style="margin-bottom: 1rem">
+          <ListGroupItem icon="credit-card" label="Billing" subtitle="Payment methods" />
+          <ListGroupItem icon="trash" label="Delete account" variant="danger" />
+          <ListGroupItem icon="flag" label="Archived" subtitle="Old records" disabled />
+        </ListGroup>
+
+        <p class="muted" style="margin: 0 0 0.5rem; font-size: 0.875rem">Custom content via slots (dot + rich text + trailing Badge)</p>
+        <ListGroup>
+          <ListGroupItem>
+            <template #leading>
+              <span style="width:8px;height:8px;border-radius:50%;background:hsl(var(--agala-danger));flex-shrink:0;margin:0.25rem 0" />
+            </template>
+            <div>
+              <span style="font-weight:600;font-size:0.875rem">Alergias</span>
+              <p style="margin:0;font-size:0.75rem;color:hsl(var(--agala-muted-foreground))">Penicilina, Ibuprofeno — reacción anafiláctica</p>
+            </div>
+            <template #trailing>
+              <span style="display:inline-flex;align-items:center;justify-content:center;min-width:1.25rem;height:1.25rem;padding:0 0.375rem;border-radius:99px;background:hsl(var(--agala-danger) / 0.1);color:hsl(var(--agala-danger));font-size:0.6875rem;font-weight:600">2</span>
+            </template>
+          </ListGroupItem>
+          <ListGroupItem>
+            <template #leading>
+              <span style="width:8px;height:8px;border-radius:50%;background:hsl(var(--agala-warning));flex-shrink:0;margin:0.25rem 0" />
+            </template>
+            <div>
+              <span style="font-weight:600;font-size:0.875rem">Medicamentos</span>
+              <p style="margin:0;font-size:0.75rem;color:hsl(var(--agala-muted-foreground))">Enalapril 10mg diario</p>
+            </div>
+          </ListGroupItem>
+          <ListGroupItem>
+            <template #leading>
+              <span style="width:8px;height:8px;border-radius:50%;background:hsl(var(--agala-primary));flex-shrink:0;margin:0.25rem 0" />
+            </template>
+            <div>
+              <span style="font-weight:600;font-size:0.875rem">Observaciones</span>
+              <p style="margin:0;font-size:0.75rem;color:hsl(var(--agala-muted-foreground))">Paciente colaboradora. Buena higiene bucal.</p>
+            </div>
+            <template #trailing>
+              <span style="display:inline-flex;align-items:center;justify-content:center;min-width:1.25rem;height:1.25rem;padding:0 0.375rem;border-radius:99px;background:hsl(var(--agala-primary) / 0.1);color:hsl(var(--agala-primary));font-size:0.6875rem;font-weight:600">3</span>
+            </template>
+          </ListGroupItem>
+        </ListGroup>
       </div>
     </section>
 
