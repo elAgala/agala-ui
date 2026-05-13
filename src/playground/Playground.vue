@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, h, watch } from 'vue'
-import { Button, Input, FormField, Select, CreatableSelect, DatePicker, ColorPicker, Modal, ModalProvider, modalManager, Badge, Checkbox, Toggle, Avatar, ToastProvider, toastManager, Textarea, DropdownMenu, Table, Tabs, Card, Tooltip, RadioGroup, SegmentedControl, Navbar, Sidebar, SidebarItem, SidebarGroup, SidebarToggle, Accordion, AccordionItem, Skeleton, Stat, EmptyState, Progress, Tag, Pagination, Drawer, FileUpload, DevEnvBanner, Calendar, Alert } from '../lib'
+import { Button, Center, Divider, Input, FormField, Select, CreatableSelect, DatePicker, ColorPicker, HStack, Modal, ModalProvider, modalManager, Badge, Checkbox, Toggle, Avatar, ToastProvider, toastManager, Textarea, DropdownMenu, Table, Tabs, Card, Tooltip, RadioGroup, SegmentedControl, Navbar, Sidebar, SidebarItem, SidebarGroup, SidebarToggle, Accordion, AccordionItem, Skeleton, Stat, EmptyState, Progress, Spacer, Stack, Tag, Pagination, Drawer, FileUpload, DevEnvBanner, Calendar, Alert, VStack } from '../lib'
 
 import { useMediaQuery } from '../lib/composables/useMediaQuery'
 import AgalaIcon from '../lib/components/AgalaIcon/AgalaIcon.vue'
@@ -448,6 +448,7 @@ const AckDialog = {
     <a href="#pagination">Pagination</a>
     <a href="#drawer">Drawer</a>
     <a href="#fileupload">File</a>
+    <a href="#layout">Layout</a>
     <a href="#alert">Alert</a>
     <a href="#theme">Theme</a>
   </nav>
@@ -1599,6 +1600,54 @@ const AckDialog = {
       <div style="margin-bottom: 0.75rem">
         <p class="muted" style="margin: 0 0 0.5rem; font-size: 0.875rem">Disabled option (Option B)</p>
         <SegmentedControl :options="SEG_DISABLED_OPT" v-model="segValue" />
+      </div>
+    </section>
+
+    <!-- ═══════════════════ LAYOUT PRIMITIVES ═══════════════════ -->
+    <section id="layout">
+      <h2>Layout Primitives</h2>
+      <p class="muted" style="margin: 0 0 0.75rem; font-size: 0.875rem">
+        Stack, HStack, VStack, Spacer, Divider, Center — build layouts without CSS.
+      </p>
+
+      <div style="margin-bottom: 1rem">
+        <p class="muted" style="margin: 0 0 0.5rem; font-size: 0.875rem">VStack (vertical, gap 0.75rem)</p>
+        <VStack gap="0.75rem" style="background: hsl(var(--agala-muted) / 0.3); padding: 0.75rem; border-radius: var(--agala-radius)">
+          <div style="background: hsl(var(--agala-primary) / 0.1); padding: 0.5rem; border-radius: var(--agala-radius-sm)">Item 1</div>
+          <div style="background: hsl(var(--agala-primary) / 0.1); padding: 0.5rem; border-radius: var(--agala-radius-sm)">Item 2</div>
+          <div style="background: hsl(var(--agala-primary) / 0.1); padding: 0.5rem; border-radius: var(--agala-radius-sm)">Item 3</div>
+        </VStack>
+      </div>
+
+      <div style="margin-bottom: 1rem">
+        <p class="muted" style="margin: 0 0 0.5rem; font-size: 0.875rem">HStack (horizontal, gap 0.5rem) + Spacer</p>
+        <HStack gap="0.5rem" style="background: hsl(var(--agala-muted) / 0.3); padding: 0.75rem; border-radius: var(--agala-radius)">
+          <Button size="sm">Action</Button>
+          <Button size="sm" variant="secondary">Cancel</Button>
+          <Spacer />
+          <Badge variant="success">Active</Badge>
+        </HStack>
+      </div>
+
+      <div style="margin-bottom: 1rem">
+        <p class="muted" style="margin: 0 0 0.5rem; font-size: 0.875rem">Center (both axes)</p>
+        <Center style="height: 80px; background: hsl(var(--agala-muted) / 0.3); border-radius: var(--agala-radius)">
+          <Badge variant="primary">Centered</Badge>
+        </Center>
+      </div>
+
+      <div style="margin-bottom: 1rem">
+        <p class="muted" style="margin: 0 0 0.5rem; font-size: 0.875rem">Divider (horizontal, with label)</p>
+        <Divider label="Section" />
+        <Divider label="Start" label-position="start" />
+        <Divider label="End" label-position="end" />
+      </div>
+
+      <div style="margin-bottom: 1rem; height: 100px; display: flex">
+        <p class="muted" style="margin: 0 0.5rem 0 0; font-size: 0.875rem">Divider (vertical):</p>
+        <span>Left</span>
+        <Divider orientation="vertical" />
+        <span>Right</span>
       </div>
     </section>
 

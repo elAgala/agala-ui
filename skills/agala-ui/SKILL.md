@@ -30,6 +30,7 @@ description: >
 - **ColorPicker** — popover-based with saturation/luminance square, hue slider, presets, manual HEX input
 - **SegmentedControl** — pill-style single-select toggle group with ARIA radiogroup, keyboard nav, per-option variant colors, sizes sm/md/lg matching Button
 - **Charts** — companion package `@el-agala/charts` provides ECharts-based BaseChart component (8 chart types, theme integration). See the `agala-charts` skill.
+- **Layout primitives** — Stack, HStack, VStack (flex containers with gap/align/justify), Spacer (flex spacer), Center (centers both axes), Divider (separator with optional label)
 
 ---
 
@@ -465,6 +466,25 @@ toastManager.show({
   <AccordionItem value="1" title="Question">Answer</AccordionItem>
 </Accordion>
 ```
+
+### Stack / HStack / VStack
+```vue
+<VStack gap="1rem">
+  <HStack gap="0.5rem" align="center">
+    <span>Item</span>
+    <Spacer />
+    <Badge>Label</Badge>
+  </HStack>
+  <Divider />
+  <p>Content below</p>
+</VStack>
+```
+- `Stack`: flex container, `direction` (vertical/horizontal), `gap` (any CSS), `align`, `justify`, `wrap`, `as` (tag)
+- `HStack`: horizontal stack (same props, no direction)
+- `VStack`: vertical stack (same props, no direction)
+- `Spacer`: flex spacer, pushes siblings apart (`flex: 1`)
+- `Center`: centers children both axes
+- `Divider`: separator, `orientation` (horizontal/vertical), `label`, `label-position`
 
 ### Alert
 ```vue

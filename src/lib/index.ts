@@ -42,8 +42,15 @@ export type { DatePickerProps, DatePickerSize } from './components/DatePicker'
 export { default as Calendar } from './components/Calendar/Calendar.vue'
 export type { CalendarEvent, CalendarView, CalendarProps, CalendarEmits, SlotSelectPayload } from './components/Calendar'
 
+export { default as Center } from './components/Center/Center.vue'
+
 export { default as ColorPicker } from './components/ColorPicker/ColorPicker.vue'
 export type { ColorPickerProps, ColorPickerSize } from './components/ColorPicker'
+
+export { default as Divider } from './components/Divider/Divider.vue'
+export type { DividerProps } from './components/Divider'
+
+export { default as HStack } from './components/Stack/HStack.vue'
 
 export { default as Modal } from './components/Modal/Modal.vue'
 export { default as ModalProvider } from './components/Modal/ModalProvider.vue'
@@ -55,6 +62,11 @@ export type { BadgeProps, BadgeVariant, BadgeSize } from './components/Badge'
 
 export { default as Checkbox } from './components/Checkbox/Checkbox.vue'
 export type { CheckboxProps } from './components/Checkbox'
+
+export { default as Spacer } from './components/Spacer/Spacer.vue'
+
+export { default as Stack } from './components/Stack/Stack.vue'
+export type { StackProps } from './components/Stack'
 
 export { default as Toggle } from './components/Toggle/Toggle.vue'
 export type { ToggleProps, ToggleSize } from './components/Toggle'
@@ -127,6 +139,8 @@ export type { DrawerProps, DrawerPlacement } from './components/Drawer'
 
 export { default as FileUpload } from './components/FileUpload/FileUpload.vue'
 export type { FileUploadProps, FileItem, FileStatus } from './components/FileUpload'
+
+export { default as VStack } from './components/Stack/VStack.vue'
 
 export { default as DevEnvBanner } from './components/DevEnvBanner/DevEnvBanner.vue'
 export type { DevEnvBannerProps } from './components/DevEnvBanner'
