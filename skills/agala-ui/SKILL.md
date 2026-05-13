@@ -28,6 +28,7 @@ description: >
 - **Responsive by default** — Sidebar, Modal, Tabs, Pagination, and Navbar adapt to mobile/tablet viewports via CSS media queries (no custom CSS needed)
 - **Alert** — inline contextual messages with 4 semantic variants, optional title, dismissible, flat mode
 - **ColorPicker** — popover-based with saturation/luminance square, hue slider, presets, manual HEX input
+- **Charts** — companion package `@el-agala/charts` provides ECharts-based BaseChart component (8 chart types, theme integration). See the `agala-charts` skill.
 
 ---
 
