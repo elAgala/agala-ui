@@ -28,6 +28,7 @@ description: >
 - **Responsive by default** — Sidebar, Modal, Tabs, Pagination, and Navbar adapt to mobile/tablet viewports via CSS media queries (no custom CSS needed)
 - **Alert** — inline contextual messages with 4 semantic variants, optional title, dismissible, flat mode
 - **ColorPicker** — popover-based with saturation/luminance square, hue slider, presets, manual HEX input
+- **SegmentedControl** — pill-style single-select toggle group with ARIA radiogroup, keyboard nav, per-option variant colors, sizes sm/md/lg matching Button
 - **Charts** — companion package `@el-agala/charts` provides ECharts-based BaseChart component (8 chart types, theme integration). See the `agala-charts` skill.
 
 ---
@@ -279,6 +280,27 @@ const events = ref<CalendarEvent[]>([
 ```vue
 <RadioGroup :options="[{ value: 'a', label: 'A' }]" v-model="value" orientation="vertical" />
 ```
+
+### SegmentedControl
+```vue
+<SegmentedControl
+  v-model="selected"
+  :options="[
+    { value: 'week', label: 'Week' },
+    { value: 'day', label: 'Day' },
+  ]"
+  size="md"
+/>
+```
+- `options`: `{ value, label, variant?, disabled? }[]` — required
+- `modelValue`: string — v-model
+- `size`: `sm` | `md` | `lg` (default `md`, heights match Button: 2rem/2.25rem/2.5rem)
+- `disabled`: boolean — disables entire group
+- `variant` per option: `'primary' | 'danger' | 'success' | 'warning' | 'info'` — overrides active state background (`info` maps to `--agala-accent`)
+- Keyboard: ArrowLeft/ArrowRight cycle, Home/End jump, roving tabindex (radiogroup ARIA 1.2)
+- Disabled options skipped in keyboard nav, rendered at `opacity: 0.4`
+- First option left-rounded, last right-rounded, middle square, only-child full pill
+- `class` prop accepted
 
 ### Textarea
 ```vue
