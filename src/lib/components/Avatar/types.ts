@@ -4,6 +4,7 @@ export interface AvatarProps {
   src?: string
   alt?: string
   fallback?: string
-  size?: AvatarSize
+  size?: string
+  shape?: 'circle' | 'rounded' | 'square'
   class?: string
 }

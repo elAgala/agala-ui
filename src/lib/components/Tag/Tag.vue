@@ -7,12 +7,21 @@ const props = withDefaults(defineProps<TagProps>(), {
   variant: 'default',
   size: 'md',
   removable: false,
+  color: '',
 })
 
 const emit = defineEmits<{
   remove: []
   click: []
 }>()
+
+const colorStyle = computed(() => {
+  if (!props.color) return undefined
+  return {
+    backgroundColor: props.color + '1A',
+    color: props.color,
+  }
+})
 
 const cls = computed(() => [
   'tag',
@@ -36,6 +45,7 @@ function onClick() {
 <template>
   <span
     :class="cls"
+    :style="colorStyle"
     role="button"
     tabindex="0"
     @click="onClick"
@@ -63,9 +73,11 @@ function onClick() {
 .tag {
   display: inline-flex;
   align-items: center;
-  gap: 0.375rem;
+  gap: var(--agala-tag-gap, 0.375rem);
   max-width: 100%;
-  border-radius: var(--agala-radius);
+  padding: var(--agala-tag-padding, 0.1875rem 0.5rem);
+  border-radius: var(--agala-tag-radius, 99px);
+  font-size: var(--agala-tag-font-size, 0.6875rem);
   font-family: var(--agala-font-sans);
   font-weight: var(--agala-font-weight-medium);
   line-height: 1;
@@ -77,16 +89,16 @@ function onClick() {
 }
 
 .tag--sm {
-  height: 1.375rem;
+  height: var(--agala-tag-height, 1.375rem);
   padding: 0 0.5rem;
-  font-size: 0.6875rem;
+  font-size: var(--agala-tag-font-size-sm, 0.6875rem);
   gap: 0.25rem;
 }
 
 .tag--md {
-  height: 1.625rem;
+  height: var(--agala-tag-height, 1.625rem);
   padding: 0 0.625rem;
-  font-size: 0.75rem;
+  font-size: var(--agala-tag-font-size, 0.75rem);
   gap: 0.375rem;
 }
 

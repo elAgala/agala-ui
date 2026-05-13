@@ -32,33 +32,34 @@ const props = defineProps<EmptyStateProps>()
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 3rem 1.5rem;
-  gap: 0.5rem;
+  padding: var(--agala-empty-padding, 3rem 1.5rem);
+  gap: var(--agala-empty-gap, 0.5rem);
 }
 
 .emptyIcon {
   margin-bottom: 0.5rem;
+  font-size: var(--agala-empty-icon-size, 2.5rem);
+  color: var(--agala-empty-icon-color, hsl(var(--agala-muted-foreground)));
 }
 
 .emptyIconDefault {
-  color: hsl(var(--agala-muted-foreground));
   opacity: 0.5;
 }
 
 .emptyTitle {
   margin: 0;
   font-family: var(--agala-font-sans);
-  font-size: var(--agala-font-size-lg);
-  font-weight: var(--agala-font-weight-semibold);
+  font-size: var(--agala-empty-title-size, var(--agala-font-size-lg));
+  font-weight: var(--agala-empty-title-weight, var(--agala-font-weight-semibold));
   color: hsl(var(--agala-foreground));
 }
 
 .emptyDescription {
   margin: 0;
   font-family: var(--agala-font-sans);
-  font-size: var(--agala-font-size-base);
+  font-size: var(--agala-empty-description-size, var(--agala-font-size-base));
   color: hsl(var(--agala-muted-foreground));
-  max-width: 36ch;
+  max-width: var(--agala-empty-description-max-width, 36ch);
   line-height: var(--agala-line-height-relaxed);
 }
 

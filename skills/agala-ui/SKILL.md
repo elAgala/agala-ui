@@ -237,6 +237,65 @@ Every component exposes its key CSS values as `--agala-<component>-*` custom pro
 --agala-calendar-title-size: var(--agala-font-size-lg);
 --agala-calendar-title-weight: var(--agala-font-weight-semibold);
 --agala-calendar-views-gap: 0.25rem;
+
+/* Avatar */
+--agala-avatar-radius: 50%;
+--agala-avatar-bg: hsl(var(--agala-primary));
+--agala-avatar-color: hsl(var(--agala-primary-foreground));
+--agala-avatar-border: none;
+
+/* Tag */
+--agala-tag-padding: 0.1875rem 0.5rem;
+--agala-tag-radius: 99px;
+--agala-tag-font-size: 0.6875rem;
+--agala-tag-gap: 0.25rem;
+--agala-tag-height: 1.5rem;
+
+/* Sidebar */
+--agala-sidebar-bg: hsl(var(--agala-card));
+--agala-sidebar-border: 1px solid hsl(var(--agala-border));
+--agala-sidebar-header-padding: 1rem;
+--agala-sidebar-nav-padding: 0.5rem 0.75rem;
+--agala-sidebar-footer-padding: 0.75rem;
+--agala-sidebar-footer-border: 1px solid hsl(var(--agala-border));
+
+/* Navbar */
+--agala-navbar-padding: 0 1rem;
+--agala-navbar-height: 3.5rem;
+--agala-navbar-bg: hsl(var(--agala-card));
+--agala-navbar-border: 1px solid hsl(var(--agala-border));
+--agala-navbar-shadow: none;
+--agala-navbar-brand-size: var(--agala-font-size-lg);
+--agala-navbar-brand-weight: var(--agala-font-weight-semibold);
+
+/* Progress */
+--agala-progress-track-bg: hsl(var(--agala-muted));
+--agala-progress-bar-radius: 99px;
+--agala-progress-linear-height: 0.5rem;
+--agala-progress-linear-height-sm: 0.375rem;
+--agala-progress-linear-height-lg: 0.75rem;
+--agala-progress-circle-stroke-width: 4;
+
+/* EmptyState */
+--agala-empty-padding: 2.5rem 1rem;
+--agala-empty-gap: 0.75rem;
+--agala-empty-icon-size: 2.5rem;
+--agala-empty-icon-color: hsl(var(--agala-muted-foreground));
+--agala-empty-title-size: var(--agala-font-size-lg);
+--agala-empty-title-weight: var(--agala-font-weight-semibold);
+--agala-empty-description-size: var(--agala-font-size-sm);
+--agala-empty-description-max-width: 24rem;
+
+/* SegmentedControl */
+--agala-seg-height: 2.25rem;
+--agala-seg-padding: 0 14px;
+--agala-seg-border: hsl(var(--agala-border));
+--agala-seg-inactive-color: hsl(var(--agala-muted-foreground));
+--agala-seg-active-bg: hsl(var(--agala-primary));
+--agala-seg-active-color: hsl(var(--agala-primary-foreground));
+--agala-seg-font-size-sm: 0.813rem;
+--agala-seg-font-size-md: 0.875rem;
+--agala-seg-font-size-lg: 1rem;
 ```
 
 Override any of these in your theme to customize individual components:

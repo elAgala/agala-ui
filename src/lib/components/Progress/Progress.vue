@@ -12,9 +12,9 @@ const props = withDefaults(defineProps<ProgressProps>(), {
 
 /* ── Linear ── */
 const linearHeights: Record<ProgressSize, string> = {
-  sm: '0.25rem',
-  md: '0.5rem',
-  lg: '0.75rem',
+  sm: 'var(--agala-progress-linear-height-sm, 0.25rem)',
+  md: 'var(--agala-progress-linear-height, 0.5rem)',
+  lg: 'var(--agala-progress-linear-height-lg, 0.75rem)',
 }
 
 const linearHeight = computed(() => linearHeights[props.size])
@@ -77,7 +77,7 @@ const trackColor = computed(() => `hsl(${colorVar[props.color]})`)
       :cy="circleSize / 2"
       :r="radius"
       fill="none"
-      stroke-width="4"
+      :stroke-width="`var(--agala-progress-circle-stroke-width, 4)`"
     />
     <circle
       class="circleFill"
@@ -85,7 +85,7 @@ const trackColor = computed(() => `hsl(${colorVar[props.color]})`)
       :cy="circleSize / 2"
       :r="radius"
       fill="none"
-      stroke-width="4"
+      :stroke-width="`var(--agala-progress-circle-stroke-width, 4)`"
       :stroke="trackColor"
       :stroke-dasharray="circumference"
       :stroke-dashoffset="strokeDashoffset"
@@ -98,14 +98,14 @@ const trackColor = computed(() => `hsl(${colorVar[props.color]})`)
 /* ── Linear ── */
 .progressLinear {
   width: 100%;
-  border-radius: 9999px;
-  background-color: hsl(var(--agala-muted));
+  border-radius: var(--agala-progress-bar-radius, 9999px);
+  background: var(--agala-progress-track-bg, hsl(var(--agala-muted)));
   overflow: hidden;
 }
 
 .progressBar {
   height: 100%;
-  border-radius: 9999px;
+  border-radius: var(--agala-progress-bar-radius, 9999px);
   transition: width var(--agala-transition-base);
 }
 

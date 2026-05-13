@@ -92,8 +92,8 @@ watch(isMobile, (mobile) => {
   flex-direction: column;
   height: 100%;
   width: var(--sidebar-width, 240px);
-  background-color: hsl(var(--agala-card));
-  border-right: var(--agala-border-width) solid hsl(var(--agala-border));
+  background: var(--agala-sidebar-bg, hsl(var(--agala-card)));
+  border-right: var(--agala-sidebar-border, var(--agala-border-width) solid hsl(var(--agala-border)));
   overflow: hidden;
   flex-shrink: 0;
   transition: width var(--agala-transition-base);
@@ -102,7 +102,7 @@ watch(isMobile, (mobile) => {
 .sidebarHeader {
   display: flex;
   align-items: center;
-  padding: 0 1rem;
+  padding: var(--agala-sidebar-header-padding, 0 1rem);
   height: var(--agala-navbar-height, 3.5rem);
   border-bottom: var(--agala-border-width) solid hsl(var(--agala-border));
   flex-shrink: 0;
@@ -111,7 +111,7 @@ watch(isMobile, (mobile) => {
 
 .sidebarNav {
   flex: 1;
-  padding: 0.5rem;
+  padding: var(--agala-sidebar-nav-padding, 0.5rem);
   overflow-y: auto;
   overflow-x: hidden;
 }
@@ -121,8 +121,8 @@ watch(isMobile, (mobile) => {
 }
 
 .sidebarFooter {
-  padding: 0.75rem;
-  border-top: var(--agala-border-width) solid hsl(var(--agala-border));
+  padding: var(--agala-sidebar-footer-padding, 0.75rem);
+  border-top: var(--agala-sidebar-footer-border, var(--agala-border-width) solid hsl(var(--agala-border)));
   flex-shrink: 0;
   overflow: hidden;
 }

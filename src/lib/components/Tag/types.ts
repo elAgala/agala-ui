@@ -8,5 +8,6 @@ export interface TagProps {
   size?: TagSize
   removable?: boolean
   disabled?: boolean
+  color?: string
   class?: string
 }

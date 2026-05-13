@@ -1,15 +1,18 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { AgalaIcon } from '../AgalaIcon'
-import type { AvatarProps, AvatarSize } from './types'
+import type { AvatarProps } from './types'
 
 const props = withDefaults(defineProps<AvatarProps>(), {
   size: 'md',
+  shape: 'circle',
 })
 
 const imgError = ref(false)
 
-const sizeMap: Record<AvatarSize, string> = {
+const presetSizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const
+
+const sizeMap: Record<string, string> = {
   xs: 'avatarXs',
   sm: 'avatarSm',
   md: 'avatarMd',
@@ -17,7 +20,13 @@ const sizeMap: Record<AvatarSize, string> = {
   xl: 'avatarXl',
 }
 
-const iconSizeMap: Record<AvatarSize, number> = {
+const shapeMap: Record<string, string> = {
+  circle: 'avatarCircle',
+  rounded: 'avatarRounded',
+  square: 'avatarSquare',
+}
+
+const iconSizeMap: Record<string, number> = {
   xs: 12,
   sm: 14,
   md: 18,
@@ -25,9 +34,17 @@ const iconSizeMap: Record<AvatarSize, number> = {
   xl: 32,
 }
 
+const isPresetSize = computed(() => presetSizes.includes(props.size as typeof presetSizes[number]))
+const customSizeStyle = computed(() => !isPresetSize.value ? {
+  width: props.size,
+  height: props.size,
+  fontSize: `calc(${props.size} * 0.4)`,
+} : undefined)
+
 const cls = computed(() => [
   'avatar',
   sizeMap[props.size],
+  shapeMap[props.shape],
   props.class,
 ].filter(Boolean).join(' '))
 
@@ -36,7 +53,7 @@ const displayFallback = computed(() => props.fallback?.slice(0, 2).toUpperCase()
 </script>
 
 <template>
-  <span :class="cls">
+  <span :class="cls" :style="customSizeStyle">
     <img
       v-if="src && !imgError"
       :src="src"
@@ -56,14 +73,26 @@ const displayFallback = computed(() => props.fallback?.slice(0, 2).toUpperCase()
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
-  background-color: hsl(var(--agala-muted));
-  color: hsl(var(--agala-muted-foreground));
+  border-radius: var(--agala-avatar-radius, 50%);
+  background: var(--agala-avatar-bg, hsl(var(--agala-muted)));
+  color: var(--agala-avatar-color, hsl(var(--agala-muted-foreground)));
   overflow: hidden;
   flex-shrink: 0;
   font-family: var(--agala-font-sans);
   font-weight: var(--agala-font-weight-medium);
-  border: var(--agala-border-width) solid hsl(var(--agala-border));
+  border: var(--agala-avatar-border, var(--agala-border-width) solid hsl(var(--agala-border)));
+}
+
+.avatarCircle {
+  border-radius: 50%;
+}
+
+.avatarRounded {
+  border-radius: var(--agala-radius);
+}
+
+.avatarSquare {
+  border-radius: 0;
 }
 
 .avatarImg {

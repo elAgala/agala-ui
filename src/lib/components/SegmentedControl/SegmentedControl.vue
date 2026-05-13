@@ -132,9 +132,9 @@ function handleKeyDown(e: KeyboardEvent) {
   z-index: 0;
   font-family: var(--agala-font-sans);
   font-weight: var(--agala-font-weight-medium);
-  border: var(--agala-border-width) solid hsl(var(--agala-border));
+  border: var(--agala-border-width) solid var(--agala-seg-border, hsl(var(--agala-border)));
   background: transparent;
-  color: hsl(var(--agala-muted-foreground));
+  color: var(--agala-seg-inactive-color, hsl(var(--agala-muted-foreground)));
   cursor: pointer;
   outline: none;
   user-select: none;
@@ -142,7 +142,7 @@ function handleKeyDown(e: KeyboardEvent) {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  padding: 0 14px;
+  padding: var(--agala-seg-padding, 0 14px);
   transition:
     background-color var(--agala-transition-fast),
     color var(--agala-transition-fast),
@@ -155,20 +155,20 @@ function handleKeyDown(e: KeyboardEvent) {
 }
 
 .segSm {
-  height: 2rem;
-  font-size: 0.813rem;
+  height: var(--agala-seg-height, 2rem);
+  font-size: var(--agala-seg-font-size-sm, 0.813rem);
   line-height: 2rem;
 }
 
 .segMd {
-  height: 2.25rem;
-  font-size: 0.875rem;
+  height: var(--agala-seg-height, 2.25rem);
+  font-size: var(--agala-seg-font-size-md, 0.875rem);
   line-height: 2.25rem;
 }
 
 .segLg {
-  height: 2.5rem;
-  font-size: 1rem;
+  height: var(--agala-seg-height, 2.5rem);
+  font-size: var(--agala-seg-font-size-lg, 1rem);
   line-height: 2.5rem;
 }
 
@@ -189,8 +189,8 @@ function handleKeyDown(e: KeyboardEvent) {
 }
 
 .segOptionActive {
-  background: hsl(var(--agala-primary));
-  color: hsl(var(--agala-primary-foreground));
+  background: var(--agala-seg-active-bg, hsl(var(--agala-primary)));
+  color: var(--agala-seg-active-color, hsl(var(--agala-primary-foreground)));
   border-color: transparent;
   z-index: 1;
 }
