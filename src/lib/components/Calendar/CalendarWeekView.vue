@@ -222,9 +222,7 @@ function getEventStyle(
     width: `${(1 / totalColumns) * 100 - 1}%`,
   }
   if (event.color && !tokenColors.includes(event.color)) {
-    style.backgroundColor = `${event.color}20`
-    style.color = event.color
-    style.borderLeft = `3px solid ${event.color}`
+    style.borderLeftColor = event.color
   }
   return style
 }
@@ -533,9 +531,10 @@ function getAllDayEventStyle(event: CalendarEvent): Record<string, string> | und
 /* ─── Events ─── */
 .event {
   position: absolute;
-  border: none;
+  border: 1px solid hsl(var(--agala-border));
+  border-left: 4px solid hsl(var(--agala-border));
   border-radius: var(--agala-radius-sm);
-  padding: 0.125rem 0.375rem;
+  padding: 0.25rem 0.375rem;
   font-size: 0.6875rem;
   font-family: inherit;
   text-align: left;
@@ -547,14 +546,27 @@ function getAllDayEventStyle(event: CalendarEvent): Record<string, string> | und
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 0;
+  gap: 0.125rem;
   z-index: 1;
   box-sizing: border-box;
+  background: hsl(var(--agala-card));
+  color: hsl(var(--agala-foreground));
+  transition:
+    box-shadow var(--agala-transition-fast),
+    transform var(--agala-transition-fast);
+}
+
+.event:hover {
+  box-shadow: var(--agala-shadow-md);
+  z-index: 5;
+  transform: scale(1.02);
 }
 
 .event:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px hsl(var(--agala-ring));
+  box-shadow:
+    0 0 0 2px hsl(var(--agala-background)),
+    0 0 0 4px hsl(var(--agala-ring));
 }
 
 .eventTitle {
@@ -584,7 +596,8 @@ function getAllDayEventStyle(event: CalendarEvent): Record<string, string> | und
 
 /* ─── All-day event chips ─── */
 .allDayEvent {
-  border: none;
+  border: 1px solid hsl(var(--agala-border));
+  border-left: 3px solid hsl(var(--agala-border));
   border-radius: var(--agala-radius-sm);
   padding: 0.125rem 0.25rem;
   font-size: var(--agala-font-size-sm);
@@ -604,39 +617,27 @@ function getAllDayEventStyle(event: CalendarEvent): Record<string, string> | und
 
 /* ─── Token color classes ─── */
 .eventPrimary {
-  background-color: hsl(var(--agala-primary) / 0.12);
-  color: hsl(var(--agala-primary));
-  border-left: 3px solid hsl(var(--agala-primary));
+  border-left-color: hsl(var(--agala-primary));
 }
 
 .eventDanger {
-  background-color: hsl(var(--agala-danger) / 0.12);
-  color: hsl(var(--agala-danger));
-  border-left: 3px solid hsl(var(--agala-danger));
+  border-left-color: hsl(var(--agala-danger));
 }
 
 .eventSuccess {
-  background-color: hsl(var(--agala-success) / 0.12);
-  color: hsl(var(--agala-success));
-  border-left: 3px solid hsl(var(--agala-success));
+  border-left-color: hsl(var(--agala-success));
 }
 
 .eventWarning {
-  background-color: hsl(var(--agala-warning) / 0.15);
-  color: hsl(var(--agala-warning));
-  border-left: 3px solid hsl(var(--agala-warning));
+  border-left-color: hsl(var(--agala-warning));
 }
 
 .eventSecondary {
-  background-color: hsl(var(--agala-secondary) / 0.5);
-  color: hsl(var(--agala-secondary-foreground));
-  border-left: 3px solid hsl(var(--agala-secondary-foreground) / 0.5);
+  border-left-color: hsl(var(--agala-secondary-foreground) / 0.5);
 }
 
 .eventAccent {
-  background-color: hsl(var(--agala-accent) / 0.5);
-  color: hsl(var(--agala-accent-foreground));
-  border-left: 3px solid hsl(var(--agala-accent-foreground) / 0.5);
+  border-left-color: hsl(var(--agala-accent-foreground) / 0.5);
 }
 
 /* ─── Current time indicator ─── */

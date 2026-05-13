@@ -190,9 +190,7 @@ function eventStyle(item: {
   const style: Record<string, string> = {}
 
   if (item.event.color && !tokenColorMap[item.event.color]) {
-    style.backgroundColor = `${item.event.color}20`
-    style.color = item.event.color
-    style.borderLeft = `3px solid ${item.event.color}`
+    style.borderLeftColor = item.event.color
   }
 
   style.top = `${item.position.top}px`
@@ -516,21 +514,38 @@ function formatSelectionTime(minutes: number): string {
 
 .event {
   position: absolute;
-  padding: 0.125rem 0.375rem;
+  padding: 0.375rem 0.5rem;
   border-radius: var(--agala-radius-sm);
   font-size: 0.6875rem;
   font-weight: var(--agala-font-weight-medium);
   text-align: left;
   overflow: hidden;
   cursor: pointer;
-  border: none;
+  border: 1px solid hsl(var(--agala-border));
+  border-left: 4px solid hsl(var(--agala-border));
   line-height: 1.25;
   box-sizing: border-box;
-  background: hsl(var(--agala-primary) / 0.12);
+  background: hsl(var(--agala-card));
   color: hsl(var(--agala-foreground));
   display: flex;
   flex-direction: column;
   justify-content: center;
+  transition:
+    box-shadow var(--agala-transition-fast),
+    transform var(--agala-transition-fast);
+}
+
+.event:hover {
+  box-shadow: var(--agala-shadow-md);
+  z-index: 5;
+  transform: scale(1.02);
+}
+
+.event:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px hsl(var(--agala-background)),
+    0 0 0 4px hsl(var(--agala-ring));
 }
 
 .event:focus-visible {
@@ -570,12 +585,12 @@ function formatSelectionTime(minutes: number): string {
   text-overflow: ellipsis;
 }
 
-.eventPrimary { background-color: hsl(var(--agala-primary) / 0.12); color: hsl(var(--agala-primary)); border-left: 3px solid hsl(var(--agala-primary)); }
-.eventDanger { background-color: hsl(var(--agala-danger) / 0.12); color: hsl(var(--agala-danger)); border-left: 3px solid hsl(var(--agala-danger)); }
-.eventSuccess { background-color: hsl(var(--agala-success) / 0.12); color: hsl(var(--agala-success)); border-left: 3px solid hsl(var(--agala-success)); }
-.eventWarning { background-color: hsl(var(--agala-warning) / 0.15); color: hsl(var(--agala-warning)); border-left: 3px solid hsl(var(--agala-warning)); }
-.eventSecondary { background-color: hsl(var(--agala-secondary) / 0.5); color: hsl(var(--agala-secondary-foreground)); border-left: 3px solid hsl(var(--agala-secondary-foreground) / 0.5); }
-.eventAccent { background-color: hsl(var(--agala-accent) / 0.5); color: hsl(var(--agala-accent-foreground)); border-left: 3px solid hsl(var(--agala-accent-foreground) / 0.5); }
+.eventPrimary { border-left-color: hsl(var(--agala-primary)); }
+.eventDanger { border-left-color: hsl(var(--agala-danger)); }
+.eventSuccess { border-left-color: hsl(var(--agala-success)); }
+.eventWarning { border-left-color: hsl(var(--agala-warning)); }
+.eventSecondary { border-left-color: hsl(var(--agala-secondary-foreground) / 0.5); }
+.eventAccent { border-left-color: hsl(var(--agala-accent-foreground) / 0.5); }
 
 @media (max-width: 639px) {
   .timeLabel,
