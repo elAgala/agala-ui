@@ -84,6 +84,8 @@ import { ModalProvider, ToastProvider } from '@el-agala/ui'
   --agala-muted: 240 4.8% 95.9%;
   --agala-muted-foreground: 240 3.8% 46.1%;
   --agala-border: 240 5.9% 90%;
+  --agala-input: 240 5.9% 90%;
+  --agala-input-background: unset;  /* falls back to --agala-background */
   --agala-danger: 0 84.2% 60.2%;
   --agala-success: 142 71% 45%;
   --agala-warning: 43 96% 50%;
