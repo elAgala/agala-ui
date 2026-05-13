@@ -142,6 +142,7 @@ function handleKeyDown(e: KeyboardEvent) {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  padding: 0 14px;
   transition:
     background-color var(--agala-transition-fast),
     color var(--agala-transition-fast),
@@ -156,21 +157,18 @@ function handleKeyDown(e: KeyboardEvent) {
 .segSm {
   height: 2rem;
   font-size: 0.813rem;
-  padding: 0 1.25rem;
   line-height: 2rem;
 }
 
 .segMd {
   height: 2.25rem;
   font-size: 0.875rem;
-  padding: 0 1.5rem;
   line-height: 2.25rem;
 }
 
 .segLg {
   height: 2.5rem;
   font-size: 1rem;
-  padding: 0 2rem;
   line-height: 2.5rem;
 }
 
