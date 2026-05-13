@@ -54,6 +54,18 @@ createApp(App).mount('#app')
 import '@el-agala/ui/reset.css'
 ```
 
+**Plain HTML (no bundler) with importmap:**
+```html
+<link rel="stylesheet" href="node_modules/@el-agala/ui/dist/index.css">
+<script type="importmap">{
+  "imports": {
+    "vue": "node_modules/vue/dist/vue.esm-browser.js",
+    "@el-agala/ui": "node_modules/@el-agala/ui/dist/agala-ui.browser.js"
+  }
+}</script>
+```
+Uses `agala-ui.browser.js` which has no `import './index.css'` statement (browsers don't support CSS imports in ES modules). CSS is linked separately via `<link rel="stylesheet">`.
+
 **For imperative modals & toasts — add providers once at root:**
 
 ```vue
@@ -892,9 +904,11 @@ toastManager.show({
 ```
 node_modules/@el-agala/ui/
   dist/
-    agala-ui.es.js     ← ESM bundle (CSS injected)
-    index.d.ts         ← TypeScript declarations
-    reset.css          ← Optional global CSS reset
+    agala-ui.es.js       ← ESM bundle (with CSS import, for bundlers)
+    agala-ui.browser.js  ← ESM bundle (no CSS import, for plain HTML)
+    index.css            ← Extracted styles
+    index.d.ts           ← TypeScript declarations
+    reset.css            ← Optional global CSS reset
 ```
 
 ```ts
