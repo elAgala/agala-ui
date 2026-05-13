@@ -566,23 +566,32 @@ const { matches: isMobile } = useMediaQuery('(max-width: 639px)')
 **Critical:** Use only for JS enhancements (e.g. scrolling active tab into view). Never use for layout decisions — all layout responsive behavior is CSS-only via `@media` queries.
 
 ### useDropdownPosition
-Fixed positioning with scroll handling (teleports to body).
+Fixed positioning with collision detection (horizontal flip + vertical flip). Uses `position: fixed` to escape overflow containers.
 
 ```ts
 import { useDropdownPosition } from '@el-agala/ui'
 
-const { dropdownStyle, recompute } = useDropdownPosition(triggerRef, {
-  width: 'trigger' // 'trigger' | 'auto'
-})
+const { dropdownStyle, recompute } = useDropdownPosition(
+  triggerRef,
+  floatingRef?,   // optional: pass the dropdown ref for two-pass measurement
+  { width: 'trigger' } // 'trigger' | 'auto'
+)
 ```
 
-**Options:**
-- `width`: `'trigger'` (default) — sets `width: ${rect.width}px` on dropdown to match trigger
-- `width`: `'auto'` — skips width, lets CSS handle it (useful for DatePicker where calendar needs 280px)
+**Parameters:**
+- `triggerRef`: `Ref<HTMLElement | undefined>` — the trigger element used for initial position
+- `floatingRef?`: `Ref<HTMLElement | null | undefined>` — optional. When provided, enables two-pass collision detection (second pass measures actual dropdown height and flips vertical if overflowing viewport)
+- `opts.width`: `'trigger'` (default) — sets `width: ${rect.width}px` on dropdown to match trigger
+- `opts.width`: `'auto'` — skips inline width, lets CSS handle it (useful for DatePicker where calendar needs 280px)
+
+**Collision detection (automatic when `floatingRef` is passed):**
+- **Horizontal flip:** if dropdown overflows right viewport edge, right-aligns (aligns right edge with trigger's right edge) or shifts left to stay within 8px margin
+- **Vertical flip:** on second pass (via `requestAnimationFrame`), if dropdown overflows below viewport, repositions above trigger with 4px gap. If above also overflows, clamps to viewport with 8px margin.
 
 **Usage pattern inside component:**
 ```ts
-const { dropdownStyle, recompute } = useDropdownPosition(triggerRef, { width: 'auto' })
+const floatingRef = ref<HTMLDivElement>()
+const { dropdownStyle, recompute } = useDropdownPosition(triggerRef, floatingRef, { width: 'auto' })
 
 // On open — must wrap recompute() in requestAnimationFrame inside nextTick
 // so getBoundingClientRect() reads after browser layout/composite phase
@@ -590,7 +599,6 @@ watch(isOpen, async (open) => {
   if (open) {
     await nextTick()
     requestAnimationFrame(() => recompute())
-    // focus with preventScroll to avoid browser auto-scroll to fixed-position element
     searchInputRef.value?.focus({ preventScroll: true })
     window.addEventListener('scroll', closeOnScroll, true)
     window.addEventListener('resize', recompute)
@@ -608,6 +616,7 @@ watch(isOpen, async (open) => {
 - Always call `recompute()` imperatively after `nextTick()` + `requestAnimationFrame()`
 - Call `recompute()` on `resize` events while dropdown is open
 - `position: fixed` teleported to `<body>` is relative to viewport UNLESS an ancestor has `transform`, `perspective`, or `filter`
+- Pass `floatingRef` to enable two-pass collision detection. Without it, only first-pass positioning applies (no vertical flip).
 
 ### usePopoverBehavior
 Shared click-outside + scroll-close + resize-reposition behavior for popover components.
@@ -746,7 +755,7 @@ toastManager.show({
 
 2. **ModalProvider / ToastProvider** — Must be mounted once at app root. Imperative modals/toasts won't work without them.
 
-3. **Teleports** — Modal, Drawer, Toast, DropdownMenu, and Select/DatePicker/CreatableSelect dropdowns use `<Teleport to="body">`. `--agala-z-dropdown: 1050` > `--agala-z-modal: 1000` ensures dropdowns stack above modal backdrop.
+3. **Teleports** — Modal, Drawer, Toast, DropdownMenu, Select, DatePicker, ColorPicker, and CreatableSelect all use `<Teleport to="body">`. `--agala-z-dropdown: 1050` > `--agala-z-modal: 1000` ensures dropdowns stack above modal backdrop.
 
 4. **Type imports** — Use `import type { ... }` due to `verbatimModuleSyntax`.
 
@@ -766,25 +775,27 @@ toastManager.show({
 
 12. **Dropdown width** — `useDropdownPosition` with `width: 'trigger'` sets inline `width: ${rect.width}px`. For content wider than trigger (DatePicker calendar), use `width: 'auto'` so CSS `width: 280px` applies.
 
-13. **Focus scroll** — When focusing teleported `position: fixed` elements, always use `focus({ preventScroll: true })` to prevent browser auto-scroll.
+13. **Collision detection** — `useDropdownPosition(triggerRef, floatingRef)` enables automatic collision detection. Horizontal: right-aligns or shifts if overflowing viewport edge (8px margin). Vertical: flips above trigger if insufficient space below. Second pass via `requestAnimationFrame` measures actual dropdown height. No visual flicker — correction happens before paint.
 
-14. **Containing blocks** — `position: fixed` is relative to viewport UNLESS an ancestor has `transform`, `perspective`, or `filter`. If forja-app or consumer applies these to `<body>`/modal ancestors, dropdown coordinates will be wrong.
+14. **Focus scroll** — When focusing teleported `position: fixed` elements, always use `focus({ preventScroll: true })` to prevent browser auto-scroll.
 
-15. **Responsive Sidebar** — `Sidebar` is responsive by default (`responsive` prop defaults to `true`). On tablet (640–768px) it auto-collapses to 64px regardless of the `collapsed` prop. On mobile (<640px) it hides completely — use `v-model:open` + `SidebarToggle` to show it as a Drawer.
+15. **Containing blocks** — `position: fixed` is relative to viewport UNLESS an ancestor has `transform`, `perspective`, or `filter`. If forja-app or consumer applies these to `<body>`/modal ancestors, dropdown coordinates will be wrong.
 
-16. **Responsive layout is CSS-only** — All responsive behavior (Sidebar width, Modal sizing, Tabs scroll, Pagination compact) uses CSS `@media` queries. The `useMediaQuery` composable exists only for JS enhancements like scrolling active tabs into view. Never use it for layout.
+16. **Responsive Sidebar** — `Sidebar` is responsive by default (`responsive` prop defaults to `true`). On tablet (640–768px) it auto-collapses to 64px regardless of the `collapsed` prop. On mobile (<640px) it hides completely — use `v-model:open` + `SidebarToggle` to show it as a Drawer.
 
-17. **Breakpoint tokens** — `--agala-breakpoint-sm: 640px` and `--agala-breakpoint-md: 768px` are exposed as CSS custom properties for documentation/JS reference only. Component media queries hardcode these values; they cannot be consumed via `var()` inside `@media` rules.
+17. **Responsive layout is CSS-only** — All responsive behavior (Sidebar width, Modal sizing, Tabs scroll, Pagination compact) uses CSS `@media` queries. The `useMediaQuery` composable exists only for JS enhancements like scrolling active tabs into view. Never use it for layout.
 
-18. **Table responsive** — `Table` does not have built-in responsive column hiding. Wrap it in a container with `overflow-x: auto` for horizontal scrolling on mobile, or use custom CSS to hide less important columns.
+18. **Breakpoint tokens** — `--agala-breakpoint-sm: 640px` and `--agala-breakpoint-md: 768px` are exposed as CSS custom properties for documentation/JS reference only. Component media queries hardcode these values; they cannot be consumed via `var()` inside `@media` rules.
 
-19. **Calendar event colors** — `color` prop accepts token names (`primary`, `danger`, `success`, `warning`, `secondary`, `accent`) OR arbitrary CSS color strings. Token names apply a subtle transparent background + colored text + left border. Arbitrary colors use `color-mix` for background transparency. The consumer is responsible for contrast in both light and dark modes when using arbitrary colors.
+19. **Table responsive** — `Table` does not have built-in responsive column hiding. Wrap it in a container with `overflow-x: auto` for horizontal scrolling on mobile, or use custom CSS to hide less important columns.
 
-20. **Calendar event times** — `start` and `end` must be ISO 8601 strings (e.g. `2024-05-15T09:00:00`). The component does not handle recurring events or multi-day spanning events in v1. Events must start and end on the same calendar day.
+20. **Calendar event colors** — `color` prop accepts token names (`primary`, `danger`, `success`, `warning`, `secondary`, `accent`) OR arbitrary CSS color strings. Token names apply a subtle transparent background + colored text + left border. Arbitrary colors use `color-mix` for background transparency. The consumer is responsible for contrast in both light and dark modes when using arbitrary colors.
 
-21. **Calendar "+N more"** — In month view, cells show max 3 event indicators. Clicking `+N more` emits `@day-click` with the date so the consumer can switch to day view or open a modal to see all events.
+21. **Calendar event times** — `start` and `end` must be ISO 8601 strings (e.g. `2024-05-15T09:00:00`). The component does not handle recurring events or multi-day spanning events in v1. Events must start and end on the same calendar day.
 
-22. **Calendar list view** — Not designed for "available slots" browsing. Pass free time slots as fake `CalendarEvent` objects with `color: 'success'` if you want to use it for booking, but a custom component is usually better for that UX.
+22. **Calendar "+N more"** — In month view, cells show max 3 event indicators. Clicking `+N more` emits `@day-click` with the date so the consumer can switch to day view or open a modal to see all events.
+
+23. **Calendar list view** — Not designed for "available slots" browsing. Pass free time slots as fake `CalendarEvent` objects with `color: 'success'` if you want to use it for booking, but a custom component is usually better for that UX.
 
 ---
 
