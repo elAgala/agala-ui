@@ -30,7 +30,7 @@ const props = withDefaults(defineProps<{
   class: '',
 })
 
-const emit = defineEmits<{
+defineEmits<{
   'update:modelValue': [value: string]
 }>()
 

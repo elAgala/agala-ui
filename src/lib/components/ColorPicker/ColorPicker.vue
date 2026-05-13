@@ -10,8 +10,6 @@ import {
   hexToHsl,
   hslToHex,
   isValidHex,
-  hslToHsb,
-  hsbToHsl,
   parseHslToken,
 } from './colorUtils'
 import type { HSL } from './colorUtils'

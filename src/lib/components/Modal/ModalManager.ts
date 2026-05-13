@@ -1,4 +1,4 @@
-import { reactive, h, markRaw, type VNode, type Component } from 'vue'
+import { reactive, h, type VNode, type Component } from 'vue'
 import Modal from './Modal.vue'
 import type { ModalResult, ModalOptions } from './types'
 
