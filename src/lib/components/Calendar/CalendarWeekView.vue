@@ -414,7 +414,7 @@ function getAllDayEventStyle(event: CalendarEvent): Record<string, string> | und
 
 /* ─── Time axis column ─── */
 .timeAxisCol {
-  width: 3.5rem;
+  width: 4.5rem;
   flex-shrink: 0;
   position: sticky;
   left: 0;
@@ -723,7 +723,7 @@ function getAllDayEventStyle(event: CalendarEvent): Record<string, string> | und
 
   .scrollWrapper {
     scroll-snap-type: x mandatory;
-    scroll-padding-left: 3.5rem;
+    scroll-padding-left: 4.5rem;
   }
 
   .dayCol {
