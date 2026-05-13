@@ -404,7 +404,7 @@ function handlePopoverKeyDown(e: KeyboardEvent) {
   width: 100%;
   border: var(--agala-border-width) solid hsl(var(--agala-input));
   border-radius: var(--agala-radius);
-  background: hsl(var(--agala-input-background));
+  background: hsl(var(--agala-input-background, var(--agala-background)));
   font-family: var(--agala-font-sans);
   color: hsl(var(--agala-foreground));
   cursor: pointer;
