@@ -39,14 +39,14 @@ const labelCls = computed(() => [
 .field {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: var(--agala-field-gap, 0.25rem);
   width: 100%;
 }
 
 .label {
-  font-size: var(--agala-font-size-sm);
-  font-weight: var(--agala-font-weight-medium);
-  color: hsl(var(--agala-foreground));
+  font-size: var(--agala-field-label-size, var(--agala-font-size-sm));
+  font-weight: var(--agala-field-label-weight, var(--agala-font-weight-medium));
+  color: var(--agala-field-label-color, hsl(var(--agala-foreground)));
   line-height: 1;
 }
 
@@ -55,19 +55,19 @@ const labelCls = computed(() => [
 }
 
 .required {
-  color: hsl(var(--agala-danger));
+  color: var(--agala-field-required-color, hsl(var(--agala-danger)));
 }
 
 .helperText {
-  font-size: var(--agala-font-size-sm);
-  color: hsl(var(--agala-muted-foreground));
+  font-size: var(--agala-field-helper-size, var(--agala-font-size-sm));
+  color: var(--agala-field-helper-color, hsl(var(--agala-muted-foreground)));
   line-height: var(--agala-line-height-normal);
   margin: 0;
 }
 
 .errorText {
-  font-size: var(--agala-font-size-sm);
-  color: hsl(var(--agala-danger));
+  font-size: var(--agala-field-error-size, var(--agala-font-size-sm));
+  color: var(--agala-field-error-color, hsl(var(--agala-danger)));
   line-height: var(--agala-line-height-normal);
   margin: 0;
 }

@@ -5,5 +5,7 @@ export interface StatProps {
   value: string | number
   trend?: number
   trendLabel?: string
+  bordered?: boolean
+  labelTransform?: string
   class?: string
 }

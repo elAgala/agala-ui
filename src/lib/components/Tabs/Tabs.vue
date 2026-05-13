@@ -136,21 +136,22 @@ function tabCls(tab: TabItem) {
 /* Tab strip */
 .tabList {
   display: flex;
-  border-bottom: var(--agala-border-width) solid hsl(var(--agala-border));
-  gap: 0;
+  border-bottom: var(--agala-tab-list-border, var(--agala-border-width) solid hsl(var(--agala-border)));
+  gap: var(--agala-tab-gap, 0);
+  padding: var(--agala-tab-list-padding, 0);
 }
 
 .tabBtn {
   position: relative;
-  padding: 0.625rem 1rem;
+  padding: var(--agala-tab-padding, 0.625rem 1rem);
   background: none;
   border: none;
   border-bottom: 2px solid transparent;
   margin-bottom: calc(-1 * var(--agala-border-width));
   font-family: var(--agala-font-sans);
-  font-size: var(--agala-font-size-base);
-  font-weight: var(--agala-font-weight-medium);
-  color: hsl(var(--agala-muted-foreground));
+  font-size: var(--agala-tab-font-size, var(--agala-font-size-base));
+  font-weight: var(--agala-tab-font-weight, var(--agala-font-weight-medium));
+  color: var(--agala-tab-inactive-color, hsl(var(--agala-muted-foreground)));
   cursor: pointer;
   white-space: nowrap;
   transition:
@@ -170,8 +171,8 @@ function tabCls(tab: TabItem) {
 }
 
 .tabBtnActive {
-  color: hsl(var(--agala-primary));
-  border-bottom-color: hsl(var(--agala-primary));
+  color: var(--agala-tab-active-color, hsl(var(--agala-primary)));
+  border-bottom: var(--agala-tab-active-border, 2px solid hsl(var(--agala-primary)));
 }
 
 .tabBtnDisabled {

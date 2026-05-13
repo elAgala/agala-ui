@@ -20,6 +20,7 @@ const props = withDefaults(defineProps<CalendarProps>(), {
   dayEnd: '24:00',
   snapMinutes: 30,
   availableViews: undefined,
+  hideHeader: false,
   class: '',
 })
 
@@ -226,6 +227,7 @@ function handleSlotSelect(payload: { start: string; end: string }) {
   <div :class="['calendar', props.class]">
     <!-- Header -->
     <slot name="header">
+      <template v-if="!hideHeader">
       <div class="calendarHeader">
         <!-- Left: nav + title -->
         <div class="calendarNav">
@@ -267,6 +269,7 @@ function handleSlotSelect(payload: { start: string; end: string }) {
           </Button>
         </div>
       </div>
+      </template>
     </slot>
 
     <!-- Body -->
@@ -310,8 +313,8 @@ function handleSlotSelect(payload: { start: string; end: string }) {
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 0.75rem;
-  padding: 0.75rem 1rem;
-  border-bottom: var(--agala-border-width) solid hsl(var(--agala-border));
+  padding: var(--agala-calendar-header-padding, 0.75rem 1rem);
+  border-bottom: var(--agala-calendar-header-border, var(--agala-border-width) solid hsl(var(--agala-border)));
 }
 
 .calendarNav {
@@ -321,8 +324,8 @@ function handleSlotSelect(payload: { start: string; end: string }) {
 }
 
 .calendarTitle {
-  font-size: var(--agala-font-size-lg);
-  font-weight: var(--agala-font-weight-semibold);
+  font-size: var(--agala-calendar-title-size, var(--agala-font-size-lg));
+  font-weight: var(--agala-calendar-title-weight, var(--agala-font-weight-semibold));
   color: hsl(var(--agala-foreground));
   line-height: 1.25;
   margin: 0 0.5rem;
@@ -331,7 +334,7 @@ function handleSlotSelect(payload: { start: string; end: string }) {
 .calendarViews {
   display: flex;
   align-items: center;
-  gap: 0.25rem;
+  gap: var(--agala-calendar-views-gap, 0.25rem);
 }
 
 .viewLabel {

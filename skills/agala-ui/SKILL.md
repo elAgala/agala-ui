@@ -172,6 +172,71 @@ Every component exposes its key CSS values as `--agala-<component>-*` custom pro
 --agala-list-item-border: 1px solid hsl(var(--agala-border));
 --agala-list-badge-bg: hsl(var(--agala-primary) / 0.1);
 --agala-list-badge-color: hsl(var(--agala-primary));
+
+/* Stat */
+--agala-stat-padding: 1rem;
+--agala-stat-gap: 0.25rem;
+--agala-stat-bg: hsl(var(--agala-card));
+--agala-stat-border: 1px solid hsl(var(--agala-border));
+--agala-stat-radius: var(--agala-radius);
+--agala-stat-shadow: none;
+--agala-stat-label-transform: uppercase;
+--agala-stat-label-size: var(--agala-font-size-sm);
+--agala-stat-label-weight: var(--agala-font-weight-medium);
+--agala-stat-label-color: hsl(var(--agala-muted-foreground));
+--agala-stat-value-size: 1.5rem;
+--agala-stat-value-weight: var(--agala-font-weight-bold);
+--agala-stat-value-color: hsl(var(--agala-foreground));
+--agala-stat-trend-size: var(--agala-font-size-sm);
+
+/* Table */
+--agala-table-border: 1px solid hsl(var(--agala-border));
+--agala-table-radius: var(--agala-radius);
+--agala-table-header-bg: hsl(var(--agala-muted));
+--agala-table-header-font-size: var(--agala-font-size-sm);
+--agala-table-header-weight: var(--agala-font-weight-semibold);
+--agala-table-header-color: hsl(var(--agala-muted-foreground));
+--agala-table-header-cell-padding: 0.75rem 1rem;
+--agala-table-row-border: 1px solid hsl(var(--agala-border));
+--agala-table-row-hover-bg: hsl(var(--agala-accent));
+--agala-table-cell-padding: 0.75rem 1rem;
+--agala-table-cell-size: var(--agala-font-size-base);
+--agala-table-cell-color: hsl(var(--agala-foreground));
+--agala-table-cell-line-height: var(--agala-line-height-normal);
+--agala-table-footer-bg: hsl(var(--agala-muted));
+--agala-table-footer-padding: 0.625rem 1rem;
+--agala-table-footer-border: 1px solid hsl(var(--agala-border));
+--agala-table-empty-padding: 2rem 1rem;
+--agala-table-empty-color: hsl(var(--agala-muted-foreground));
+
+/* Tabs */
+--agala-tab-gap: 0;
+--agala-tab-list-padding: 0;
+--agala-tab-list-border: 1px solid hsl(var(--agala-border));
+--agala-tab-padding: 0.625rem 1rem;
+--agala-tab-font-size: var(--agala-font-size-base);
+--agala-tab-font-weight: var(--agala-font-weight-medium);
+--agala-tab-inactive-color: hsl(var(--agala-muted-foreground));
+--agala-tab-active-color: hsl(var(--agala-primary));
+--agala-tab-active-border: 2px solid hsl(var(--agala-primary));
+
+/* FormField */
+--agala-field-gap: 0.25rem;
+--agala-field-label-size: var(--agala-font-size-sm);
+--agala-field-label-weight: var(--agala-font-weight-medium);
+--agala-field-label-color: hsl(var(--agala-foreground));
+--agala-field-helper-size: var(--agala-font-size-sm);
+--agala-field-helper-color: hsl(var(--agala-muted-foreground));
+--agala-field-error-size: var(--agala-font-size-sm);
+--agala-field-error-color: hsl(var(--agala-danger));
+--agala-field-required-color: hsl(var(--agala-danger));
+
+/* Calendar */
+--agala-calendar-header-padding: 0.75rem 1rem;
+--agala-calendar-header-border: 1px solid hsl(var(--agala-border));
+--agala-calendar-title-size: var(--agala-font-size-lg);
+--agala-calendar-title-weight: var(--agala-font-weight-semibold);
+--agala-calendar-views-gap: 0.25rem;
 ```
 
 Override any of these in your theme to customize individual components:
