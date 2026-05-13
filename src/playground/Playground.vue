@@ -2,7 +2,6 @@
 import { ref, h, watch } from 'vue'
 import { Button, Input, FormField, Select, CreatableSelect, DatePicker, ColorPicker, Modal, ModalProvider, modalManager, Badge, Checkbox, Toggle, Avatar, ToastProvider, toastManager, Textarea, DropdownMenu, Table, Tabs, Card, Tooltip, RadioGroup, Navbar, Sidebar, SidebarItem, SidebarGroup, SidebarToggle, Accordion, AccordionItem, Skeleton, Stat, EmptyState, Progress, Tag, Pagination, Drawer, FileUpload, DevEnvBanner, Calendar, Alert } from '../lib'
 
-import { BaseChart } from '../../packages/charts/src/index'
 import { useMediaQuery } from '../lib/composables/useMediaQuery'
 import AgalaIcon from '../lib/components/AgalaIcon/AgalaIcon.vue'
 import type { TableColumn, TabItem, CalendarEvent, CalendarView } from '../lib'
@@ -415,7 +414,6 @@ const AckDialog = {
     <a href="#drawer">Drawer</a>
     <a href="#fileupload">File</a>
     <a href="#alert">Alert</a>
-    <a href="#charts">Charts</a>
     <a href="#theme">Theme</a>
   </nav>
 
@@ -1381,7 +1379,7 @@ const AckDialog = {
           <p style="margin: 0">Billing panel — invoices, payment methods, etc.</p>
         </template>
         <template #panel-analytics>
-          <p style="margin: 0">Analytics panel — charts, metrics, and trends.</p>
+          <p style="margin: 0">Analytics panel — metrics and trends.</p>
         </template>
         <template #panel-activity>
           <p style="margin: 0">Activity panel — recent events and logs.</p>
@@ -1564,86 +1562,6 @@ const AckDialog = {
       </div>
     </section>
 
-    <!-- ─── Charts (from @el-agala/charts) ─── -->
-    <section id="charts">
-      <h2>Charts — BaseChart</h2>
-      <div class="charts-grid" style="max-width: 900px">
-        <div class="chart-item" style="background: hsl(var(--agala-card)); border-radius: var(--agala-radius); padding: 1rem;">
-          <h3 style="margin: 0 0 0.5rem; font-size: 0.875rem; font-weight: 600;">Line</h3>
-          <BaseChart
-            type="line"
-            :labels="['Jan','Feb','Mar','Apr','May','Jun']"
-            :datasets="[{ name: 'Revenue', data: [1200, 1900, 1500, 2100, 1800, 2400], smooth: true, areaStyle: true }]"
-            :height="220"
-          />
-        </div>
-        <div class="chart-item" style="background: hsl(var(--agala-card)); border-radius: var(--agala-radius); padding: 1rem;">
-          <h3 style="margin: 0 0 0.5rem; font-size: 0.875rem; font-weight: 600;">Bar</h3>
-          <BaseChart
-            type="bar"
-            :labels="['Mon','Tue','Wed','Thu','Fri','Sat','Sun']"
-            :datasets="[{ name: 'Check-ins', data: [45, 52, 38, 61, 48, 72, 80] }]"
-            :height="220"
-          />
-        </div>
-        <div class="chart-item" style="background: hsl(var(--agala-card)); border-radius: var(--agala-radius); padding: 1rem;">
-          <h3 style="margin: 0 0 0.5rem; font-size: 0.875rem; font-weight: 600;">Pie</h3>
-          <BaseChart
-            type="pie"
-            :labels="['Active','Inactive','Pending']"
-            :datasets="[{ data: [65, 20, 15] }]"
-            :height="220"
-          />
-        </div>
-        <div class="chart-item" style="background: hsl(var(--agala-card)); border-radius: var(--agala-radius); padding: 1rem;">
-          <h3 style="margin: 0 0 0.5rem; font-size: 0.875rem; font-weight: 600;">Scatter — Age vs. Spend</h3>
-          <BaseChart
-            type="scatter"
-            :datasets="[{ name: 'Members', data: [[22,320],[25,480],[30,550],[35,420],[40,670],[45,580],[50,720],[28,390],[33,510],[38,640]] }]"
-            :height="220"
-          />
-        </div>
-        <div class="chart-item" style="background: hsl(var(--agala-card)); border-radius: var(--agala-radius); padding: 1rem;">
-          <h3 style="margin: 0 0 0.5rem; font-size: 0.875rem; font-weight: 600;">Radar — Member Profile</h3>
-          <BaseChart
-            type="radar"
-            :indicators="[{ name: 'Attendance', max: 100 }, { name: 'Renewals', max: 100 }, { name: 'Referrals', max: 100 }, { name: 'Engagement', max: 100 }, { name: 'Satisfaction', max: 100 }]"
-            :datasets="[{ name: 'Q1', data: [85, 70, 45, 60, 90] }, { name: 'Q2', data: [78, 82, 55, 72, 88] }]"
-            :height="220"
-          />
-        </div>
-        <div class="chart-item" style="background: hsl(var(--agala-card)); border-radius: var(--agala-radius); padding: 1rem;">
-          <h3 style="margin: 0 0 0.5rem; font-size: 0.875rem; font-weight: 600;">Gauge — Occupancy</h3>
-          <BaseChart
-            type="gauge"
-            :datasets="[{ name: 'Capacity', data: [72] }]"
-            :max="100"
-            :height="220"
-          />
-        </div>
-        <div class="chart-item" style="background: hsl(var(--agala-card)); border-radius: var(--agala-radius); padding: 1rem;">
-          <h3 style="margin: 0 0 0.5rem; font-size: 0.875rem; font-weight: 600;">Stacked Area — Total Members</h3>
-          <BaseChart
-            type="line"
-            stacked
-            :labels="['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']"
-            :datasets="[{ name: 'New', data: [20,28,35,42,50,55,60,58,62,70,75,80] }, { name: 'Renewed', data: [80,82,85,88,90,92,95,93,96,98,100,105] }]"
-            :height="220"
-          />
-        </div>
-        <div class="chart-item" style="background: hsl(var(--agala-card)); border-radius: var(--agala-radius); padding: 1rem;">
-          <h3 style="margin: 0 0 0.5rem; font-size: 0.875rem; font-weight: 600;">Stacked Bar — Members by Plan</h3>
-          <BaseChart
-            type="bar"
-            stacked
-            :labels="['Jan','Feb','Mar','Apr','May','Jun']"
-            :datasets="[{ name: 'Basic', data: [30,40,35,50,45,60] }, { name: 'Pro', data: [20,25,30,35,40,45] }, { name: 'Elite', data: [10,12,15,18,20,25] }]"
-            :height="220"
-          />
-        </div>
-      </div>
-    </section>
-
   </div>
 </template>
 
@@ -1758,18 +1676,6 @@ section {
   }
 }
 
-/* ─── Charts grid ─── */
-.charts-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1rem;
-}
-
-@media (max-width: 640px) {
-  .charts-grid {
-    grid-template-columns: 1fr;
-  }
-}
 
 /* ─── Theme switcher bar ─── */
 .themebar {
