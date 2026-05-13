@@ -21,7 +21,7 @@
   ],
   "scripts": {
     "dev": "vite",
-    "build:lib": "vue-tsc --noEmit && vite build && cp src/lib/reset.css dist/reset.css",
+    "build:lib": "vue-tsc --noEmit && vite build && cp src/lib/reset.css dist/reset.css && cp dist/agala-ui.es.js dist/agala-ui.browser.js && node -e \"require('fs').writeFileSync('dist/agala-ui.browser.js', require('fs').readFileSync('dist/agala-ui.es.js','utf-8').replace(/import '\\.\\/index\\.css';[^\\n]*\\n?/g, ''))\"" ,
     "lint": "eslint .",
     "preview": "vite preview",
     "prepublishOnly": "npm run build:lib"
