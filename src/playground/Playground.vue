@@ -1764,6 +1764,15 @@ const AckDialog = {
           <ListGroupItem icon="settings" label="Settings" style="border-radius: var(--agala-radius-sm)" />
         </ListGroup>
 
+        <p class="muted" style="margin: 0 0 0.5rem; font-size: 0.875rem">Borderless (embeds inside other containers)</p>
+        <div style="background: hsl(var(--agala-muted) / 0.3); padding: 0.75rem; border-radius: var(--agala-radius)">
+          <ListGroup borderless>
+            <ListGroupItem icon="user" label="Profile" subtitle="Edit your info" />
+            <ListGroupItem icon="bell" label="Notifications" badge="12" />
+            <ListGroupItem icon="settings" label="Settings" />
+          </ListGroup>
+        </div>
+
         <p class="muted" style="margin: 0 0 0.5rem; font-size: 0.875rem; margin-top: 1rem">Cards variant</p>
         <ListGroup variant="cards" style="max-width: 400px">
           <ListGroupItem icon="user" label="Profile" subtitle="Edit your info" />
