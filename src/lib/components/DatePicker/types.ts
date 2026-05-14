@@ -1,4 +1,5 @@
 export type DatePickerSize = 'sm' | 'md' | 'lg'
+export type DatePickerView = 'days' | 'months' | 'years'
 
 export interface DatePickerProps {
   modelValue?: string
@@ -10,5 +11,8 @@ export interface DatePickerProps {
   min?: string
   max?: string
   clearable?: boolean
+  inline?: boolean
+  highlightDates?: string[]
+  displayMonth?: string
   class?: string
 }

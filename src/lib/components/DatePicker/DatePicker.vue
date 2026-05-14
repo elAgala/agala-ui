@@ -15,6 +15,9 @@ const props = withDefaults(defineProps<{
   min?: string
   max?: string
   clearable?: boolean
+  inline?: boolean
+  highlightDates?: string[]
+  displayMonth?: string
   class?: string
 }>(), {
   size: 'md',
@@ -22,10 +25,13 @@ const props = withDefaults(defineProps<{
   error: false,
   placeholder: 'Pick a date',
   clearable: false,
+  inline: false,
+  highlightDates: () => [],
 })
 
 const emit = defineEmits<{
   'update:modelValue': [value: string]
+  'update:displayMonth': [value: string]
 }>()
 
 const WEEKDAYS = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']
@@ -213,7 +219,7 @@ function selectDay(day: DayCell) {
   if (day.disabled) return
   emit('update:modelValue', day.dateISO)
   isYearPanelOpen.value = false
-  close()
+  if (!props.inline) close()
 }
 
 function clear() {
@@ -294,7 +300,7 @@ function handleTriggerKeyDown(e: KeyboardEvent) {
 
 function handleGridKeyDown(e: KeyboardEvent) {
   e.stopPropagation()
-  if (!isOpen.value) return
+  if (!isOpen.value && !props.inline) return
 
   if (isYearPanelOpen.value) {
     const panel = wrapperRef.value?.querySelector('.yearPanel')
@@ -381,12 +387,12 @@ function handleGridKeyDown(e: KeyboardEvent) {
       const iso = toISO(d)
       if (!isDisabled(iso)) {
         emit('update:modelValue', iso)
-        close()
+        if (!props.inline) close()
       }
       return
     }
     case 'Escape':
-      close()
+      if (!props.inline) close()
       return
   }
 
@@ -402,6 +408,7 @@ function handleGridKeyDown(e: KeyboardEvent) {
 }
 
 function cellCls(day: DayCell): string {
+  const isHighlighted = props.highlightDates?.includes(day.dateISO)
   return [
     'dayCell',
     !day.currentMonth ? 'dayCellOther' : undefined,
@@ -410,6 +417,7 @@ function cellCls(day: DayCell): string {
     day.disabled ? 'dayCellDisabled' : undefined,
     day.focused && !day.selected ? 'dayCellFocused' : undefined,
     hoverDay.value === day.dateISO && !day.disabled && !day.selected ? 'dayCellHover' : undefined,
+    isHighlighted ? 'dayCellHighlighted' : undefined,
   ].filter(Boolean).join(' ')
 }
 
@@ -429,14 +437,110 @@ watch(isYearPanelOpen, (open) => {
 /* click outside + scroll close + resize reposition */
 usePopoverBehavior(isOpen, wrapperRef, floatingRef, () => close(), recompute)
 
+/* Watchers for displayMonth */
+watch(() => props.displayMonth, (val) => {
+  if (val) {
+    const [y, m] = val.split('-').map(Number)
+    if (y && m !== undefined) {
+      viewYear.value = y
+      viewMonth.value = m - 1
+    }
+  }
+}, { immediate: true })
+
+watch([viewYear, viewMonth], () => {
+  const val = `${viewYear.value}-${String(viewMonth.value + 1).padStart(2, '0')}`
+  emit('update:displayMonth', val)
+})
+
 </script>
 
 <template>
-  <div
-    ref="wrapperRef"
-    class="wrapper"
-    :class="$props.class"
-  >
+  <div v-if="inline" ref="wrapperRef" class="inlinePanel" :class="$props.class" @keydown="handleGridKeyDown" id="agala-date-grid" role="grid" aria-label="Calendar">
+    <div class="header">
+      <button type="button" class="navBtn" @click="prevMonth" aria-label="Previous month">
+        <AgalaIcon name="chevron" :size="14" />
+      </button>
+      <div class="headerSelects">
+        <div class="selectWrapper">
+          <select v-model="viewMonth" class="nativeSelect monthSelect">
+            <option v-for="(label, i) in MONTH_LABELS" :key="i" :value="i" :disabled="isMonthDisabled(i)">
+              {{ label }}
+            </option>
+          </select>
+          <AgalaIcon name="chevron" :size="12" class="selectChevron" />
+        </div>
+        <div class="selectWrapper yearPanelWrapper">
+          <button
+            type="button"
+            class="nativeSelect yearTrigger yearSelect"
+            @click.stop="isYearPanelOpen = !isYearPanelOpen"
+            :aria-expanded="isYearPanelOpen"
+            aria-haspopup="listbox"
+          >
+            {{ viewYear }}
+            <AgalaIcon name="chevron" :size="12" class="selectChevron" :class="isYearPanelOpen ? 'selectChevronOpen' : ''" />
+          </button>
+          <div
+            v-if="isYearPanelOpen"
+            class="yearPanel"
+            role="listbox"
+            aria-label="Years"
+          >
+            <button
+              v-for="year in yearOptions"
+              :key="year"
+              type="button"
+              role="option"
+              :class="yearCellCls(year)"
+              :aria-selected="viewYear === year"
+              :aria-disabled="isYearDisabled(year)"
+              @click="selectYear(year)"
+            >
+              {{ year }}
+            </button>
+          </div>
+        </div>
+      </div>
+      <button type="button" class="navBtn navBtnNext" @click="nextMonth" aria-label="Next month">
+        <AgalaIcon name="chevron" :size="14" />
+      </button>
+    </div>
+
+    <div class="weekdays" role="row">
+      <div v-for="d in WEEKDAYS" :key="d" class="weekday" role="columnheader" :aria-label="d">
+        {{ d }}
+      </div>
+    </div>
+
+    <div class="days" role="rowgroup">
+      <div v-for="(week, wi) in grid" :key="wi" class="week" role="row">
+        <button
+          v-for="day in week"
+          :key="day.dateISO"
+          type="button"
+          role="gridcell"
+          :aria-selected="day.selected"
+          :aria-disabled="day.disabled"
+          :aria-label="day.ariaLabel"
+          :class="cellCls(day)"
+          :tabindex="day.focused ? 0 : -1"
+          @click="selectDay(day)"
+          @mouseenter="hoverDay = day.dateISO"
+          @mouseleave="hoverDay = ''"
+        >
+          {{ day.dayNum }}
+        </button>
+      </div>
+    </div>
+
+    <div v-if="clearable && modelValue" class="footer">
+      <button type="button" class="clearBtn" @click="clear">
+        Clear
+      </button>
+    </div>
+  </div>
+  <div v-else ref="wrapperRef" class="wrapper" :class="$props.class">
     <div ref="triggerRef" :class="triggerRowCls" @click="handleTriggerClick" @keydown="handleTriggerKeyDown" tabindex="0" role="combobox" :aria-expanded="isOpen" aria-haspopup="grid" aria-controls="agala-date-grid" :aria-disabled="disabled">
       <span class="triggerLabel">
         <AgalaIcon name="calendar" :size="14" />
@@ -823,6 +927,7 @@ usePopoverBehavior(isOpen, wrapperRef, floatingRef, () => close(), recompute)
 }
 
 .dayCell {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -884,6 +989,28 @@ usePopoverBehavior(isOpen, wrapperRef, floatingRef, () => close(), recompute)
 
 .dayCellHover:not(.dayCellDisabled):not(.dayCellSelected):not(.dayCellFocused) {
   background-color: hsl(var(--agala-accent));
+}
+
+/* Inline panel */
+.inlinePanel {
+  width: 280px;
+}
+
+/* Highlighted dot */
+.dayCellHighlighted::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: hsl(var(--agala-primary));
+}
+
+.dayCellHighlighted.dayCellSelected::after {
+  background: hsl(var(--agala-primary-foreground));
 }
 
 /* Footer */
