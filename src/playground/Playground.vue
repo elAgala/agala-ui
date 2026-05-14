@@ -90,6 +90,8 @@ function handleCreateEmpty(text: string) {
 const pickedDate = ref('')
 const minDate = ref('')
 const maxDate = ref('')
+const inlineDate = ref('')
+const inlineDisplayMonth = ref('2026-05')
 
 /* ─── ColorPicker state ─── */
 const pickedColor = ref('')
@@ -700,6 +702,20 @@ const AckDialog = {
       <div class="stack" style="max-width: 320px">
         <DatePicker placeholder="Error state" error error-message="Please select a valid date." />
         <DatePicker placeholder="Disabled" disabled />
+      </div>
+    </section>
+
+    <section>
+      <h2>DatePicker — Inline + Highlight dates</h2>
+      <p class="muted" style="margin: 0 0 0.75rem; font-size: 0.875rem">
+        Always-visible calendar panel, no input popup. Dots indicate highlighted dates.
+      </p>
+      <div style="display: flex; gap: 2rem; align-items: flex-start; flex-wrap: wrap">
+        <DatePicker v-model="inlineDate" inline :highlight-dates="['2026-05-13', '2026-05-18', '2026-05-22']" v-model:display-month="inlineDisplayMonth" />
+        <div style="padding-top: 0.5rem">
+          <p class="muted" style="margin: 0 0 0.25rem; font-size: 0.875rem">Selected: <strong>{{ inlineDate || '—' }}</strong></p>
+          <p class="muted" style="margin: 0; font-size: 0.875rem">Display month: {{ inlineDisplayMonth }}</p>
+        </div>
       </div>
     </section>
 
