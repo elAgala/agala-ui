@@ -563,6 +563,13 @@ const AckDialog = {
       </div>
     </section>
 
+    <section>
+      <h2 style="margin-top: 1.5rem">Input — Actionable end icon</h2>
+      <div class="stack" style="max-width: 300px">
+        <Input placeholder="Search..." icon-start="search" icon-end="x" icon-end-actionable @icon-end-click="console.log('clear')" />
+      </div>
+    </section>
+
     <!-- ─── FormField ─── -->
     <section id="formfield">
       <h2>FormField</h2>
@@ -884,6 +891,16 @@ const AckDialog = {
       </div>
     </section>
 
+    <section>
+      <h2 style="margin-top: 1.5rem">Badge — Subtle variant</h2>
+      <div class="row">
+        <Badge variant="subtle" color="primary">Active</Badge>
+        <Badge variant="subtle" color="success">Completed</Badge>
+        <Badge variant="subtle" color="warning">Pending</Badge>
+        <Badge variant="subtle" color="danger">Cancelled</Badge>
+      </div>
+    </section>
+
     <!-- ═══════════════════ CHECKBOX ═══════════════════ -->
     <section id="checkbox">
       <h2>Checkbox</h2>
@@ -1104,6 +1121,15 @@ const AckDialog = {
       </p>
     </section>
 
+    <section>
+      <h2 style="margin-top: 1.5rem">Table — Clean variant</h2>
+      <Table
+        variant="clean"
+        :columns="[{ key: 'name', label: 'Name', sortable: true }, { key: 'role', label: 'Role' }, { key: 'status', label: 'Status' }]"
+        :rows="[{ name: 'Alice', role: 'Admin', status: 'Active' }, { name: 'Bob', role: 'Editor', status: 'Inactive' }]"
+      />
+    </section>
+
     <!-- ═══════════════════ STAT ═══════════════════ -->
     <section id="stat">
       <h2>Stat</h2>
@@ -1112,6 +1138,17 @@ const AckDialog = {
         <Stat label="Active Now"    value="184"   :trend="3.2"  trend-label="vs yesterday" />
         <Stat label="Churn Rate"    value="2.4%"  :trend="-0.8" trend-label="vs last month" />
         <Stat label="MRR"           value="$18,420" :trend="0" trend-label="no change" />
+      </div>
+
+      <h2 style="margin-top: 1.5rem">Stat — Layout variants</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 0.75rem; max-width: 600px">
+        <Stat label="Turnos hoy" value="7" layout="row" icon="calendar" iconBg="primary" />
+        <Stat label="Pendientes" value="4" layout="row" icon="clock" iconBg="warning" />
+        <Stat label="Completados" value="12" layout="row" icon="check" iconBg="success" />
+      </div>
+      <div style="margin-top: 0.75rem">
+        <Stat label="Pacientes activos" value="248" layout="inline" />
+        <Stat label="Ingresos hoy" value="$1,420" layout="inline" />
       </div>
     </section>
 
@@ -1447,6 +1484,15 @@ const AckDialog = {
       <p class="muted" style="margin-top: 0.75rem; font-size: 0.875rem">Active tab: <strong>{{ activeTab }}</strong> · "Settings" is disabled.</p>
     </section>
 
+    <section>
+      <h2 style="margin-top: 1.5rem">Tabs — Pills variant</h2>
+      <Tabs variant="pills" :tabs="[{ value: 'a', label: 'Pendientes' }, { value: 'b', label: 'Historial' }, { value: 'c', label: 'Detalles' }]" v-model="activeTab">
+        <template #panel-a><p style="margin: 0.5rem 0; font-size: 0.875rem">Pending items panel</p></template>
+        <template #panel-b><p style="margin: 0.5rem 0; font-size: 0.875rem">History panel</p></template>
+        <template #panel-c><p style="margin: 0.5rem 0; font-size: 0.875rem">Details panel</p></template>
+      </Tabs>
+    </section>
+
     <!-- ═══════════════════ CARD ═══════════════════ -->
     <section id="card">
       <h2>Card — Padding Variants</h2>
@@ -1499,6 +1545,12 @@ const AckDialog = {
           <p style="margin: 0; font-size: 0.875rem">accentColor: #8b5cf6</p>
         </Card>
       </div>
+
+      <h2 style="margin-top: 1.5rem">Card — Compact header</h2>
+      <Card header-variant="compact" style="max-width: 400px">
+        <template #header>Tipos de turno</template>
+        <p style="margin: 0; font-size: 0.875rem">Content with compact header style.</p>
+      </Card>
     </section>
 
     <!-- ═══════════════════ TOOLTIP ═══════════════════ -->
@@ -1710,6 +1762,13 @@ const AckDialog = {
           <ListGroupItem icon="user" label="Profile" subtitle="Edit your info" style="border-radius: var(--agala-radius-sm)" />
           <ListGroupItem icon="bell" label="Notifications" badge="12" style="border-radius: var(--agala-radius-sm)" />
           <ListGroupItem icon="settings" label="Settings" style="border-radius: var(--agala-radius-sm)" />
+        </ListGroup>
+
+        <p class="muted" style="margin: 0 0 0.5rem; font-size: 0.875rem; margin-top: 1rem">Cards variant</p>
+        <ListGroup variant="cards" style="max-width: 400px">
+          <ListGroupItem icon="user" label="Profile" subtitle="Edit your info" />
+          <ListGroupItem icon="bell" label="Notifications" badge="12" />
+          <ListGroupItem icon="settings" label="Settings" />
         </ListGroup>
       </div>
     </section>
