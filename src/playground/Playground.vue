@@ -464,7 +464,7 @@ const AckDialog = {
         Paste custom CSS variables below and click <strong>Apply</strong> to see all components update instantly.
       </p>
       <div class="stack" style="max-width: 640px">
-        <Textarea
+        <AgalaTextarea
           v-model="customThemeCss"
           :rows="6"
           resize="vertical"
@@ -527,7 +527,7 @@ const AckDialog = {
       <div class="row">
         <AgalaButton disabled>Disabled</AgalaButton>
         <AgalaButton loading>Saving</AgalaButton>
-        <Button
+        <AgalaButton
           :loading="loading"
           @click="loading = true; setTimeout(() => loading = false, 2000)"
         >
@@ -650,7 +650,7 @@ const AckDialog = {
         Press Enter on it to emit the <code>create</code> event with the typed text.
       </p>
       <div class="stack" style="max-width: 400px">
-        <CreatableSelect
+        <AgalaCreatableSelect
           v-model="creatableTags"
           :options="SKILLS"
           placeholder="Pick or create skills…"
@@ -667,7 +667,7 @@ const AckDialog = {
       <h2>CreatableSelect — Disabled + Empty</h2>
       <div class="stack" style="max-width: 400px">
         <AgalaCreatableSelect :options="SKILLS" placeholder="Disabled select" disabled />
-        <CreatableSelect
+        <AgalaCreatableSelect
           v-model="emptyTags"
           :options="emptyOptions"
           placeholder="No options available"
@@ -726,7 +726,7 @@ const AckDialog = {
         Interactive calendar with month, week, day, and list views. Click events or days to see debug info below.
       </p>
       <div style="height: 600px; border: 1px solid hsl(var(--agala-border)); border-radius: var(--agala-radius-lg); overflow: hidden">
-        <Calendar
+        <AgalaCalendar
           v-model:view="calendarView"
           v-model:currentDate="calendarDate"
           :events="calendarEvents"
@@ -748,7 +748,7 @@ const AckDialog = {
         Same calendar with <strong>:snap-minutes="15"</strong> for finer slot selection.
       </p>
       <div style="height: 600px; border: 1px solid hsl(var(--agala-border)); border-radius: var(--agala-radius-lg); overflow: hidden">
-        <Calendar
+        <AgalaCalendar
           v-model:view="calendarView"
           v-model:currentDate="calendarDate"
           :events="calendarEvents"
@@ -827,7 +827,7 @@ const AckDialog = {
         <p>Aquí viene el Select cerca del footer:</p>
         
         <!-- Select near footer - this is the test case -->
-        <Select
+        <AgalaSelect
           v-model="selectedMember"
           :options="gymMembers"
           placeholder="Selecciona un instructor..."
@@ -836,7 +836,7 @@ const AckDialog = {
         />
 
         <p class="muted">Aquí viene el CreatableSelect cerca del footer:</p>
-        <CreatableSelect
+        <AgalaCreatableSelect
           v-model="modalSelectedSkills"
           :options="modalSkills"
           placeholder="Pick or create skills…"
@@ -845,7 +845,7 @@ const AckDialog = {
         />
 
         <p class="muted">Aquí viene el DatePicker cerca del footer:</p>
-        <DatePicker
+        <AgalaDatePicker
           v-model="modalClassDate"
           placeholder="Pick a class date…"
           style="margin-bottom: 1rem; max-width: 320px"
@@ -1032,7 +1032,7 @@ const AckDialog = {
     <section id="dropdown">
       <h2>DropdownMenu</h2>
       <div class="row">
-        <DropdownMenu
+        <AgalaDropdownMenu
           :items="[
             { label: 'View profile', icon: 'user', onClick: () => toastManager.show({ message: 'View profile', variant: 'default' }) },
             { label: 'Edit',         icon: 'search', onClick: () => toastManager.show({ message: 'Edit clicked' }) },
@@ -1046,7 +1046,7 @@ const AckDialog = {
           </template>
         </AgalaDropdownMenu>
 
-        <DropdownMenu
+        <AgalaDropdownMenu
           :items="[
             { label: 'Edit row', icon: 'search' },
             { label: 'Duplicate', icon: 'flag' },
@@ -1069,7 +1069,7 @@ const AckDialog = {
     <section id="table">
       <h2>Table</h2>
       <div class="row" style="margin-bottom: 0.75rem">
-        <Button
+        <AgalaButton
           variant="outline"
           size="sm"
           :loading="tableLoading"
@@ -1082,7 +1082,7 @@ const AckDialog = {
         </span>
       </div>
 
-      <Table
+      <AgalaTable
         :columns="TABLE_COLUMNS"
         :rows="TABLE_ROWS"
         :loading="tableLoading"
@@ -1108,7 +1108,7 @@ const AckDialog = {
         </template>
 
         <template #cell-actions>
-          <DropdownMenu
+          <AgalaDropdownMenu
             :items="[
               { label: 'View', icon: 'user' },
               { label: 'Edit', icon: 'search' },
@@ -1139,7 +1139,7 @@ const AckDialog = {
 
     <section>
       <h2 style="margin-top: 1.5rem">Table — Clean variant</h2>
-      <Table
+      <AgalaTable
         variant="clean"
         :columns="[{ key: 'name', label: 'Name', sortable: true }, { key: 'role', label: 'Role' }, { key: 'status', label: 'Status' }]"
         :rows="[{ name: 'Alice', role: 'Admin', status: 'Active' }, { name: 'Bob', role: 'Editor', status: 'Inactive' }]"
@@ -1172,7 +1172,7 @@ const AckDialog = {
     <section id="empty">
       <h2>EmptyState</h2>
       <AgalaCard style="max-width: 480px">
-        <EmptyState
+        <AgalaEmptyState
           title="No members found"
           description="Try adjusting your search or filters, or invite new members to get started."
         >
@@ -1228,7 +1228,7 @@ const AckDialog = {
 
       <h2 style="margin-top: 1.5rem">Tag — Sizes + Removable</h2>
       <div class="row" style="flex-wrap: wrap">
-        <Tag
+        <AgalaTag
           v-for="(t, i) in tagList"
           :key="t.label"
           :label="t.label"
@@ -1268,7 +1268,7 @@ const AckDialog = {
         <AgalaButton variant="outline" @click="openDrawer('top')">Top</AgalaButton>
         <AgalaButton variant="outline" @click="openDrawer('bottom')">Bottom</AgalaButton>
       </div>
-      <Drawer
+      <AgalaDrawer
         :open="drawerOpen"
         :placement="drawerPlacement"
         :title="`${drawerPlacement.charAt(0).toUpperCase() + drawerPlacement.slice(1)} Drawer`"
@@ -1287,7 +1287,7 @@ const AckDialog = {
     <section id="fileupload">
       <h2>FileUpload</h2>
       <div class="stack" style="max-width: 480px">
-        <FileUpload
+        <AgalaFileUpload
           v-model="uploadedFiles"
           multiple
           accept="image/*,.pdf"
@@ -1336,13 +1336,13 @@ const AckDialog = {
       <div style="border: 1px solid hsl(var(--agala-border)); border-radius: var(--agala-radius-lg); overflow: hidden">
         <AgalaNavbar>
           <template #brand>
-            <SidebarToggle
+            <AgalaSidebarToggle
               v-if="isMobileViewport"
               aria-controls="responsive-sidebar"
               :aria-expanded="sidebarOpen"
               @click="sidebarOpen = !sidebarOpen"
             />
-            <Button
+            <AgalaButton
               v-else-if="isDesktopViewport"
               variant="ghost"
               size="icon"
@@ -1362,7 +1362,7 @@ const AckDialog = {
           </template>
         </AgalaNavbar>
         <div style="display: flex; height: 420px; border-top: 1px solid hsl(var(--agala-border));">
-          <Sidebar
+          <AgalaSidebar
             id="responsive-sidebar"
             :responsive="true"
             v-model:collapsed="sidebarCollapsed"
@@ -1598,7 +1598,7 @@ const AckDialog = {
       <div class="row" style="align-items: flex-start; gap: 3rem">
         <div>
           <p style="margin: 0 0 0.75rem; font-size: 0.875rem; font-weight: 600">Vertical (default)</p>
-          <RadioGroup
+          <AgalaRadioGroup
             :options="NOTIFY_OPTIONS"
             v-model="radioNotify"
           />
@@ -1606,7 +1606,7 @@ const AckDialog = {
         </div>
         <div>
           <p style="margin: 0 0 0.75rem; font-size: 0.875rem; font-weight: 600">Horizontal</p>
-          <RadioGroup
+          <AgalaRadioGroup
             :options="[
               { value: 'h', label: 'Horizontal' },
               { value: 'v', label: 'Vertical' },
@@ -1618,7 +1618,7 @@ const AckDialog = {
         </div>
         <div>
           <p style="margin: 0 0 0.75rem; font-size: 0.875rem; font-weight: 600">Error state</p>
-          <RadioGroup
+          <AgalaRadioGroup
             :options="[{ value: 'a', label: 'Option A' }, { value: 'b', label: 'Option B' }]"
             v-model="radioError"
             :error="true"
@@ -1626,7 +1626,7 @@ const AckDialog = {
         </div>
         <div>
           <p style="margin: 0 0 0.75rem; font-size: 0.875rem; font-weight: 600">Disabled</p>
-          <RadioGroup
+          <AgalaRadioGroup
             :options="[{ value: 'x', label: 'Option X' }, { value: 'y', label: 'Option Y' }]"
             model-value="x"
             :disabled="true"
