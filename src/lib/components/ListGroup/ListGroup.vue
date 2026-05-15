@@ -66,4 +66,8 @@ const rootStyle = computed(() => ({
   box-shadow: var(--agala-shadow-xs);
   border-bottom: 1px solid hsl(var(--agala-border));
 }
+
+.listGroupCards :deep(.listItem:last-child) {
+  border-bottom: 1px solid hsl(var(--agala-border));
+}
 </style>
