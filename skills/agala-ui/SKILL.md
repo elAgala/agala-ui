@@ -17,6 +17,20 @@ description: >
 
 `@el-agala/ui` is a **zero-dependency** Vue 3 component library (peer-dep: `vue >=3.3.0`). It ships as a single ESM bundle with CSS injected. All components use `<style scoped>` with HSL design tokens. No Tailwind, no CSS Modules.
 
+**Naming convention:** All components are exported with the `Agala` prefix — `AgalaButton`, `AgalaCard`, `AgalaStat`, etc. This prevents conflicts with native HTML elements (`<dialog>`, `<details>`, `<search>`) and makes components instantly recognizable in templates. Import individually:
+
+```ts
+import { AgalaButton, AgalaCard } from '@el-agala/ui'
+```
+
+Or register all globally via plugin:
+
+```ts
+import { AgalaUI } from '@el-agala/ui'
+app.use(AgalaUI)
+// Then use <AgalaButton>, <AgalaCard>, etc. anywhere
+```
+
 **Key principles:**
 - Scoped CSS in `.vue` SFCs only
 - HSL design tokens (`--agala-primary`, etc.) via `tokens.css`
@@ -70,8 +84,8 @@ Uses `agala-ui.browser.js` which has no `import './index.css'` statement (browse
 
 ```vue
 <template>
-  <ModalProvider />
-  <ToastProvider />
+  <AgalaModalProvider />
+  <AgalaToastProvider />
   <RouterView />
 </template>
 
@@ -326,9 +340,9 @@ html[data-theme="forja"] {
 
 ### Button
 ```vue
-<Button variant="default" size="md" :loading="false" :disabled="false" icon>
+<AgalaButton variant="default" size="md" :loading="false" :disabled="false" icon>
   Label
-</Button>
+</AgalaButton>
 ```
 - `variant`: `default` | `secondary` | `outline` | `ghost` | `danger` | `link`
 - `size`: `sm` | `md` | `lg` | `icon`
@@ -337,7 +351,7 @@ html[data-theme="forja"] {
 
 ### Input
 ```vue
-<Input v-model="value" placeholder="…" size="md" type="text" icon-start icon-end error />
+<AgalaInput v-model="value" placeholder="…" size="md" type="text" icon-start icon-end error />
 ```
 - `size`: `sm` | `md` | `lg`
 - `iconStart`, `iconEnd` (shows search icon)
@@ -345,14 +359,14 @@ html[data-theme="forja"] {
 
 ### FormField
 ```vue
-<FormField label="Email" helper="We won't spam." html-for="email" required :error="errorMsg">
-  <Input id="email" v-model="email" />
-</FormField>
+<AgalaFormField label="Email" helper="We won't spam." html-for="email" required :error="errorMsg">
+  <AgalaInput id="email" v-model="email" />
+</AgalaFormField>
 ```
 
 ### Select
 ```vue
-<Select :options="[{ value: 'a', label: 'A' }]" v-model="selected" multiple searchable clearable />
+<AgalaSelect :options="[{ value: 'a', label: 'A' }]" v-model="selected" multiple searchable clearable />
 ```
 - `options`: `{ value, label, subtitle?, group?, disabled? }[]`
 - `multiple`, `searchable`, `clearable`, `maxSelections`
@@ -390,14 +404,14 @@ html[data-theme="forja"] {
 
 ### DatePicker
 ```vue
-<DatePicker v-model="date" placeholder="Pick a date" size="md" clearable min="2024-01-01" max="2024-12-31" />
+<AgalaDatePicker v-model="date" placeholder="Pick a date" size="md" clearable min="2024-01-01" max="2024-12-31" />
 ```
 - Dropdown teleports to body
 - Uses `useDropdownPosition` with `width: 'auto'` so calendar expands to `280px` instead of being clipped to trigger width
 
 ### ColorPicker
 ```vue
-<ColorPicker v-model="color" size="md" clearable placeholder="Pick a color" />
+<AgalaColorPicker v-model="color" size="md" clearable placeholder="Pick a color" />
 ```
 - Popover mode: trigger shows color swatch + hex text + chevron
 - Saturation/luminance square + hue slider for visual color selection
@@ -463,7 +477,7 @@ const events = ref<CalendarEvent[]>([
 
 ### Badge
 ```vue
-<Badge variant="default" size="md" dot>Label</Badge>
+<AgalaBadge variant="default" size="md" dot>Label</AgalaBadge>
 ```
 - `variant`: `default` | `secondary` | `outline` | `success` | `warning` | `danger`
 - `size`: `sm` | `md`
@@ -471,7 +485,7 @@ const events = ref<CalendarEvent[]>([
 
 ### Tag
 ```vue
-<Tag label="React" variant="primary" size="md" removable @remove="…" />
+<AgalaTag label="React" variant="primary" size="md" removable @remove="…" />
 ```
 - `variant`: `default` | `primary` | `secondary` | `success` | `warning` | `danger` | `outline`
 - `size`: `sm` | `md`
@@ -479,18 +493,18 @@ const events = ref<CalendarEvent[]>([
 
 ### Checkbox
 ```vue
-<Checkbox v-model="checked" label="Accept terms" :indeterminate="true" error />
+<AgalaCheckbox v-model="checked" label="Accept terms" :indeterminate="true" error />
 ```
 
 ### Toggle
 ```vue
-<Toggle v-model="on" size="md" />
+<AgalaToggle v-model="on" size="md" />
 ```
 - `size`: `sm` | `md` | `lg`
 
 ### RadioGroup
 ```vue
-<RadioGroup :options="[{ value: 'a', label: 'A' }]" v-model="value" orientation="vertical" />
+<AgalaRadioGroup :options="[{ value: 'a', label: 'A' }]" v-model="value" orientation="vertical" />
 ```
 
 ### SegmentedControl
@@ -516,7 +530,7 @@ const events = ref<CalendarEvent[]>([
 
 ### Textarea
 ```vue
-<Textarea v-model="text" :rows="3" resize="vertical" />
+<AgalaTextarea v-model="text" :rows="3" resize="vertical" />
 ```
 - `resize`: `none` | `vertical` | `horizontal` | `both`
 
@@ -532,30 +546,30 @@ const events = ref<CalendarEvent[]>([
 >
   <template #cell-name="{ row }"><strong>{{ row.name }}</strong></template>
   <template #footer>…</template>
-</Table>
+</AgalaTable>
 ```
 
 ### Pagination
 ```vue
-<Pagination v-model="page" :total="120" :page-size="10" :sibling-count="1" show-edges />
+<AgalaPagination v-model="page" :total="120" :page-size="10" :sibling-count="1" show-edges />
 ```
 - **Responsive:** Below 640px, switches to compact mode showing only Prev / "Page X of Y" / Next instead of numbered buttons.
 
 ### Tabs
 ```vue
-<Tabs :tabs="[{ value: 'a', label: 'Tab A' }]" v-model="activeTab">
+<AgalaTabs :tabs="[{ value: 'a', label: 'Tab A' }]" v-model="activeTab">
   <template #panel-a>Content</template>
-</Tabs>
+</AgalaTabs>
 ```
 - **Responsive:** Below 640px, tab list becomes horizontally scrollable with hidden scrollbar and edge fade indicators. Active tab auto-scrolls into view.
 
 ### Card
 ```vue
-<Card padding="md" accent="top" accent-color="primary">
+<AgalaCard padding="md" accent="top" accent-color="primary">
   <template #header>Title</template>
   <p>Content</p>
-  <template #footer><Button>Action</Button></template>
-</Card>
+  <template #footer><AgalaButton>Action</AgalaButton></template>
+</AgalaCard>
 ```
 - `padding`: `none` | `sm` | `md` | `lg`
 - `accent`: `top` | `left` | `right` | `bottom` — position of colored border segment
@@ -565,26 +579,26 @@ const events = ref<CalendarEvent[]>([
 
 ### Tooltip
 ```vue
-<Tooltip content="Hello" placement="top" :delay="300">
-  <Button>Hover me</Button>
-</Tooltip>
+<AgalaTooltip content="Hello" placement="top" :delay="300">
+  <AgalaButton>Hover me</AgalaButton>
+</AgalaTooltip>
 ```
 
 ### DropdownMenu
 ```vue
-<DropdownMenu :items="[{ label: 'Edit', icon: 'pencil', onClick: () => {} }]" placement="bottom-start">
-  <template #trigger><Button>Actions</Button></template>
-</DropdownMenu>
+<AgalaDropdownMenu :items="[{ label: 'Edit', icon: 'pencil', onClick: () => {} }]" placement="bottom-start">
+  <template #trigger><AgalaButton>Actions</AgalaButton></template>
+</AgalaDropdownMenu>
 ```
 
 ### Modal (Declarative)
 ```vue
-<Modal v-model:open="isOpen" title="Title" size="md" :dismissible="true" :escape-closes="true">
+<AgalaModal v-model:open="isOpen" title="Title" size="md" :dismissible="true" :escape-closes="true">
   <p>Content</p>
   <template #footer="{ close }">
-    <Button @click="close">Cancel</Button>
+    <AgalaButton @click="close">Cancel</AgalaButton>
   </template>
-</Modal>
+</AgalaModal>
 ```
 - `size`: `sm` | `md` | `lg` | `xl` | `full`
 - **Responsive:** Below 640px, `sm/md/lg/xl` automatically shrink to `calc(100vw - 2rem)` with reduced padding. `full` unchanged.
@@ -592,7 +606,7 @@ const events = ref<CalendarEvent[]>([
 ### Modal (Imperative)
 ```vue
 <!-- App.vue root -->
-<ModalProvider />
+<AgalaModalProvider />
 ```
 
 ```ts
@@ -610,7 +624,7 @@ if (result.confirmed) { /* … */ }
 ### Toast
 ```vue
 <!-- App.vue root -->
-<ToastProvider />
+<AgalaToastProvider />
 ```
 
 ```ts
@@ -626,12 +640,12 @@ toastManager.show({
 
 ### Drawer
 ```vue
-<Drawer :open="isOpen" @close="isOpen = false" title="Title" placement="right" size="384px">
+<AgalaDrawer :open="isOpen" @close="isOpen = false" title="Title" placement="right" size="384px">
   <p>Content</p>
   <template #footer="{ close }">
-    <Button @click="close">Close</Button>
+    <AgalaButton @click="close">Close</AgalaButton>
   </template>
-</Drawer>
+</AgalaDrawer>
 ```
 - `placement`: `left` | `right` | `top` | `bottom`
 
@@ -651,44 +665,44 @@ toastManager.show({
 
 ### Progress
 ```vue
-<Progress :value="65" color="primary" size="md" />
-<Progress indeterminate />
-<Progress variant="circular" :value="65" color="success" size="lg" />
+<AgalaProgress :value="65" color="primary" size="md" />
+<AgalaProgress indeterminate />
+<AgalaProgress variant="circular" :value="65" color="success" size="lg" />
 ```
 - `color`: `primary` | `success` | `warning` | `danger`
 - `size`: `sm` | `md` | `lg`
 
 ### Avatar
 ```vue
-<Avatar src="https://…" alt="Name" fallback="JD" size="md" />
+<AgalaAvatar src="https://…" alt="Name" fallback="JD" size="md" />
 ```
 - `size`: `xs` | `sm` | `md` | `lg` | `xl`
 
 ### Skeleton
 ```vue
-<Skeleton variant="line" width="60%" />
-<Skeleton variant="rect" height="6rem" />
-<Skeleton variant="circle" width="2.5rem" height="2.5rem" />
+<AgalaSkeleton variant="line" width="60%" />
+<AgalaSkeleton variant="rect" height="6rem" />
+<AgalaSkeleton variant="circle" width="2.5rem" height="2.5rem" />
 ```
 
 ### Accordion
 ```vue
-<Accordion :multiple="true">
-  <AccordionItem value="1" title="Question">Answer</AccordionItem>
-</Accordion>
+<AgalaAccordion :multiple="true">
+  <AgalaAccordionItem value="1" title="Question">Answer</AgalaAccordionItem>
+</AgalaAccordion>
 ```
 
 ### Stack / HStack / VStack
 ```vue
-<VStack gap="1rem">
-  <HStack gap="0.5rem" align="center">
+<AgalaVStack gap="1rem">
+  <AgalaHStack gap="0.5rem" align="center">
     <span>Item</span>
-    <Spacer />
-    <Badge>Label</Badge>
-  </HStack>
-  <Divider />
+    <AgalaSpacer />
+    <AgalaBadge>Label</AgalaBadge>
+  </AgalaHStack>
+  <AgalaDivider />
   <p>Content below</p>
-</VStack>
+</AgalaVStack>
 ```
 - `Stack`: flex container, `direction` (vertical/horizontal), `gap` (any CSS), `align`, `justify`, `wrap`, `as` (tag)
 - `HStack`: horizontal stack (same props, no direction)
@@ -699,10 +713,10 @@ toastManager.show({
 
 ### ListGroup / ListGroupItem
 ```vue
-<ListGroup>
-  <ListGroupItem icon="user" label="Profile" subtitle="Edit info" badge="3" @click="..." />
-  <ListGroupItem label="Delete" variant="danger" />
-</ListGroup>
+<AgalaListGroup>
+  <AgalaListGroupItem icon="user" label="Profile" subtitle="Edit info" badge="3" @click="..." />
+  <AgalaListGroupItem label="Delete" variant="danger" />
+</AgalaListGroup>
 ```
 - `ListGroup`: wrapper with border and radius, `gap` prop for spacing between items
 - `ListGroupItem`: `label` (required), `subtitle`, `icon` (AgalaIcon name), `badge`, `badgeVariant`, `variant` (default/danger), `disabled`
@@ -712,16 +726,16 @@ toastManager.show({
 
 **With gap (separated items):**
 ```vue
-<ListGroup gap="6px">
-  <ListGroupItem icon="user" label="Profile" style="border-radius: var(--agala-radius-sm)" />
-  <ListGroupItem icon="settings" label="Settings" style="border-radius: var(--agala-radius-sm)" />
-</ListGroup>
+<AgalaListGroup gap="6px">
+  <AgalaListGroupItem icon="user" label="Profile" style="border-radius: var(--agala-radius-sm)" />
+  <AgalaListGroupItem icon="settings" label="Settings" style="border-radius: var(--agala-radius-sm)" />
+</AgalaListGroup>
 ```
 
 **With slots (custom dot + trailing badge):**
 ```vue
-<ListGroup>
-  <ListGroupItem>
+<AgalaListGroup>
+  <AgalaListGroupItem>
     <template #leading>
       <span style="width:8px;height:8px;border-radius:50%;background:hsl(var(--agala-danger));flex-shrink:0" />
     </template>
@@ -730,19 +744,19 @@ toastManager.show({
       <p style="margin:0;font-size:0.75rem;color:hsl(var(--agala-muted-foreground))">Penicilina, Ibuprofeno</p>
     </div>
     <template #trailing>
-      <Badge variant="danger">2</Badge>
+      <AgalaBadge variant="danger">2</AgalaBadge>
     </template>
-  </ListGroupItem>
-</ListGroup>
+  </AgalaListGroupItem>
+</AgalaListGroup>
 ```
 
 ### Alert
 ```vue
-<Alert variant="info" title="Heads up" dismissible>
+<AgalaAlert variant="info" title="Heads up" dismissible>
   Your session expires in 5 minutes.
-</Alert>
+</AgalaAlert>
 
-<Alert variant="success" flat>Changes saved.</Alert>
+<AgalaAlert variant="success" flat>Changes saved.</AgalaAlert>
 ```
 - `variant`: `info` | `success` | `warning` | `danger`
 - `title`: optional bold header text
@@ -755,44 +769,44 @@ toastManager.show({
 
 ### Stat
 ```vue
-<Stat label="Members" value="2,841" :trend="12.5" trend-label="vs last month" />
+<AgalaStat label="Members" value="2,841" :trend="12.5" trend-label="vs last month" />
 ```
 
 ### EmptyState
 ```vue
-<EmptyState title="No data" description="Get started by adding your first item.">
-  <template #action><Button>Add item</Button></template>
-</EmptyState>
+<AgalaEmptyState title="No data" description="Get started by adding your first item.">
+  <template #action><AgalaButton>Add item</AgalaButton></template>
+</AgalaEmptyState>
 ```
 
 ### Navbar
 ```vue
-<Navbar>
+<AgalaNavbar>
   <template #brand>Logo</template>
-  <Button variant="ghost">Link</Button>
-  <template #actions><Button>Action</Button></template>
-</Navbar>
+  <AgalaButton variant="ghost">Link</AgalaButton>
+  <template #actions><AgalaButton>Action</AgalaButton></template>
+</AgalaNavbar>
 ```
 
 ### Sidebar
 ```vue
-<Sidebar v-model:collapsed="collapsed" v-model:open="sidebarOpen" :responsive="true">
+<AgalaSidebar v-model:collapsed="collapsed" v-model:open="sidebarOpen" :responsive="true">
   <template #header>
     <span>Brand</span>
-    <Button @click="collapsed = !collapsed">☰</Button>
+    <AgalaButton @click="collapsed = !collapsed">☰</AgalaButton>
   </template>
 
-  <SidebarGroup label="Section">
-    <SidebarItem icon="home" label="Dashboard" active />
-    <SidebarItem icon="users" label="Members" badge="248" />
-    <SidebarItem icon="bell" label="Alerts" dot dot-variant="danger" />
-  </SidebarGroup>
+  <AgalaSidebarGroup label="Section">
+    <AgalaSidebarItem icon="home" label="Dashboard" active />
+    <AgalaSidebarItem icon="users" label="Members" badge="248" />
+    <AgalaSidebarItem icon="bell" label="Alerts" dot dot-variant="danger" />
+  </AgalaSidebarGroup>
 
   <template #footer>
-    <Avatar fallback="JD" size="sm" />
+    <AgalaAvatar fallback="JD" size="sm" />
     <span>Jane Doe</span>
   </template>
-</Sidebar>
+</AgalaSidebar>
 ```
 - `SidebarItem`: `icon`, `label`, `active`, `badge`, `badgeVariant`, `dot`, `dotVariant`, `disabled`
 - `SidebarGroup`: `label`
@@ -804,7 +818,7 @@ toastManager.show({
 
 ### SidebarToggle
 ```vue
-<SidebarToggle :aria-expanded="sidebarOpen" aria-controls="sidebar-id" @click="sidebarOpen = !sidebarOpen" />
+<AgalaSidebarToggle :aria-expanded="sidebarOpen" aria-controls="sidebar-id" @click="sidebarOpen = !sidebarOpen" />
 ```
 - Ghost icon button with `panel-left` icon
 - `ariaExpanded`, `ariaControls`, `ariaLabel` props
@@ -813,14 +827,14 @@ toastManager.show({
 
 ### DevEnvBanner
 ```vue
-<DevEnvBanner text="ATENCIÓN: Esto es un ambiente inestable de desarrollo" />
+<AgalaDevEnvBanner text="ATENCIÓN: Esto es un ambiente inestable de desarrollo" />
 ```
 - Simple dismissible warning banner
 - Uses warning theme colors
 - Close button removes banner from DOM (no parent state needed)
 - `text` prop to override default message
 - `class` prop for consumer overrides
-- Use as sibling of `<Navbar>` in app layout
+- Use as sibling of `<AgalaNavbar>` in app layout
 
 ---
 
@@ -830,50 +844,50 @@ Several components offer `variant` or `layout` props that change DOM structure, 
 
 ### Stat
 ```vue
-<Stat label="Turnos" value="7" layout="row" icon="calendar" iconBg="primary" />
+<AgalaStat label="Turnos" value="7" layout="row" icon="calendar" iconBg="primary" />
 ```
 - `layout`: `vertical` (default, card) | `row` (icon + label/value side by side) | `inline` (label: value text pair)
 - `icon`, `iconBg`: optional icon with colored circle background (primary/danger/success/warning/info)
 
 ### Card
 ```vue
-<Card header-variant="compact">
+<AgalaCard header-variant="compact">
   <template #header>Uppercase title</template>
-</Card>
+</AgalaCard>
 ```
 - `headerVariant`: `default` | `compact` (smaller padding, uppercase bold muted text)
 
 ### Badge
 ```vue
-<Badge variant="subtle" color="primary">Active</Badge>
+<AgalaBadge variant="subtle" color="primary">Active</AgalaBadge>
 ```
 - `variant`: `default` | `secondary` | `outline` | `subtle` | `success` | `warning` | `danger`
 - `subtle`: light background + colored text, no border (new)
 
 ### ListGroup
 ```vue
-<ListGroup variant="cards" gap="4px">
-  <ListGroupItem label="Item" radius="sm" />
-</ListGroup>
+<AgalaListGroup variant="cards" gap="4px">
+  <AgalaListGroupItem label="Item" radius="sm" />
+</AgalaListGroup>
 ```
 - `variant`: `divided` (default, connected items) | `cards` (separated items with individual border/radius/shadow)
 - `gap`: spacing between items when variant="cards"
 
 ### Tabs
 ```vue
-<Tabs variant="pills" :tabs="tabs" v-model="active" />
+<AgalaTabs variant="pills" :tabs="tabs" v-model="active" />
 ```
 - `variant`: `underline` (default, bottom-border) | `pills` (filled bg + radius, toolbar style)
 
 ### Table
 ```vue
-<Table variant="clean" :columns="cols" :rows="data" />
+<AgalaTable variant="clean" :columns="cols" :rows="data" />
 ```
 - `variant`: `default` | `clean` (no outer border, transparent header) | `minimal` (no borders, just row hover)
 
 ### Input
 ```vue
-<Input icon-end="x" icon-end-actionable @icon-end-click="clear" />
+<AgalaInput icon-end="x" icon-end-actionable @icon-end-click="clear" />
 ```
 - `iconEndActionable`: marks the right icon as clickable, emits `icon-end-click`
 
