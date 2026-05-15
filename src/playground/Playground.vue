@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, h, watch } from 'vue'
-import { Button, Center, Divider, Input, FormField, Select, CreatableSelect, DatePicker, ColorPicker, HStack, ListGroup, ListGroupItem, Modal, ModalProvider, modalManager, Badge, Checkbox, Toggle, Avatar, ToastProvider, toastManager, Textarea, DropdownMenu, Table, Tabs, Card, Tooltip, RadioGroup, SegmentedControl, Navbar, Sidebar, SidebarItem, SidebarGroup, SidebarToggle, Accordion, AccordionItem, Skeleton, Stat, EmptyState, Progress, Spacer, Stack, Tag, Pagination, Drawer, FileUpload, DevEnvBanner, Calendar, Alert, VStack } from '../lib'
+import { AgalaButton, AgalaCenter, AgalaDivider, AgalaInput, AgalaFormField, AgalaSelect, AgalaCreatableSelect, AgalaDatePicker, AgalaColorPicker, AgalaHStack, AgalaListGroup, AgalaListGroupItem, AgalaModal, AgalaModalProvider, modalManager, AgalaBadge, AgalaCheckbox, AgalaToggle, AgalaAvatar, AgalaToastProvider, toastManager, AgalaTextarea, AgalaDropdownMenu, AgalaTable, AgalaTabs, AgalaCard, AgalaTooltip, AgalaRadioGroup, AgalaSegmentedControl, AgalaNavbar, AgalaSidebar, AgalaSidebarItem, AgalaSidebarGroup, AgalaSidebarToggle, AgalaAccordion, AgalaAccordionItem, AgalaSkeleton, AgalaStat, AgalaEmptyState, AgalaProgress, AgalaSpacer, AgalaStack, AgalaTag, AgalaPagination, AgalaDrawer, AgalaFileUpload, AgalaDevEnvBanner, AgalaCalendar, AgalaAlert, AgalaVStack } from '../lib'
 
 import { useMediaQuery } from '../lib/composables/useMediaQuery'
 import AgalaIcon from '../lib/components/AgalaIcon/AgalaIcon.vue'
@@ -397,8 +397,8 @@ const AckDialog = {
 </script>
 
 <template>
-  <ModalProvider />
-  <ToastProvider />
+  <AgalaModalProvider />
+  <AgalaToastProvider />
 
   <div class="themebar">
     <span class="themebar__label">Theme</span>
@@ -471,8 +471,8 @@ const AckDialog = {
           placeholder="/* Paste your custom theme CSS here */\n:root {\n  --agala-primary: 200 90% 50%;\n  --agala-background: 0 0% 98%;\n  --agala-card: 0 0% 100%;\n  /* … */\n}"
         />
         <div class="row" style="margin-bottom: 0">
-          <Button variant="primary" icon="search" @click="applyCustomTheme">Apply Custom Theme</Button>
-          <Button variant="outline" @click="resetCustomTheme">Reset to Default</Button>
+          <AgalaButton variant="primary" icon="search" @click="applyCustomTheme">Apply Custom Theme</AgalaButton>
+          <AgalaButton variant="outline" @click="resetCustomTheme">Reset to Default</AgalaButton>
           <span v-if="activeTheme === 'custom'" class="muted" style="font-size: 0.75rem; margin-left: auto">
             ✅ Custom theme active
           </span>
@@ -490,8 +490,8 @@ const AckDialog = {
       <h2>DevEnvBanner</h2>
       <p class="muted" style="margin: 0 0 0.75rem; font-size: 0.875rem">Close button removes the banner from the DOM. Refresh to reset.</p>
       <div class="stack" style="gap: 0">
-        <DevEnvBanner />
-        <DevEnvBanner text="Custom: Preview environment — data resets daily." class="custom-banner" />
+        <AgalaDevEnvBanner />
+        <AgalaDevEnvBanner text="Custom: Preview environment — data resets daily." class="custom-banner" />
       </div>
     </section>
 
@@ -499,41 +499,41 @@ const AckDialog = {
     <section id="btn">
       <h2>Button — Variants</h2>
       <div class="row">
-        <Button v-for="v in variants" :key="v" :variant="v">
+        <AgalaButton v-for="v in variants" :key="v" :variant="v">
           {{ v.charAt(0).toUpperCase() + v.slice(1) }}
-        </Button>
+        </AgalaButton>
       </div>
     </section>
 
     <section>
       <h2>Button — Sizes</h2>
       <div class="row">
-        <Button v-for="s in sizes" :key="s" :size="s">{{ s.toUpperCase() }} button</Button>
+        <AgalaButton v-for="s in sizes" :key="s" :size="s">{{ s.toUpperCase() }} button</AgalaButton>
       </div>
     </section>
 
     <section>
       <h2>Button — Icon</h2>
       <div class="row">
-        <Button icon="search">Search</Button>
-        <Button variant="outline" icon="mail">Email</Button>
-        <Button variant="ghost" icon="search">Ghost</Button>
-        <Button size="icon" icon="search" aria-label="Search" />
+        <AgalaButton icon="search">Search</AgalaButton>
+        <AgalaButton variant="outline" icon="mail">Email</AgalaButton>
+        <AgalaButton variant="ghost" icon="search">Ghost</AgalaButton>
+        <AgalaButton size="icon" icon="search" aria-label="Search" />
       </div>
     </section>
 
     <section>
       <h2>Button — States</h2>
       <div class="row">
-        <Button disabled>Disabled</Button>
-        <Button loading>Saving</Button>
+        <AgalaButton disabled>Disabled</AgalaButton>
+        <AgalaButton loading>Saving</AgalaButton>
         <Button
           :loading="loading"
           @click="loading = true; setTimeout(() => loading = false, 2000)"
         >
           {{ loading ? 'Working…' : 'Click to load' }}
-        </Button>
-        <Button block>Block</Button>
+        </AgalaButton>
+        <AgalaButton block>Block</AgalaButton>
       </div>
     </section>
 
@@ -541,34 +541,34 @@ const AckDialog = {
     <section id="input">
       <h2>Input — Default</h2>
       <div class="stack" style="max-width: 400px">
-        <Input placeholder="Small" size="sm" />
-        <Input placeholder="Medium (default)" />
-        <Input placeholder="Large" size="lg" />
+        <AgalaInput placeholder="Small" size="sm" />
+        <AgalaInput placeholder="Medium (default)" />
+        <AgalaInput placeholder="Large" size="lg" />
       </div>
     </section>
 
     <section>
       <h2>Input — With Icons</h2>
       <div class="stack" style="max-width: 400px">
-        <Input placeholder="Search…" icon-start="search" />
-        <Input placeholder="you@example.com" icon-start="mail" />
-        <Input placeholder="Password" type="password" icon-end="eye" />
+        <AgalaInput placeholder="Search…" icon-start="search" />
+        <AgalaInput placeholder="you@example.com" icon-start="mail" />
+        <AgalaInput placeholder="Password" type="password" icon-end="eye" />
       </div>
     </section>
 
     <section>
       <h2>Input — States</h2>
       <div class="stack" style="max-width: 400px">
-        <Input placeholder="Disabled" disabled />
-        <Input placeholder="Read-only" readonly value="me@agala.dev" />
-        <Input placeholder="With error" error error-message="This field is required." />
+        <AgalaInput placeholder="Disabled" disabled />
+        <AgalaInput placeholder="Read-only" readonly value="me@agala.dev" />
+        <AgalaInput placeholder="With error" error error-message="This field is required." />
       </div>
     </section>
 
     <section>
       <h2 style="margin-top: 1.5rem">Input — Actionable end icon</h2>
       <div class="stack" style="max-width: 300px">
-        <Input placeholder="Search..." icon-start="search" icon-end="x" icon-end-actionable @icon-end-click="console.log('clear')" />
+        <AgalaInput placeholder="Search..." icon-start="search" icon-end="x" icon-end-actionable @icon-end-click="console.log('clear')" />
       </div>
     </section>
 
@@ -576,18 +576,18 @@ const AckDialog = {
     <section id="formfield">
       <h2>FormField</h2>
       <div class="stack" style="max-width: 400px">
-        <FormField label="Username" helper="Choose a unique username." html-for="user" required>
-          <Input id="user" placeholder="agala" />
-        </FormField>
-        <FormField label="Email" helper="We'll never share your email." html-for="email2">
-          <Input id="email2" placeholder="you@example.com" icon-start="mail" />
-        </FormField>
-        <FormField label="Password" error="Password must be at least 8 characters." html-for="pass" required>
-          <Input id="pass" type="password" placeholder="••••••••" icon-end="eye" error />
-        </FormField>
-        <FormField label="Disabled field" disabled>
-          <Input placeholder="Can't type here" disabled />
-        </FormField>
+        <AgalaFormField label="Username" helper="Choose a unique username." html-for="user" required>
+          <AgalaInput id="user" placeholder="agala" />
+        </AgalaFormField>
+        <AgalaFormField label="Email" helper="We'll never share your email." html-for="email2">
+          <AgalaInput id="email2" placeholder="you@example.com" icon-start="mail" />
+        </AgalaFormField>
+        <AgalaFormField label="Password" error="Password must be at least 8 characters." html-for="pass" required>
+          <AgalaInput id="pass" type="password" placeholder="••••••••" icon-end="eye" error />
+        </AgalaFormField>
+        <AgalaFormField label="Disabled field" disabled>
+          <AgalaInput placeholder="Can't type here" disabled />
+        </AgalaFormField>
       </div>
     </section>
 
@@ -595,39 +595,39 @@ const AckDialog = {
     <section id="select">
       <h2>Select — Single</h2>
       <div class="stack" style="max-width: 400px">
-        <Select :options="USERS" placeholder="Pick a user" v-model="singleUser" clearable />
-        <Select :options="USERS" placeholder="Small" size="sm" />
-        <Select :options="USERS" placeholder="Large" size="lg" />
+        <AgalaSelect :options="USERS" placeholder="Pick a user" v-model="singleUser" clearable />
+        <AgalaSelect :options="USERS" placeholder="Small" size="sm" />
+        <AgalaSelect :options="USERS" placeholder="Large" size="lg" />
       </div>
     </section>
 
     <section>
       <h2>Select — Multi-select</h2>
       <div class="stack" style="max-width: 400px">
-        <Select :options="TAGS" placeholder="Pick tags (chips)" multiple clearable v-model="multiTags" />
+        <AgalaSelect :options="TAGS" placeholder="Pick tags (chips)" multiple clearable v-model="multiTags" />
       </div>
     </section>
 
     <section>
       <h2>Select — Searchable + Grouped</h2>
       <div class="stack" style="max-width: 400px">
-        <Select :options="COUNTRIES" placeholder="Search countries…" searchable clearable v-model="searchCountry" />
+        <AgalaSelect :options="COUNTRIES" placeholder="Search countries…" searchable clearable v-model="searchCountry" />
       </div>
     </section>
 
     <section>
       <h2>Select — Max 3 selections</h2>
       <div class="stack" style="max-width: 400px">
-        <Select :options="TAGS" placeholder="Pick up to 3 tags" multiple clearable :max-selections="3" v-model="maxTags" />
+        <AgalaSelect :options="TAGS" placeholder="Pick up to 3 tags" multiple clearable :max-selections="3" v-model="maxTags" />
       </div>
     </section>
 
     <section>
       <h2>Select — Error + Disabled</h2>
       <div class="stack" style="max-width: 400px">
-        <Select :options="USERS" placeholder="Something went wrong" error error-message="You must select at least one user." />
-        <Select :options="USERS" placeholder="Disabled" disabled />
-        <Select :options="[]" placeholder="Empty options" />
+        <AgalaSelect :options="USERS" placeholder="Something went wrong" error error-message="You must select at least one user." />
+        <AgalaSelect :options="USERS" placeholder="Disabled" disabled />
+        <AgalaSelect :options="[]" placeholder="Empty options" />
       </div>
     </section>
 
@@ -637,8 +637,8 @@ const AckDialog = {
         Two selects in a flex row with fixed widths — neither should stretch beyond its assigned width.
       </p>
       <div class="row" style="gap: 0.5rem; max-width: 400px; border: 1px dashed hsl(var(--agala-border)); padding: 0.5rem; border-radius: var(--agala-radius)">
-        <Select :options="USERS" placeholder="180px" style="width: 180px" clearable />
-        <Select :options="TAGS" placeholder="Flex:1" multiple clearable style="flex: 1" />
+        <AgalaSelect :options="USERS" placeholder="180px" style="width: 180px" clearable />
+        <AgalaSelect :options="TAGS" placeholder="Flex:1" multiple clearable style="flex: 1" />
       </div>
     </section>
 
@@ -666,7 +666,7 @@ const AckDialog = {
     <section>
       <h2>CreatableSelect — Disabled + Empty</h2>
       <div class="stack" style="max-width: 400px">
-        <CreatableSelect :options="SKILLS" placeholder="Disabled select" disabled />
+        <AgalaCreatableSelect :options="SKILLS" placeholder="Disabled select" disabled />
         <CreatableSelect
           v-model="emptyTags"
           :options="emptyOptions"
@@ -680,9 +680,9 @@ const AckDialog = {
     <section id="datepicker">
       <h2>DatePicker — Sizes</h2>
       <div class="stack" style="max-width: 320px">
-        <DatePicker v-model="pickedDate" size="sm" placeholder="Small" />
-        <DatePicker v-model="pickedDate" size="md" placeholder="Medium (default)" />
-        <DatePicker v-model="pickedDate" size="lg" placeholder="Large" />
+        <AgalaDatePicker v-model="pickedDate" size="sm" placeholder="Small" />
+        <AgalaDatePicker v-model="pickedDate" size="md" placeholder="Medium (default)" />
+        <AgalaDatePicker v-model="pickedDate" size="lg" placeholder="Large" />
       </div>
       <p class="muted" style="margin-top: 0.5rem; font-size: 0.875rem">Selected: {{ pickedDate || '—' }}</p>
       <p class="muted" style="margin-top: 0.25rem; font-size: 0.875rem">Click the header to switch between day, month, and year views for fast navigation.</p>
@@ -691,17 +691,17 @@ const AckDialog = {
     <section>
       <h2>DatePicker — Clearable + Min/Max</h2>
       <div class="stack" style="max-width: 320px">
-        <DatePicker v-model="pickedDate" clearable placeholder="Pick a date (clearable)" />
-        <DatePicker v-model="minDate" :min="pickedDate || undefined" placeholder="Min = selected above" clearable />
-        <DatePicker v-model="maxDate" :max="pickedDate || undefined" placeholder="Max = selected above" clearable />
+        <AgalaDatePicker v-model="pickedDate" clearable placeholder="Pick a date (clearable)" />
+        <AgalaDatePicker v-model="minDate" :min="pickedDate || undefined" placeholder="Min = selected above" clearable />
+        <AgalaDatePicker v-model="maxDate" :max="pickedDate || undefined" placeholder="Max = selected above" clearable />
       </div>
     </section>
 
     <section>
       <h2>DatePicker — Error + Disabled</h2>
       <div class="stack" style="max-width: 320px">
-        <DatePicker placeholder="Error state" error error-message="Please select a valid date." />
-        <DatePicker placeholder="Disabled" disabled />
+        <AgalaDatePicker placeholder="Error state" error error-message="Please select a valid date." />
+        <AgalaDatePicker placeholder="Disabled" disabled />
       </div>
     </section>
 
@@ -711,7 +711,7 @@ const AckDialog = {
         Always-visible calendar panel, no input popup. Dots indicate highlighted dates.
       </p>
       <div style="display: flex; gap: 2rem; align-items: flex-start; flex-wrap: wrap">
-        <DatePicker v-model="inlineDate" inline :highlight-dates="['2026-05-13', '2026-05-18', '2026-05-22']" v-model:display-month="inlineDisplayMonth" />
+        <AgalaDatePicker v-model="inlineDate" inline :highlight-dates="['2026-05-13', '2026-05-18', '2026-05-22']" v-model:display-month="inlineDisplayMonth" />
         <div style="padding-top: 0.5rem">
           <p class="muted" style="margin: 0 0 0.25rem; font-size: 0.875rem">Selected: <strong>{{ inlineDate || '—' }}</strong></p>
           <p class="muted" style="margin: 0; font-size: 0.875rem">Display month: {{ inlineDisplayMonth }}</p>
@@ -764,17 +764,17 @@ const AckDialog = {
     <section id="colorpicker">
       <h2>ColorPicker — Sizes</h2>
       <div class="stack" style="max-width: 320px">
-        <ColorPicker v-model="pickedColor" size="sm" placeholder="Small" />
-        <ColorPicker v-model="pickedColor" size="md" placeholder="Medium" />
-        <ColorPicker v-model="pickedColor" size="lg" placeholder="Large" />
+        <AgalaColorPicker v-model="pickedColor" size="sm" placeholder="Small" />
+        <AgalaColorPicker v-model="pickedColor" size="md" placeholder="Medium" />
+        <AgalaColorPicker v-model="pickedColor" size="lg" placeholder="Large" />
       </div>
       <p class="muted" style="margin-top: 0.5rem; font-size: 0.875rem">Selected: {{ pickedColor || '—' }}</p>
 
       <h2>ColorPicker — Clearable + Error + Disabled</h2>
       <div class="stack" style="max-width: 320px">
-        <ColorPicker v-model="pickedColor" clearable placeholder="Pick a color (clearable)" />
-        <ColorPicker placeholder="Error state" error error-message="Please select a valid color." />
-        <ColorPicker placeholder="Disabled" disabled />
+        <AgalaColorPicker v-model="pickedColor" clearable placeholder="Pick a color (clearable)" />
+        <AgalaColorPicker placeholder="Error state" error error-message="Please select a valid color." />
+        <AgalaColorPicker placeholder="Disabled" disabled />
       </div>
     </section>
 
@@ -791,9 +791,9 @@ const AckDialog = {
         Shrinks to near-full-width on viewports below 640 px automatically.
       </p>
       <div class="row">
-        <Button @click="basicOpen = true">Open Basic Modal</Button>
+        <AgalaButton @click="basicOpen = true">Open Basic Modal</AgalaButton>
       </div>
-      <Modal :open="basicOpen" @close="basicOpen = false" title="Hello Modal">
+      <AgalaModal :open="basicOpen" @close="basicOpen = false" title="Hello Modal">
         <p style="margin: 0 0 1rem">
           This is a fully declarative modal. You control its state with <code>v-model:open</code> or <code>open</code> and <code>@close</code> props.
         </p>
@@ -801,10 +801,10 @@ const AckDialog = {
           Try pressing Escape, clicking outside, or the X button.
         </p>
         <template #footer="{ close }">
-          <Button variant="outline" size="sm" @click="close">Close</Button>
-          <Button size="sm" @click="basicOpen = false">Save Changes</Button>
+          <AgalaButton variant="outline" size="sm" @click="close">Close</AgalaButton>
+          <AgalaButton size="sm" @click="basicOpen = false">Save Changes</AgalaButton>
         </template>
-      </Modal>
+      </AgalaModal>
     </section>
 
     <section>
@@ -813,9 +813,9 @@ const AckDialog = {
         Open modal → scroll down → test Select, CreatableSelect, and DatePicker dropdowns. All should appear <strong>above the footer</strong>, not clipped.
       </p>
       <div class="row">
-        <Button @click="selectInModalOpen = true">Open Modal with Select</Button>
+        <AgalaButton @click="selectInModalOpen = true">Open Modal with Select</AgalaButton>
       </div>
-      <Modal :open="selectInModalOpen" @close="selectInModalOpen = false" title="Dropdown Positioning Test">
+      <AgalaModal :open="selectInModalOpen" @close="selectInModalOpen = false" title="Dropdown Positioning Test">
         <!-- Lots of content to force scrolling -->
         <p>Configuración de la clase de spinning del día lunes.</p>
         <p class="muted">Este contenido está aquí para forzar que el modal tenga scroll y el Select quede cerca del footer.</p>
@@ -855,18 +855,18 @@ const AckDialog = {
         <p>Otra línea de contenido para llenar el modal.</p>
         
         <template #footer="{ close }">
-          <Button variant="outline" size="sm" @click="close">Cancelar</Button>
-          <Button size="sm" @click="selectInModalOpen = false">Confirmar</Button>
+          <AgalaButton variant="outline" size="sm" @click="close">Cancelar</AgalaButton>
+          <AgalaButton size="sm" @click="selectInModalOpen = false">Confirmar</AgalaButton>
         </template>
-      </Modal>
+      </AgalaModal>
     </section>
 
     <section>
       <h2>Modal — Sizes</h2>
       <div class="row">
-        <Button v-for="sz in modalSizes" :key="sz" variant="outline" size="sm" @click="basicOpen = true">
+        <AgalaButton v-for="sz in modalSizes" :key="sz" variant="outline" size="sm" @click="basicOpen = true">
           {{ sz.toUpperCase() }}
-        </Button>
+        </AgalaButton>
       </div>
       <p class="muted">In real usage you'd wire each to its own state.</p>
     </section>
@@ -874,9 +874,9 @@ const AckDialog = {
     <section>
       <h2>Modal — Imperative</h2>
       <div class="row">
-        <Button variant="outline" @click="openConfirmDialog">Confirm Dialog</Button>
-        <Button variant="outline" @click="openFormDialog">Custom Form</Button>
-        <Button variant="outline" @click="openAckDialog">Forced Acknowledge</Button>
+        <AgalaButton variant="outline" @click="openConfirmDialog">Confirm Dialog</AgalaButton>
+        <AgalaButton variant="outline" @click="openFormDialog">Custom Form</AgalaButton>
+        <AgalaButton variant="outline" @click="openAckDialog">Forced Acknowledge</AgalaButton>
       </div>
       <p class="muted">
         Uses <code>modalManager.open()</code> — no Vue state needed. Returns a <code>Promise&lt;ModalResult&gt;</code>.
@@ -887,33 +887,33 @@ const AckDialog = {
     <section id="badge">
       <h2>Badge — Variants</h2>
       <div class="row">
-        <Badge>Default</Badge>
-        <Badge variant="secondary">Secondary</Badge>
-        <Badge variant="outline">Outline</Badge>
-        <Badge variant="success">Success</Badge>
-        <Badge variant="warning">Warning</Badge>
-        <Badge variant="danger">Danger</Badge>
+        <AgalaBadge>Default</AgalaBadge>
+        <AgalaBadge variant="secondary">Secondary</AgalaBadge>
+        <AgalaBadge variant="outline">Outline</AgalaBadge>
+        <AgalaBadge variant="success">Success</AgalaBadge>
+        <AgalaBadge variant="warning">Warning</AgalaBadge>
+        <AgalaBadge variant="danger">Danger</AgalaBadge>
       </div>
     </section>
 
     <section>
       <h2>Badge — Sizes + Dot</h2>
       <div class="row">
-        <Badge size="sm">Small</Badge>
-        <Badge size="md">Medium</Badge>
-        <Badge variant="success" dot>Active</Badge>
-        <Badge variant="danger" dot>Critical</Badge>
-        <Badge variant="warning" dot size="sm">Pending</Badge>
+        <AgalaBadge size="sm">Small</AgalaBadge>
+        <AgalaBadge size="md">Medium</AgalaBadge>
+        <AgalaBadge variant="success" dot>Active</AgalaBadge>
+        <AgalaBadge variant="danger" dot>Critical</AgalaBadge>
+        <AgalaBadge variant="warning" dot size="sm">Pending</AgalaBadge>
       </div>
     </section>
 
     <section>
       <h2 style="margin-top: 1.5rem">Badge — Subtle variant</h2>
       <div class="row">
-        <Badge variant="subtle" color="primary">Active</Badge>
-        <Badge variant="subtle" color="success">Completed</Badge>
-        <Badge variant="subtle" color="warning">Pending</Badge>
-        <Badge variant="subtle" color="danger">Cancelled</Badge>
+        <AgalaBadge variant="subtle" color="primary">Active</AgalaBadge>
+        <AgalaBadge variant="subtle" color="success">Completed</AgalaBadge>
+        <AgalaBadge variant="subtle" color="warning">Pending</AgalaBadge>
+        <AgalaBadge variant="subtle" color="danger">Cancelled</AgalaBadge>
       </div>
     </section>
 
@@ -921,11 +921,11 @@ const AckDialog = {
     <section id="checkbox">
       <h2>Checkbox</h2>
       <div class="stack" style="max-width: 320px">
-        <Checkbox v-model="cbBasic" label="Accept terms and conditions" />
-        <Checkbox v-model="cbError" label="Error state" :error="true" />
-        <Checkbox v-model="cbIndeterminate" label="Indeterminate (select all)" :indeterminate="true" />
-        <Checkbox label="Disabled unchecked" :disabled="true" />
-        <Checkbox label="Disabled checked" :model-value="true" :disabled="true" />
+        <AgalaCheckbox v-model="cbBasic" label="Accept terms and conditions" />
+        <AgalaCheckbox v-model="cbError" label="Error state" :error="true" />
+        <AgalaCheckbox v-model="cbIndeterminate" label="Indeterminate (select all)" :indeterminate="true" />
+        <AgalaCheckbox label="Disabled unchecked" :disabled="true" />
+        <AgalaCheckbox label="Disabled checked" :model-value="true" :disabled="true" />
       </div>
       <p class="muted" style="margin-top: 0.75rem; font-size: 0.875rem">cbBasic: {{ cbBasic }}</p>
     </section>
@@ -935,19 +935,19 @@ const AckDialog = {
       <h2>Toggle — Sizes</h2>
       <div class="row" style="align-items: center; gap: 1.5rem">
         <div class="row" style="align-items: center; gap: 0.5rem; margin: 0">
-          <Toggle v-model="tgSm" size="sm" />
+          <AgalaToggle v-model="tgSm" size="sm" />
           <span style="font-size: 0.875rem">Small</span>
         </div>
         <div class="row" style="align-items: center; gap: 0.5rem; margin: 0">
-          <Toggle v-model="tgBasic" size="md" />
+          <AgalaToggle v-model="tgBasic" size="md" />
           <span style="font-size: 0.875rem">Medium</span>
         </div>
         <div class="row" style="align-items: center; gap: 0.5rem; margin: 0">
-          <Toggle v-model="tgLg" size="lg" />
+          <AgalaToggle v-model="tgLg" size="lg" />
           <span style="font-size: 0.875rem">Large</span>
         </div>
         <div class="row" style="align-items: center; gap: 0.5rem; margin: 0">
-          <Toggle :model-value="true" :disabled="true" />
+          <AgalaToggle :model-value="true" :disabled="true" />
           <span style="font-size: 0.875rem">Disabled</span>
         </div>
       </div>
@@ -957,23 +957,23 @@ const AckDialog = {
     <section id="avatar">
       <h2>Avatar — Sizes</h2>
       <div class="row" style="align-items: flex-end">
-        <Avatar size="xs" fallback="XS" />
-        <Avatar size="sm" fallback="SM" />
-        <Avatar size="md" fallback="MD" />
-        <Avatar size="lg" fallback="LG" />
-        <Avatar size="xl" fallback="XL" />
+        <AgalaAvatar size="xs" fallback="XS" />
+        <AgalaAvatar size="sm" fallback="SM" />
+        <AgalaAvatar size="md" fallback="MD" />
+        <AgalaAvatar size="lg" fallback="LG" />
+        <AgalaAvatar size="xl" fallback="XL" />
       </div>
     </section>
 
     <section>
       <h2>Avatar — Fallbacks</h2>
       <div class="row" style="align-items: center">
-        <Avatar src="https://i.pravatar.cc/150?img=1" alt="Alice" size="md" />
-        <Avatar src="https://i.pravatar.cc/150?img=2" alt="Bob" size="md" />
-        <Avatar fallback="JD" size="md" />
-        <Avatar fallback="AB" size="md" />
-        <Avatar size="md" />
-        <Avatar src="https://broken.url/img.png" fallback="ER" size="md" />
+        <AgalaAvatar src="https://i.pravatar.cc/150?img=1" alt="Alice" size="md" />
+        <AgalaAvatar src="https://i.pravatar.cc/150?img=2" alt="Bob" size="md" />
+        <AgalaAvatar fallback="JD" size="md" />
+        <AgalaAvatar fallback="AB" size="md" />
+        <AgalaAvatar size="md" />
+        <AgalaAvatar src="https://broken.url/img.png" fallback="ER" size="md" />
       </div>
       <p class="muted" style="font-size: 0.875rem; margin-top: 0.5rem">Last avatar has a broken src — falls back to initials.</p>
     </section>
@@ -982,30 +982,30 @@ const AckDialog = {
     <section id="toast">
       <h2>Toast</h2>
       <div class="row">
-        <Button variant="outline" size="sm"
+        <AgalaButton variant="outline" size="sm"
           @click="toastManager.show({ message: 'Everything looks good.' })">
           Default
-        </Button>
-        <Button variant="outline" size="sm"
+        </AgalaButton>
+        <AgalaButton variant="outline" size="sm"
           @click="toastManager.show({ message: 'Your changes have been saved.', variant: 'success' })">
           Success
-        </Button>
-        <Button variant="outline" size="sm"
+        </AgalaButton>
+        <AgalaButton variant="outline" size="sm"
           @click="toastManager.show({ message: 'Your subscription expires in 3 days.', variant: 'warning' })">
           Warning
-        </Button>
-        <Button variant="outline" size="sm"
+        </AgalaButton>
+        <AgalaButton variant="outline" size="sm"
           @click="toastManager.show({ message: 'Payment failed. Please retry.', variant: 'danger' })">
           Danger
-        </Button>
-        <Button variant="outline" size="sm"
+        </AgalaButton>
+        <AgalaButton variant="outline" size="sm"
           @click="toastManager.show({ message: 'File uploaded successfully.', variant: 'success', action: { label: 'View', onClick: () => alert('Viewing!') } })">
           With Action
-        </Button>
-        <Button variant="outline" size="sm"
+        </AgalaButton>
+        <AgalaButton variant="outline" size="sm"
           @click="toastManager.show({ message: 'This toast will stay until dismissed.', duration: 0 })">
           Persistent
-        </Button>
+        </AgalaButton>
       </div>
       <p class="muted" style="font-size: 0.875rem">Toasts appear bottom-right. Default auto-dismiss after 4s.</p>
     </section>
@@ -1014,16 +1014,16 @@ const AckDialog = {
     <section id="textarea">
       <h2>Textarea</h2>
       <div class="stack" style="max-width: 480px">
-        <FormField label="Notes" html-for="ta1" helper="Resize vertically by default.">
-          <Textarea id="ta1" v-model="textareaValue" placeholder="Write something…" />
-        </FormField>
-        <FormField label="Fixed height" html-for="ta2">
-          <Textarea id="ta2" :rows="2" resize="none" placeholder="No resize, 2 rows" />
-        </FormField>
-        <FormField label="Error state" html-for="ta3" error="This field is required.">
-          <Textarea id="ta3" placeholder="Required field" error error-message="" />
-        </FormField>
-        <Textarea placeholder="Disabled textarea" :disabled="true" />
+        <AgalaFormField label="Notes" html-for="ta1" helper="Resize vertically by default.">
+          <AgalaTextarea id="ta1" v-model="textareaValue" placeholder="Write something…" />
+        </AgalaFormField>
+        <AgalaFormField label="Fixed height" html-for="ta2">
+          <AgalaTextarea id="ta2" :rows="2" resize="none" placeholder="No resize, 2 rows" />
+        </AgalaFormField>
+        <AgalaFormField label="Error state" html-for="ta3" error="This field is required.">
+          <AgalaTextarea id="ta3" placeholder="Required field" error error-message="" />
+        </AgalaFormField>
+        <AgalaTextarea placeholder="Disabled textarea" :disabled="true" />
       </div>
       <p class="muted" style="margin-top: 0.5rem; font-size: 0.875rem">Value: {{ textareaValue || '—' }}</p>
     </section>
@@ -1042,9 +1042,9 @@ const AckDialog = {
           placement="bottom-start"
         >
           <template #trigger>
-            <Button variant="outline" size="sm">Actions</Button>
+            <AgalaButton variant="outline" size="sm">Actions</AgalaButton>
           </template>
-        </DropdownMenu>
+        </AgalaDropdownMenu>
 
         <DropdownMenu
           :items="[
@@ -1058,9 +1058,9 @@ const AckDialog = {
           placement="bottom-end"
         >
           <template #trigger>
-            <Button size="icon" variant="ghost" aria-label="Row actions" icon="search" />
+            <AgalaButton size="icon" variant="ghost" aria-label="Row actions" icon="search" />
           </template>
-        </DropdownMenu>
+        </AgalaDropdownMenu>
       </div>
       <p class="muted" style="font-size: 0.875rem">Left: bottom-start, Right: bottom-end (kebab trigger). Arrow keys + Enter navigate.</p>
     </section>
@@ -1076,7 +1076,7 @@ const AckDialog = {
           @click="tableLoading = !tableLoading"
         >
           {{ tableLoading ? 'Stop loading' : 'Toggle loading' }}
-        </Button>
+        </AgalaButton>
         <span v-if="tableSelected.length" class="muted" style="font-size: 0.875rem">
           {{ tableSelected.length }} row(s) selected
         </span>
@@ -1094,17 +1094,17 @@ const AckDialog = {
       >
         <template #cell-name="{ row }">
           <div style="display: flex; align-items: center; gap: 0.5rem">
-            <Avatar :fallback="String(row.name).slice(0, 2)" size="sm" />
+            <AgalaAvatar :fallback="String(row.name).slice(0, 2)" size="sm" />
             <span style="font-weight: 500">{{ row.name }}</span>
           </div>
         </template>
 
         <template #cell-plan="{ value }">
-          <Badge variant="secondary" size="sm">{{ value }}</Badge>
+          <AgalaBadge variant="secondary" size="sm">{{ value }}</AgalaBadge>
         </template>
 
         <template #cell-status="{ value }">
-          <Badge :variant="statusVariant(String(value))" dot size="sm">{{ value }}</Badge>
+          <AgalaBadge :variant="statusVariant(String(value))" dot size="sm">{{ value }}</AgalaBadge>
         </template>
 
         <template #cell-actions>
@@ -1118,19 +1118,19 @@ const AckDialog = {
             placement="bottom-end"
           >
             <template #trigger>
-              <Button size="icon" variant="ghost" aria-label="Row actions" icon="search" />
+              <AgalaButton size="icon" variant="ghost" aria-label="Row actions" icon="search" />
             </template>
-          </DropdownMenu>
+          </AgalaDropdownMenu>
         </template>
 
         <template #footer>
           <span class="muted" style="font-size: 0.875rem">Showing {{ TABLE_ROWS.length }} of {{ TABLE_ROWS.length }} members</span>
           <div style="display: flex; gap: 0.5rem">
-            <Button variant="outline" size="sm" disabled>Previous</Button>
-            <Button variant="outline" size="sm" disabled>Next</Button>
+            <AgalaButton variant="outline" size="sm" disabled>Previous</AgalaButton>
+            <AgalaButton variant="outline" size="sm" disabled>Next</AgalaButton>
           </div>
         </template>
-      </Table>
+      </AgalaTable>
 
       <p class="muted" style="margin-top: 0.75rem; font-size: 0.875rem">
         Sort key: <strong>{{ tableSortKey || '—' }}</strong> {{ tableSortDir }} · Selected IDs: {{ tableSelected.join(', ') || '—' }}
@@ -1150,37 +1150,37 @@ const AckDialog = {
     <section id="stat">
       <h2>Stat</h2>
       <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem">
-        <Stat label="Total Members" value="2,841" :trend="12.5" trend-label="vs last month" />
-        <Stat label="Active Now"    value="184"   :trend="3.2"  trend-label="vs yesterday" />
-        <Stat label="Churn Rate"    value="2.4%"  :trend="-0.8" trend-label="vs last month" />
-        <Stat label="MRR"           value="$18,420" :trend="0" trend-label="no change" />
+        <AgalaStat label="Total Members" value="2,841" :trend="12.5" trend-label="vs last month" />
+        <AgalaStat label="Active Now"    value="184"   :trend="3.2"  trend-label="vs yesterday" />
+        <AgalaStat label="Churn Rate"    value="2.4%"  :trend="-0.8" trend-label="vs last month" />
+        <AgalaStat label="MRR"           value="$18,420" :trend="0" trend-label="no change" />
       </div>
 
       <h2 style="margin-top: 1.5rem">Stat — Layout variants</h2>
       <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 0.75rem; max-width: 600px">
-        <Stat label="Turnos hoy" value="7" layout="row" icon="calendar" iconBg="primary" />
-        <Stat label="Pendientes" value="4" layout="row" icon="clock" iconBg="warning" />
-        <Stat label="Completados" value="12" layout="row" icon="check" iconBg="success" />
+        <AgalaStat label="Turnos hoy" value="7" layout="row" icon="calendar" iconBg="primary" />
+        <AgalaStat label="Pendientes" value="4" layout="row" icon="clock" iconBg="warning" />
+        <AgalaStat label="Completados" value="12" layout="row" icon="check" iconBg="success" />
       </div>
       <div style="margin-top: 0.75rem">
-        <Stat label="Pacientes activos" value="248" layout="inline" />
-        <Stat label="Ingresos hoy" value="$1,420" layout="inline" />
+        <AgalaStat label="Pacientes activos" value="248" layout="inline" />
+        <AgalaStat label="Ingresos hoy" value="$1,420" layout="inline" />
       </div>
     </section>
 
     <!-- ═══════════════════ EMPTY STATE ═══════════════════ -->
     <section id="empty">
       <h2>EmptyState</h2>
-      <Card style="max-width: 480px">
+      <AgalaCard style="max-width: 480px">
         <EmptyState
           title="No members found"
           description="Try adjusting your search or filters, or invite new members to get started."
         >
           <template #action>
-            <Button size="sm">Invite member</Button>
+            <AgalaButton size="sm">Invite member</AgalaButton>
           </template>
-        </EmptyState>
-      </Card>
+        </AgalaEmptyState>
+      </AgalaCard>
     </section>
 
     <!-- ═══════════════════ PROGRESS ═══════════════════ -->
@@ -1191,25 +1191,25 @@ const AckDialog = {
           <p style="margin: 0 0 0.5rem; font-size: 0.875rem; color: hsl(var(--agala-muted-foreground))">Value: {{ progressValue }}% — drag to change</p>
           <input type="range" min="0" max="100" v-model.number="progressValue" style="width: 100%; margin-bottom: 0.75rem" />
           <div class="stack" style="gap: 0.625rem">
-            <Progress :value="progressValue" color="primary" size="sm" />
-            <Progress :value="progressValue" color="success" size="md" />
-            <Progress :value="progressValue" color="warning" size="lg" />
-            <Progress :value="progressValue" color="danger"  size="md" />
+            <AgalaProgress :value="progressValue" color="primary" size="sm" />
+            <AgalaProgress :value="progressValue" color="success" size="md" />
+            <AgalaProgress :value="progressValue" color="warning" size="lg" />
+            <AgalaProgress :value="progressValue" color="danger"  size="md" />
           </div>
         </div>
         <div>
           <p style="margin: 0 0 0.5rem; font-size: 0.875rem; color: hsl(var(--agala-muted-foreground))">Indeterminate</p>
-          <Progress indeterminate />
+          <AgalaProgress indeterminate />
         </div>
       </div>
 
       <h2 style="margin-top: 2rem">Progress — Circular</h2>
       <div class="row" style="align-items: center; gap: 1.5rem">
-        <Progress variant="circular" :value="progressValue" color="primary" size="sm" />
-        <Progress variant="circular" :value="progressValue" color="success" size="md" />
-        <Progress variant="circular" :value="progressValue" color="warning" size="lg" />
-        <Progress variant="circular" :value="progressValue" color="danger"  size="lg" />
-        <Progress variant="circular" indeterminate size="md" />
+        <AgalaProgress variant="circular" :value="progressValue" color="primary" size="sm" />
+        <AgalaProgress variant="circular" :value="progressValue" color="success" size="md" />
+        <AgalaProgress variant="circular" :value="progressValue" color="warning" size="lg" />
+        <AgalaProgress variant="circular" :value="progressValue" color="danger"  size="lg" />
+        <AgalaProgress variant="circular" indeterminate size="md" />
       </div>
     </section>
 
@@ -1217,13 +1217,13 @@ const AckDialog = {
     <section id="tag">
       <h2>Tag — Variants</h2>
       <div class="row" style="flex-wrap: wrap">
-        <Tag label="Default" />
-        <Tag label="Primary" variant="primary" />
-        <Tag label="Secondary" variant="secondary" />
-        <Tag label="Success" variant="success" />
-        <Tag label="Warning" variant="warning" />
-        <Tag label="Danger" variant="danger" />
-        <Tag label="Outline" variant="outline" />
+        <AgalaTag label="Default" />
+        <AgalaTag label="Primary" variant="primary" />
+        <AgalaTag label="Secondary" variant="secondary" />
+        <AgalaTag label="Success" variant="success" />
+        <AgalaTag label="Warning" variant="warning" />
+        <AgalaTag label="Danger" variant="danger" />
+        <AgalaTag label="Outline" variant="outline" />
       </div>
 
       <h2 style="margin-top: 1.5rem">Tag — Sizes + Removable</h2>
@@ -1236,8 +1236,8 @@ const AckDialog = {
           removable
           @remove="tagList.splice(i, 1)"
         />
-        <Tag label="Small" size="sm" removable />
-        <Tag label="Disabled" disabled removable />
+        <AgalaTag label="Small" size="sm" removable />
+        <AgalaTag label="Disabled" disabled removable />
       </div>
       <p class="muted" style="margin-top: 0.5rem; font-size: 0.875rem">Click the × to remove. Removable tags emit a <code>remove</code> event.</p>
     </section>
@@ -1249,13 +1249,13 @@ const AckDialog = {
         Switches to compact mode (Prev / "Page X of Y" / Next) on viewports below 640 px.
       </p>
       <div class="row">
-        <Pagination v-model="currentPage" :total="120" :page-size="10" />
+        <AgalaPagination v-model="currentPage" :total="120" :page-size="10" />
       </div>
       <p class="muted" style="margin-top: 0.5rem; font-size: 0.875rem">Current page: <strong>{{ currentPage }}</strong> of 12</p>
 
       <h2 style="margin-top: 1.5rem">Pagination — Compact (forced)</h2>
       <div class="row">
-        <Pagination v-model="currentPage" :total="500" :page-size="10" :sibling-count="0" :show-edges="false" />
+        <AgalaPagination v-model="currentPage" :total="500" :page-size="10" :sibling-count="0" :show-edges="false" />
       </div>
     </section>
 
@@ -1263,10 +1263,10 @@ const AckDialog = {
     <section id="drawer">
       <h2>Drawer — Placements</h2>
       <div class="row">
-        <Button variant="outline" @click="openDrawer('left')">Left</Button>
-        <Button variant="outline" @click="openDrawer('right')">Right</Button>
-        <Button variant="outline" @click="openDrawer('top')">Top</Button>
-        <Button variant="outline" @click="openDrawer('bottom')">Bottom</Button>
+        <AgalaButton variant="outline" @click="openDrawer('left')">Left</AgalaButton>
+        <AgalaButton variant="outline" @click="openDrawer('right')">Right</AgalaButton>
+        <AgalaButton variant="outline" @click="openDrawer('top')">Top</AgalaButton>
+        <AgalaButton variant="outline" @click="openDrawer('bottom')">Bottom</AgalaButton>
       </div>
       <Drawer
         :open="drawerOpen"
@@ -1277,10 +1277,10 @@ const AckDialog = {
         <p style="margin: 0 0 1rem">This is a slide-in drawer from the <strong>{{ drawerPlacement }}</strong>.</p>
         <p class="muted" style="font-size: 0.875rem; margin: 0">Press Escape, click the backdrop, or the X button to close.</p>
         <template #footer="{ close }">
-          <Button variant="outline" size="sm" @click="close">Cancel</Button>
-          <Button size="sm" @click="drawerOpen = false">Save</Button>
+          <AgalaButton variant="outline" size="sm" @click="close">Cancel</AgalaButton>
+          <AgalaButton size="sm" @click="drawerOpen = false">Save</AgalaButton>
         </template>
-      </Drawer>
+      </AgalaDrawer>
     </section>
 
     <!-- ═══════════════════ FILE UPLOAD ═══════════════════ -->
@@ -1309,18 +1309,18 @@ const AckDialog = {
         Brand text truncates with ellipsis on narrow viewports.
       </p>
       <div style="border: 1px solid hsl(var(--agala-border)); border-radius: var(--agala-radius-lg); overflow: hidden">
-        <Navbar>
+        <AgalaNavbar>
           <template #brand>
             My Very Long Application Name
           </template>
-          <Button variant="ghost" size="sm">Dashboard</Button>
-          <Button variant="ghost" size="sm">Members</Button>
-          <Button variant="ghost" size="sm">Settings</Button>
+          <AgalaButton variant="ghost" size="sm">Dashboard</AgalaButton>
+          <AgalaButton variant="ghost" size="sm">Members</AgalaButton>
+          <AgalaButton variant="ghost" size="sm">Settings</AgalaButton>
           <template #actions>
-            <Button variant="outline" size="sm">Upgrade</Button>
-            <Avatar fallback="JD" size="sm" />
+            <AgalaButton variant="outline" size="sm">Upgrade</AgalaButton>
+            <AgalaAvatar fallback="JD" size="sm" />
           </template>
-        </Navbar>
+        </AgalaNavbar>
         <div style="padding: 1.25rem; font-size: 0.875rem; color: hsl(var(--agala-muted-foreground)); border-top: 1px solid hsl(var(--agala-border));">
           Page content goes here. Resize to &lt;640 px to see the brand name truncate with ellipsis.
         </div>
@@ -1334,7 +1334,7 @@ const AckDialog = {
         Auto-collapses to icon-only on tablet (640–768 px). Hidden on mobile (&lt;640 px) — use the toggle to open the Drawer.
       </p>
       <div style="border: 1px solid hsl(var(--agala-border)); border-radius: var(--agala-radius-lg); overflow: hidden">
-        <Navbar>
+        <AgalaNavbar>
           <template #brand>
             <SidebarToggle
               v-if="isMobileViewport"
@@ -1352,15 +1352,15 @@ const AckDialog = {
               @click="sidebarCollapsed = !sidebarCollapsed"
             >
               <AgalaIcon name="panel-left" :size="18" />
-            </Button>
+            </AgalaButton>
             <span style="font-weight: 600; font-size: 0.875rem; margin-left: 0.5rem">My App</span>
           </template>
-          <Button variant="ghost" size="sm">Dashboard</Button>
-          <Button variant="ghost" size="sm">Members</Button>
+          <AgalaButton variant="ghost" size="sm">Dashboard</AgalaButton>
+          <AgalaButton variant="ghost" size="sm">Members</AgalaButton>
           <template #actions>
-            <Avatar fallback="JD" size="sm" />
+            <AgalaAvatar fallback="JD" size="sm" />
           </template>
-        </Navbar>
+        </AgalaNavbar>
         <div style="display: flex; height: 420px; border-top: 1px solid hsl(var(--agala-border));">
           <Sidebar
             id="responsive-sidebar"
@@ -1370,37 +1370,37 @@ const AckDialog = {
           >
             <!-- No #header when paired with Navbar — app identity lives in Navbar #brand -->
 
-            <SidebarGroup label="Operación">
-              <SidebarItem icon="home" label="Panel" active />
-              <SidebarItem icon="users" label="Socios" badge="248" />
-              <SidebarItem icon="key" label="Accesos" dot dot-variant="danger" />
-              <SidebarItem icon="calendar" label="Agenda" />
-              <SidebarItem icon="clock" label="Horarios" />
-            </SidebarGroup>
+            <AgalaSidebarGroup label="Operación">
+              <AgalaSidebarItem icon="home" label="Panel" active />
+              <AgalaSidebarItem icon="users" label="Socios" badge="248" />
+              <AgalaSidebarItem icon="key" label="Accesos" dot dot-variant="danger" />
+              <AgalaSidebarItem icon="calendar" label="Agenda" />
+              <AgalaSidebarItem icon="clock" label="Horarios" />
+            </AgalaSidebarGroup>
 
-            <SidebarGroup label="Comercial">
-              <SidebarItem icon="document" label="Planes" />
-              <SidebarItem icon="refresh" label="Renovaciones" badge="59" badge-variant="danger" />
-              <SidebarItem icon="bell" label="Notificaciones" />
-              <SidebarItem icon="credit-card" label="Pagos" />
-              <SidebarItem icon="chart-bar" label="Reportes" />
-            </SidebarGroup>
+            <AgalaSidebarGroup label="Comercial">
+              <AgalaSidebarItem icon="document" label="Planes" />
+              <AgalaSidebarItem icon="refresh" label="Renovaciones" badge="59" badge-variant="danger" />
+              <AgalaSidebarItem icon="bell" label="Notificaciones" />
+              <AgalaSidebarItem icon="credit-card" label="Pagos" />
+              <AgalaSidebarItem icon="chart-bar" label="Reportes" />
+            </AgalaSidebarGroup>
 
-            <SidebarGroup label="Sistema">
-              <SidebarItem icon="settings" label="Configuración" />
-              <SidebarItem icon="user" label="Perfil" />
-            </SidebarGroup>
+            <AgalaSidebarGroup label="Sistema">
+              <AgalaSidebarItem icon="settings" label="Configuración" />
+              <AgalaSidebarItem icon="user" label="Perfil" />
+            </AgalaSidebarGroup>
 
             <template #footer="{ collapsed }">
               <div style="display: flex; align-items: center; gap: 0.5rem; overflow: hidden; padding: 0 0.25rem">
-                <Avatar fallback="MA" size="sm" style="flex-shrink: 0" />
+                <AgalaAvatar fallback="MA" size="sm" style="flex-shrink: 0" />
                 <div v-if="!collapsed" style="display: flex; flex-direction: column; min-width: 0">
                   <span style="font-size: 0.75rem; font-weight: 600; white-space: nowrap">Mariana Acosta</span>
                   <span class="muted" style="font-size: 0.625rem; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap">Owner</span>
                 </div>
               </div>
             </template>
-          </Sidebar>
+          </AgalaSidebar>
           <div style="flex: 1; padding: 1.25rem; font-size: 0.875rem; color: hsl(var(--agala-muted-foreground))">
             Main content area. Resize the viewport to see responsive behavior:
             <ul style="margin: 0.5rem 0; padding-left: 1.25rem">
@@ -1417,45 +1417,45 @@ const AckDialog = {
     <!-- ═══════════════════ ACCORDION ═══════════════════ -->
     <section id="accordion">
       <h2>Accordion — Single open</h2>
-      <Accordion style="max-width: 560px">
-        <AccordionItem value="q1" title="What is Agala UI?">
+      <AgalaAccordion style="max-width: 560px">
+        <AgalaAccordionItem value="q1" title="What is Agala UI?">
           A zero-dependency Vue 3 component library with full design token theming. Drop it into any project and
           customize every color, radius, shadow, and font via CSS custom properties.
-        </AccordionItem>
-        <AccordionItem value="q2" title="Does it support dark mode?">
+        </AgalaAccordionItem>
+        <AgalaAccordionItem value="q2" title="Does it support dark mode?">
           Yes. All tokens respond to <code>prefers-color-scheme: dark</code> automatically. You can also force a
           theme by setting <code>data-theme</code> on the root element.
-        </AccordionItem>
-        <AccordionItem value="q3" title="Can I use a custom theme?">
+        </AgalaAccordionItem>
+        <AgalaAccordionItem value="q3" title="Can I use a custom theme?">
           Absolutely. Override any token in your project's CSS. The Forja theme above is an example — one CSS file
           changes the entire look of the library.
-        </AccordionItem>
-        <AccordionItem value="q4" title="Disabled item (cannot open)" :disabled="true">
+        </AgalaAccordionItem>
+        <AgalaAccordionItem value="q4" title="Disabled item (cannot open)" :disabled="true">
           This content is unreachable.
-        </AccordionItem>
-      </Accordion>
+        </AgalaAccordionItem>
+      </AgalaAccordion>
 
       <h2 style="margin-top: 2rem">Accordion — Multiple open</h2>
-      <Accordion :multiple="true" style="max-width: 560px">
-        <AccordionItem value="a" title="Section A">Content for section A. Multiple items can be open simultaneously.</AccordionItem>
-        <AccordionItem value="b" title="Section B">Content for section B. Click any header to toggle independently.</AccordionItem>
-        <AccordionItem value="c" title="Section C">Content for section C.</AccordionItem>
-      </Accordion>
+      <AgalaAccordion :multiple="true" style="max-width: 560px">
+        <AgalaAccordionItem value="a" title="Section A">Content for section A. Multiple items can be open simultaneously.</AgalaAccordionItem>
+        <AgalaAccordionItem value="b" title="Section B">Content for section B. Click any header to toggle independently.</AgalaAccordionItem>
+        <AgalaAccordionItem value="c" title="Section C">Content for section C.</AgalaAccordionItem>
+      </AgalaAccordion>
     </section>
 
     <!-- ═══════════════════ SKELETON ═══════════════════ -->
     <section id="skeleton">
       <h2>Skeleton — Variants</h2>
       <div class="stack" style="max-width: 480px; gap: 0.75rem">
-        <Skeleton variant="line" />
-        <Skeleton variant="line" width="60%" />
-        <Skeleton variant="line" width="80%" />
-        <Skeleton variant="rect" height="6rem" />
+        <AgalaSkeleton variant="line" />
+        <AgalaSkeleton variant="line" width="60%" />
+        <AgalaSkeleton variant="line" width="80%" />
+        <AgalaSkeleton variant="rect" height="6rem" />
         <div style="display: flex; align-items: center; gap: 0.75rem">
-          <Skeleton variant="circle" width="2.5rem" height="2.5rem" />
+          <AgalaSkeleton variant="circle" width="2.5rem" height="2.5rem" />
           <div style="flex: 1; display: flex; flex-direction: column; gap: 0.5rem">
-            <Skeleton variant="line" width="50%" />
-            <Skeleton variant="line" width="75%" />
+            <AgalaSkeleton variant="line" width="50%" />
+            <AgalaSkeleton variant="line" width="75%" />
           </div>
         </div>
       </div>
@@ -1468,12 +1468,12 @@ const AckDialog = {
       <p class="muted" style="margin: 0 0 0.75rem; font-size: 0.875rem">
         Horizontal scroll on viewports below 640 px. Many tabs are shown below to exercise scrolling.
       </p>
-      <Tabs :tabs="TABS" v-model="activeTab">
+      <AgalaTabs :tabs="TABS" v-model="activeTab">
         <template #panel-overview>
-          <Card>
+          <AgalaCard>
             <template #header>Overview</template>
             <p style="margin: 0">This is the overview panel. Rendered inside a Card for demonstration.</p>
-          </Card>
+          </AgalaCard>
         </template>
         <template #panel-members>
           <p style="margin: 0">Members panel content goes here.</p>
@@ -1496,98 +1496,98 @@ const AckDialog = {
         <template #panel-help>
           <p style="margin: 0">Help panel — documentation and support links.</p>
         </template>
-      </Tabs>
+      </AgalaTabs>
       <p class="muted" style="margin-top: 0.75rem; font-size: 0.875rem">Active tab: <strong>{{ activeTab }}</strong> · "Settings" is disabled.</p>
     </section>
 
     <section>
       <h2 style="margin-top: 1.5rem">Tabs — Pills variant</h2>
-      <Tabs variant="pills" :tabs="[{ value: 'a', label: 'Pendientes' }, { value: 'b', label: 'Historial' }, { value: 'c', label: 'Detalles' }]" v-model="activeTab">
+      <AgalaTabs variant="pills" :tabs="[{ value: 'a', label: 'Pendientes' }, { value: 'b', label: 'Historial' }, { value: 'c', label: 'Detalles' }]" v-model="activeTab">
         <template #panel-a><p style="margin: 0.5rem 0; font-size: 0.875rem">Pending items panel</p></template>
         <template #panel-b><p style="margin: 0.5rem 0; font-size: 0.875rem">History panel</p></template>
         <template #panel-c><p style="margin: 0.5rem 0; font-size: 0.875rem">Details panel</p></template>
-      </Tabs>
+      </AgalaTabs>
     </section>
 
     <!-- ═══════════════════ CARD ═══════════════════ -->
     <section id="card">
       <h2>Card — Padding Variants</h2>
       <div class="row" style="align-items: flex-start">
-        <Card padding="sm" style="width: 180px">
+        <AgalaCard padding="sm" style="width: 180px">
           <template #header>Small</template>
           <p style="margin: 0; font-size: 0.875rem">padding: sm</p>
-        </Card>
-        <Card padding="md" style="width: 180px">
+        </AgalaCard>
+        <AgalaCard padding="md" style="width: 180px">
           <template #header>Medium</template>
           <p style="margin: 0; font-size: 0.875rem">padding: md (default)</p>
-        </Card>
-        <Card padding="lg" style="width: 180px">
+        </AgalaCard>
+        <AgalaCard padding="lg" style="width: 180px">
           <template #header>Large</template>
           <p style="margin: 0; font-size: 0.875rem">padding: lg</p>
-        </Card>
+        </AgalaCard>
       </div>
       <h2 style="margin-top: 1.5rem">Card — With Footer</h2>
-      <Card style="max-width: 360px">
+      <AgalaCard style="max-width: 360px">
         <template #header>Delete account</template>
         <p style="margin: 0; font-size: 0.875rem; color: hsl(var(--agala-muted-foreground))">
           This action is permanent and cannot be undone.
         </p>
         <template #footer>
-          <Button variant="outline" size="sm">Cancel</Button>
-          <Button variant="danger" size="sm">Delete</Button>
+          <AgalaButton variant="outline" size="sm">Cancel</AgalaButton>
+          <AgalaButton variant="danger" size="sm">Delete</AgalaButton>
         </template>
-      </Card>
+      </AgalaCard>
 
       <h2 style="margin-top: 1.5rem">Card — Accent Borders</h2>
       <div class="row" style="align-items: flex-start">
-        <Card accent="top" accent-color="primary" style="width: 180px">
+        <AgalaCard accent="top" accent-color="primary" style="width: 180px">
           <template #header>Top Primary</template>
           <p style="margin: 0; font-size: 0.875rem">accent: top</p>
-        </Card>
-        <Card accent="left" accent-color="danger" style="width: 180px">
+        </AgalaCard>
+        <AgalaCard accent="left" accent-color="danger" style="width: 180px">
           <template #header>Left Danger</template>
           <p style="margin: 0; font-size: 0.875rem">accent: left</p>
-        </Card>
-        <Card accent="bottom" accent-color="success" style="width: 180px">
+        </AgalaCard>
+        <AgalaCard accent="bottom" accent-color="success" style="width: 180px">
           <template #header>Bottom Success</template>
           <p style="margin: 0; font-size: 0.875rem">accent: bottom</p>
-        </Card>
-        <Card accent="right" accent-color="warning" style="width: 180px">
+        </AgalaCard>
+        <AgalaCard accent="right" accent-color="warning" style="width: 180px">
           <template #header>Right Warning</template>
           <p style="margin: 0; font-size: 0.875rem">accent: right</p>
-        </Card>
-        <Card accent="top" accent-color="#8b5cf6" style="width: 180px">
+        </AgalaCard>
+        <AgalaCard accent="top" accent-color="#8b5cf6" style="width: 180px">
           <template #header>Custom Hex</template>
           <p style="margin: 0; font-size: 0.875rem">accentColor: #8b5cf6</p>
-        </Card>
+        </AgalaCard>
       </div>
 
       <h2 style="margin-top: 1.5rem">Card — Compact header</h2>
-      <Card header-variant="compact" style="max-width: 400px">
+      <AgalaCard header-variant="compact" style="max-width: 400px">
         <template #header>Tipos de turno</template>
         <p style="margin: 0; font-size: 0.875rem">Content with compact header style.</p>
-      </Card>
+      </AgalaCard>
     </section>
 
     <!-- ═══════════════════ TOOLTIP ═══════════════════ -->
     <section id="tooltip">
       <h2>Tooltip — Placements</h2>
       <div class="row" style="gap: 2rem; justify-content: center; padding: 3rem 0">
-        <Tooltip content="Top tooltip" placement="top">
-          <Button variant="outline" size="sm">Top</Button>
-        </Tooltip>
-        <Tooltip content="Bottom tooltip" placement="bottom">
-          <Button variant="outline" size="sm">Bottom</Button>
-        </Tooltip>
-        <Tooltip content="Left tooltip" placement="left">
-          <Button variant="outline" size="sm">Left</Button>
-        </Tooltip>
-        <Tooltip content="Right tooltip" placement="right">
-          <Button variant="outline" size="sm">Right</Button>
-        </Tooltip>
-        <Tooltip content="Appears after 600ms" :delay="600">
-          <Button variant="outline" size="sm">Slow (600ms)</Button>
-        </Tooltip>
+        <AgalaTooltip content="Top tooltip" placement="top">
+          <AgalaButton variant="outline" size="sm">Top</AgalaButton>
+        </AgalaTooltip>
+        <AgalaTooltip content="Bottom tooltip" placement="bottom">
+          <AgalaButton variant="outline" size="sm">Bottom</AgalaButton>
+        </AgalaTooltip>
+        <AgalaTooltip content="Left tooltip" placement="left">
+          <AgalaButton variant="outline" size="sm">Left</AgalaButton>
+        </AgalaTooltip>
+        <AgalaTooltip content="Right tooltip" placement="right">
+          <AgalaButton variant="outline" size="sm">Right</AgalaButton>
+        </AgalaTooltip>
+        <AgalaTooltip content="Appears after 600ms" :delay="600">
+          <AgalaButton variant="outline" size="sm">Slow (600ms)</AgalaButton>
+        </AgalaTooltip>
       </div>
       <p class="muted" style="font-size: 0.875rem">Hover or focus any button. Delay defaults to 300ms.</p>
     </section>
@@ -1641,31 +1641,31 @@ const AckDialog = {
 
       <div style="margin-bottom: 0.75rem">
         <p class="muted" style="margin: 0 0 0.5rem; font-size: 0.875rem">Default — 4 options</p>
-        <SegmentedControl :options="SEG_OPTIONS" v-model="segValue" />
+        <AgalaSegmentedControl :options="SEG_OPTIONS" v-model="segValue" />
         <p class="muted" style="font-size: 0.875rem; margin: 0.25rem 0 0">Selected: <strong>{{ segValue }}</strong></p>
       </div>
 
       <div style="margin-bottom: 0.75rem">
         <p class="muted" style="margin: 0 0 0.5rem; font-size: 0.875rem">Per-option variants</p>
-        <SegmentedControl :options="SEG_VARIANT_OPTIONS" v-model="segVariantsValue" />
+        <AgalaSegmentedControl :options="SEG_VARIANT_OPTIONS" v-model="segVariantsValue" />
         <p class="muted" style="font-size: 0.875rem; margin: 0.25rem 0 0">Selected: <strong>{{ segVariantsValue }}</strong></p>
       </div>
 
       <div style="margin-bottom: 0.75rem">
         <p class="muted" style="margin: 0 0 0.5rem; font-size: 0.875rem">Sizes</p>
         <div class="row" style="margin: 0">
-          <SegmentedControl v-for="s in (['sm', 'md', 'lg'] as const)" :key="s" :options="SEG_SIZE_OPTIONS" v-model="segSizeValue" :size="s" />
+          <AgalaSegmentedControl v-for="s in (['sm', 'md', 'lg'] as const)" :key="s" :options="SEG_SIZE_OPTIONS" v-model="segSizeValue" :size="s" />
         </div>
       </div>
 
       <div style="margin-bottom: 0.75rem">
         <p class="muted" style="margin: 0 0 0.5rem; font-size: 0.875rem">Disabled group</p>
-        <SegmentedControl :options="SEG_OPTIONS" v-model="segValue" disabled />
+        <AgalaSegmentedControl :options="SEG_OPTIONS" v-model="segValue" disabled />
       </div>
 
       <div style="margin-bottom: 0.75rem">
         <p class="muted" style="margin: 0 0 0.5rem; font-size: 0.875rem">Disabled option (Option B)</p>
-        <SegmentedControl :options="SEG_DISABLED_OPT" v-model="segValue" />
+        <AgalaSegmentedControl :options="SEG_DISABLED_OPT" v-model="segValue" />
       </div>
     </section>
 
@@ -1678,41 +1678,41 @@ const AckDialog = {
 
       <div style="margin-bottom: 1rem">
         <p class="muted" style="margin: 0 0 0.5rem; font-size: 0.875rem">VStack (vertical, gap 0.75rem)</p>
-        <VStack gap="0.75rem" style="background: hsl(var(--agala-muted) / 0.3); padding: 0.75rem; border-radius: var(--agala-radius)">
+        <AgalaVStack gap="0.75rem" style="background: hsl(var(--agala-muted) / 0.3); padding: 0.75rem; border-radius: var(--agala-radius)">
           <div style="background: hsl(var(--agala-primary) / 0.1); padding: 0.5rem; border-radius: var(--agala-radius-sm)">Item 1</div>
           <div style="background: hsl(var(--agala-primary) / 0.1); padding: 0.5rem; border-radius: var(--agala-radius-sm)">Item 2</div>
           <div style="background: hsl(var(--agala-primary) / 0.1); padding: 0.5rem; border-radius: var(--agala-radius-sm)">Item 3</div>
-        </VStack>
+        </AgalaVStack>
       </div>
 
       <div style="margin-bottom: 1rem">
         <p class="muted" style="margin: 0 0 0.5rem; font-size: 0.875rem">HStack (horizontal, gap 0.5rem) + Spacer</p>
-        <HStack gap="0.5rem" style="background: hsl(var(--agala-muted) / 0.3); padding: 0.75rem; border-radius: var(--agala-radius)">
-          <Button size="sm">Action</Button>
-          <Button size="sm" variant="secondary">Cancel</Button>
-          <Spacer />
-          <Badge variant="success">Active</Badge>
-        </HStack>
+        <AgalaHStack gap="0.5rem" style="background: hsl(var(--agala-muted) / 0.3); padding: 0.75rem; border-radius: var(--agala-radius)">
+          <AgalaButton size="sm">Action</AgalaButton>
+          <AgalaButton size="sm" variant="secondary">Cancel</AgalaButton>
+          <AgalaSpacer />
+          <AgalaBadge variant="success">Active</AgalaBadge>
+        </AgalaHStack>
       </div>
 
       <div style="margin-bottom: 1rem">
         <p class="muted" style="margin: 0 0 0.5rem; font-size: 0.875rem">Center (both axes)</p>
-        <Center style="height: 80px; background: hsl(var(--agala-muted) / 0.3); border-radius: var(--agala-radius)">
-          <Badge variant="primary">Centered</Badge>
-        </Center>
+        <AgalaCenter style="height: 80px; background: hsl(var(--agala-muted) / 0.3); border-radius: var(--agala-radius)">
+          <AgalaBadge variant="primary">Centered</AgalaBadge>
+        </AgalaCenter>
       </div>
 
       <div style="margin-bottom: 1rem">
         <p class="muted" style="margin: 0 0 0.5rem; font-size: 0.875rem">Divider (horizontal, with label)</p>
-        <Divider label="Section" />
-        <Divider label="Start" label-position="start" />
-        <Divider label="End" label-position="end" />
+        <AgalaDivider label="Section" />
+        <AgalaDivider label="Start" label-position="start" />
+        <AgalaDivider label="End" label-position="end" />
       </div>
 
       <div style="margin-bottom: 1rem; height: 100px; display: flex">
         <p class="muted" style="margin: 0 0.5rem 0 0; font-size: 0.875rem">Divider (vertical):</p>
         <span>Left</span>
-        <Divider orientation="vertical" />
+        <AgalaDivider orientation="vertical" />
         <span>Right</span>
       </div>
     </section>
@@ -1722,23 +1722,23 @@ const AckDialog = {
       <h2>ListGroup</h2>
       <div style="max-width: 400px">
         <p class="muted" style="margin: 0 0 0.5rem; font-size: 0.875rem">Default items with icon, subtitle, badge</p>
-        <ListGroup style="margin-bottom: 1rem">
-          <ListGroupItem icon="user" label="Profile" subtitle="Edit your personal information" @click="console.log('profile')" />
-          <ListGroupItem icon="bell" label="Notifications" subtitle="Manage alert preferences" badge="12" />
-          <ListGroupItem icon="settings" label="Settings" subtitle="App configuration" />
-          <ListGroupItem icon="lock" label="Privacy" subtitle="Security settings" badge="warning" badge-variant="warning" />
-        </ListGroup>
+        <AgalaListGroup style="margin-bottom: 1rem">
+          <AgalaListGroupItem icon="user" label="Profile" subtitle="Edit your personal information" @click="console.log('profile')" />
+          <AgalaListGroupItem icon="bell" label="Notifications" subtitle="Manage alert preferences" badge="12" />
+          <AgalaListGroupItem icon="settings" label="Settings" subtitle="App configuration" />
+          <AgalaListGroupItem icon="lock" label="Privacy" subtitle="Security settings" badge="warning" badge-variant="warning" />
+        </AgalaListGroup>
 
         <p class="muted" style="margin: 0 0 0.5rem; font-size: 0.875rem">Disabled item + Danger variant</p>
-        <ListGroup style="margin-bottom: 1rem">
-          <ListGroupItem icon="credit-card" label="Billing" subtitle="Payment methods" />
-          <ListGroupItem icon="trash" label="Delete account" variant="danger" />
-          <ListGroupItem icon="flag" label="Archived" subtitle="Old records" disabled />
-        </ListGroup>
+        <AgalaListGroup style="margin-bottom: 1rem">
+          <AgalaListGroupItem icon="credit-card" label="Billing" subtitle="Payment methods" />
+          <AgalaListGroupItem icon="trash" label="Delete account" variant="danger" />
+          <AgalaListGroupItem icon="flag" label="Archived" subtitle="Old records" disabled />
+        </AgalaListGroup>
 
         <p class="muted" style="margin: 0 0 0.5rem; font-size: 0.875rem">Custom content via slots (dot + rich text + trailing Badge)</p>
-        <ListGroup>
-          <ListGroupItem>
+        <AgalaListGroup>
+          <AgalaListGroupItem>
             <template #leading>
               <span style="width:8px;height:8px;border-radius:50%;background:hsl(var(--agala-danger));flex-shrink:0;margin:0.25rem 0" />
             </template>
@@ -1749,8 +1749,8 @@ const AckDialog = {
             <template #trailing>
               <span style="display:inline-flex;align-items:center;justify-content:center;min-width:1.25rem;height:1.25rem;padding:0 0.375rem;border-radius:99px;background:hsl(var(--agala-danger) / 0.1);color:hsl(var(--agala-danger));font-size:0.6875rem;font-weight:600">2</span>
             </template>
-          </ListGroupItem>
-          <ListGroupItem>
+          </AgalaListGroupItem>
+          <AgalaListGroupItem>
             <template #leading>
               <span style="width:8px;height:8px;border-radius:50%;background:hsl(var(--agala-warning));flex-shrink:0;margin:0.25rem 0" />
             </template>
@@ -1758,8 +1758,8 @@ const AckDialog = {
               <span style="font-weight:600;font-size:0.875rem">Medicamentos</span>
               <p style="margin:0;font-size:0.75rem;color:hsl(var(--agala-muted-foreground))">Enalapril 10mg diario</p>
             </div>
-          </ListGroupItem>
-          <ListGroupItem>
+          </AgalaListGroupItem>
+          <AgalaListGroupItem>
             <template #leading>
               <span style="width:8px;height:8px;border-radius:50%;background:hsl(var(--agala-primary));flex-shrink:0;margin:0.25rem 0" />
             </template>
@@ -1770,31 +1770,31 @@ const AckDialog = {
             <template #trailing>
               <span style="display:inline-flex;align-items:center;justify-content:center;min-width:1.25rem;height:1.25rem;padding:0 0.375rem;border-radius:99px;background:hsl(var(--agala-primary) / 0.1);color:hsl(var(--agala-primary));font-size:0.6875rem;font-weight:600">3</span>
             </template>
-          </ListGroupItem>
-        </ListGroup>
+          </AgalaListGroupItem>
+        </AgalaListGroup>
 
         <p class="muted" style="margin: 0 0 0.5rem; font-size: 0.875rem">With gap (separated items)</p>
-        <ListGroup gap="6px" style="background: hsl(var(--agala-muted) / 0.3); padding: 0.5rem; border-radius: var(--agala-radius)">
-          <ListGroupItem icon="user" label="Profile" subtitle="Edit your info" style="border-radius: var(--agala-radius-sm)" />
-          <ListGroupItem icon="bell" label="Notifications" badge="12" style="border-radius: var(--agala-radius-sm)" />
-          <ListGroupItem icon="settings" label="Settings" style="border-radius: var(--agala-radius-sm)" />
-        </ListGroup>
+        <AgalaListGroup gap="6px" style="background: hsl(var(--agala-muted) / 0.3); padding: 0.5rem; border-radius: var(--agala-radius)">
+          <AgalaListGroupItem icon="user" label="Profile" subtitle="Edit your info" style="border-radius: var(--agala-radius-sm)" />
+          <AgalaListGroupItem icon="bell" label="Notifications" badge="12" style="border-radius: var(--agala-radius-sm)" />
+          <AgalaListGroupItem icon="settings" label="Settings" style="border-radius: var(--agala-radius-sm)" />
+        </AgalaListGroup>
 
         <p class="muted" style="margin: 0 0 0.5rem; font-size: 0.875rem">Borderless (embeds inside other containers)</p>
         <div style="background: hsl(var(--agala-muted) / 0.3); padding: 0.75rem; border-radius: var(--agala-radius)">
-          <ListGroup borderless>
-            <ListGroupItem icon="user" label="Profile" subtitle="Edit your info" />
-            <ListGroupItem icon="bell" label="Notifications" badge="12" />
-            <ListGroupItem icon="settings" label="Settings" />
-          </ListGroup>
+          <AgalaListGroup borderless>
+            <AgalaListGroupItem icon="user" label="Profile" subtitle="Edit your info" />
+            <AgalaListGroupItem icon="bell" label="Notifications" badge="12" />
+            <AgalaListGroupItem icon="settings" label="Settings" />
+          </AgalaListGroup>
         </div>
 
         <p class="muted" style="margin: 0 0 0.5rem; font-size: 0.875rem; margin-top: 1rem">Cards variant</p>
-        <ListGroup variant="cards" style="max-width: 400px">
-          <ListGroupItem icon="user" label="Profile" subtitle="Edit your info" />
-          <ListGroupItem icon="bell" label="Notifications" badge="12" />
-          <ListGroupItem icon="settings" label="Settings" />
-        </ListGroup>
+        <AgalaListGroup variant="cards" style="max-width: 400px">
+          <AgalaListGroupItem icon="user" label="Profile" subtitle="Edit your info" />
+          <AgalaListGroupItem icon="bell" label="Notifications" badge="12" />
+          <AgalaListGroupItem icon="settings" label="Settings" />
+        </AgalaListGroup>
       </div>
     </section>
 
@@ -1802,44 +1802,44 @@ const AckDialog = {
     <section id="alert">
       <h2>Alert — Variants</h2>
       <div class="stack" style="max-width: 600px">
-        <Alert variant="info">This is an informational message.</Alert>
-        <Alert variant="success">Your changes have been saved successfully.</Alert>
-        <Alert variant="warning">Your session will expire in 5 minutes.</Alert>
-        <Alert variant="danger">An error occurred while processing your request.</Alert>
+        <AgalaAlert variant="info">This is an informational message.</AgalaAlert>
+        <AgalaAlert variant="success">Your changes have been saved successfully.</AgalaAlert>
+        <AgalaAlert variant="warning">Your session will expire in 5 minutes.</AgalaAlert>
+        <AgalaAlert variant="danger">An error occurred while processing your request.</AgalaAlert>
       </div>
 
       <h2 style="margin-top: 1.5rem">Alert — With Title</h2>
       <div class="stack" style="max-width: 600px">
-        <Alert variant="info" title="Did you know?">
+        <AgalaAlert variant="info" title="Did you know?">
           You can customize the entire look of your dashboard using the theme settings.
-        </Alert>
-        <Alert variant="success" title="All good!">
+        </AgalaAlert>
+        <AgalaAlert variant="success" title="All good!">
           Your profile has been updated and changes are now live.
-        </Alert>
-        <Alert variant="warning" title="Heads up">
+        </AgalaAlert>
+        <AgalaAlert variant="warning" title="Heads up">
           You have used 85% of your storage quota. Consider upgrading your plan.
-        </Alert>
-        <Alert variant="danger" title="Update failed">
+        </AgalaAlert>
+        <AgalaAlert variant="danger" title="Update failed">
           The system encountered an unexpected error. Please try again later.
-        </Alert>
+        </AgalaAlert>
       </div>
 
       <h2 style="margin-top: 1.5rem">Alert — Dismissible</h2>
       <div class="stack" style="max-width: 600px">
-        <Alert variant="info" title="Welcome back!" dismissible>
+        <AgalaAlert variant="info" title="Welcome back!" dismissible>
           You have 3 new notifications waiting for you.
-        </Alert>
-        <Alert variant="warning" dismissible>
+        </AgalaAlert>
+        <AgalaAlert variant="warning" dismissible>
           This alert can be dismissed by clicking the × button.
-        </Alert>
+        </AgalaAlert>
       </div>
 
       <h2 style="margin-top: 1.5rem">Alert — Flat (icon + text, minimal)</h2>
       <div class="stack" style="max-width: 600px">
-        <Alert variant="info" flat>New updates are available.</Alert>
-        <Alert variant="success" flat>Changes saved.</Alert>
-        <Alert variant="warning" flat>Session expires in 5 minutes.</Alert>
-        <Alert variant="danger" flat>Connection lost. Reconnecting…</Alert>
+        <AgalaAlert variant="info" flat>New updates are available.</AgalaAlert>
+        <AgalaAlert variant="success" flat>Changes saved.</AgalaAlert>
+        <AgalaAlert variant="warning" flat>Session expires in 5 minutes.</AgalaAlert>
+        <AgalaAlert variant="danger" flat>Connection lost. Reconnecting…</AgalaAlert>
       </div>
     </section>
 
