@@ -151,3 +151,5 @@ export type { DevEnvBannerProps } from './components/DevEnvBanner'
 
 export { default as Alert } from './components/Alert/Alert.vue'
 export type { AlertProps, AlertVariant } from './components/Alert'
+
+export { AgalaUI } from './plugin'
